@@ -12,10 +12,10 @@ export const Header = () => {
                 </Flex>
                 <Spacer />
                 <ButtonGroup gap='4'>
-                    <Button fontSize="16px" variant='link' color="green.200">Mapas</Button>
-                    <Button fontSize="16px" variant='link' color="green.200">Pesquisar</Button>
-                    <Button fontSize="16px" variant='link' color="green.200">Sobre</Button>
-                    <Button fontSize="16px" borderRadius="20px" bg="green.200" color="neutral.100" borderColor="green.200">Login</Button>
+                    <Button cursor="pointer" fontSize="16px" variant='link' color="green.200">Mapas</Button>
+                    <Button cursor="pointer" fontSize="16px" variant='link' color="green.200">Pesquisar</Button>
+                    <Button cursor="pointer" fontSize="16px" variant='link' color="green.200">Sobre</Button>
+                    <Button cursor="pointer" fontSize="16px" borderRadius="20px" bg="green.200" color="neutral.100" borderColor="green.200">Login</Button>
                 </ButtonGroup>
             </Flex>
         </>
