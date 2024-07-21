@@ -1,13 +1,10 @@
-import { Text } from '@chakra-ui/layout'
-import { ChakraProvider, theme } from '@chakra-ui/react'
+import { Header } from "./components/commons/Header"
+import { Home } from "./pages/Home"
 
 
 function App() {
   return (
-    <ChakraProvider resetCSS theme={theme}>
-      <Text fontSize='medium'> OIII</Text>
-    </ChakraProvider>
-
+    <><Header /><Home /></>
   )
 }
 
