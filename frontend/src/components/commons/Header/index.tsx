@@ -5,7 +5,7 @@ import { TiThMenuOutline } from "react-icons/ti"
 
 export const Header = () => {
     return (
-        <HStack paddingY='16px' paddingX='24px' alignItems='center' borderBottom="1px" borderBottomColor="neutral.300">
+        <HStack paddingX={60} paddingY={20} alignItems='center' borderBottom="1px" borderBottomColor="neutral.300">
             <IconButton aria-label={"futebol"} icon={<Logo width="32" height="32" />} bg="transparent" _hover={{ bd: "transparent" }} />
             <Heading color="neutral.400" size={{ base: "sm", md: 'md', lg: "md" }}>Cidade Ativa</Heading>
             <Spacer />
@@ -34,11 +34,11 @@ export const Header = () => {
                 </Menu>
             </Hide>
             <Hide below="md">
-                <ButtonGroup gap={2}>
-                    <Button cursor="pointer" fontSize="16px" variant='link' color="green.200">Mapas</Button>
-                    <Button cursor="pointer" fontSize="16px" variant='link' color="green.200">Pesquisar</Button>
-                    <Button cursor="pointer" fontSize="16px" variant='link' color="green.200">Sobre</Button>
-                    <Button cursor="pointer" fontSize="16px" borderRadius="20px" bg="green.200" color="neutral.100" borderColor="green.200">Login</Button>
+                <ButtonGroup gap={12}>
+                    <Button cursor="pointer" fontSize={'button'} variant='link' color="green.200">Mapas</Button>
+                    <Button cursor="pointer" fontSize={'button'} variant='link' color="green.200">Pesquisar</Button>
+                    <Button cursor="pointer" fontSize={'button'} variant='link' color="green.200">Sobre</Button>
+                    <Button cursor="pointer" paddingX={20} borderRadius="20px" bg="green.200" color="neutral.100" borderColor="green.200">Login</Button>
                 </ButtonGroup>
             </Hide>
         </HStack>

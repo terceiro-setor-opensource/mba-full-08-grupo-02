@@ -5,13 +5,14 @@ import LandingPage1 from '../../../../assets/images/landing1.png'
 
 export const HomeFirstBox = () => {
     return (
-        <HStack justifyContent={["space-around", "center", "center"]} p={{ base: "2rem", md: "2rem", lg: 20 }}>
+        <Box padding={60}>
+            <HStack justifyContent="space-around">
             <Box w={{ base: "100%", md: "100%", lg: "40%" }} >
-                <Text textStyle={'title'} mb="1rem">Cidade Ativa</Text>
+                <Text textStyle={'h1'} mb={12}>Cidade Ativa</Text>
                 <Text textStyle={'subtitle'} lineHeight="1.5">Prepare-se para embarcar em uma jornada emocionante em direção a uma vida mais ativa e saudável! Estamos empenhados em ajudá-lo a encontrar os melhores lugares para praticar exercícios físicos, seja você um entusiasta experiente ou alguém que está apenas começando sua jornada de condicionamento físico.</Text>
             </Box>
             <Hide below='lg'>
-                <Box marginInline="1.5rem" width="12px" h="300px" bg="purple.200" borderRadius="8px"></Box>
+                <Box width="12px" h="300px" bg="purple.200" borderRadius="8px"></Box>
                 <Box>
                     <Image
                         w="100%"
@@ -22,6 +23,7 @@ export const HomeFirstBox = () => {
                     />
                 </Box>
             </Hide>
-        </HStack>
+            </HStack>
+        </Box>
     )
 }

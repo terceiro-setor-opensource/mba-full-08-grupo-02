@@ -3,7 +3,6 @@ interface ILogo {
     height?: string
 }
 
-
 export const Logo = ({width, height}: ILogo) => {
     return (
         <svg version="1.1" viewBox="0 0 812 812" width={width ?? "16"} height={height ?? "16"} xmlns="http://www.w3.org/2000/svg">

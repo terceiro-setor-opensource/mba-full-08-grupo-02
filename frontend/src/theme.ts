@@ -5,11 +5,18 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
 }
 
+const space = {
+    4: '0.25rem',
+    12: '0.75rem',
+    20: '1.25rem',
+    28: '1.75rem',
+    36: '2.25rem',
+    44: '2.75rem',
+    52: '3.25rem',
+    60: '3.75rem'
+}
+
 const textStyles = {
-  title: {
-    fontSize: "2.25rem",
-    fontWeight: "bold",
-  },
   h1: {
     fontSize: "1.5rem",
     fontWeight: "semibold",
@@ -22,7 +29,7 @@ const textStyles = {
     fontSize: "1.25rem",
     fontWeight: 'regular',
   },
-  p: {
+  bodyFirst: {
     fontSize: "1rem",
     fontWeight: 'regular',
   },
@@ -38,6 +45,9 @@ const textStyles = {
     fontSize: "0.688rem",
     fontWeight: 'semibold',
   },
+  button: {
+    fontSize: "1rem"
+  }
 }
 
 const colors = {
@@ -76,7 +86,7 @@ const styles = {
 }
 
 
-const theme = extendTheme({ colors, textStyles, config, styles })
+const theme = extendTheme({ colors, textStyles, config, styles, space })
 
 export default theme
 
