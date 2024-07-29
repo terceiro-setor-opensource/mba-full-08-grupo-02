@@ -8,7 +8,7 @@ export const HomeSecondBox = () => {
             <VStack justifyContent="center" alignItems="center">
                 <Box padding={60} w={'90%'}>
                     <Text textStyle={'h1'} mb={12}>Recursos</Text>
-                    <Text textStyle={'bodyFirst'} lineHeight="1.5">Imagine encontrar facilmente uma variedade de locais para se exercitar, desde academias e estúdios de yoga até trilhas para corrida e parques ao ar livre. Nosso objetivo é simplificar sua busca, oferecendo uma plataforma intuitiva e abrangente para descobrir asopções mais adequadas às suas necessidades e preferências.</Text>
+                    <Text textStyle={'subtitle'} lineHeight="1.5">Imagine encontrar facilmente uma variedade de locais para se exercitar, desde academias e estúdios de yoga até trilhas para corrida e parques ao ar livre. Nosso objetivo é simplificar sua busca, oferecendo uma plataforma intuitiva e abrangente para descobrir asopções mais adequadas às suas necessidades e preferências.</Text>
                 </Box>
             </VStack>
             <Hide below="md">
