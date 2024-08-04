@@ -1,16 +1,21 @@
-import { Box } from "@chakra-ui/layout"
-import { Header } from "./components/commons/Header"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { Layout } from "./Layout"
 import { Home } from "./pages/Home"
-import { Footer } from "./components/commons/Footer"
+import { SignUp } from "./pages/SignUp"
+
 
 
 function App() {
   return (
-    <Box w="100vw" h="100vh">
-      <Header />
-      <Home />
-      <Footer/>
-    </Box>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="/cadastro" element={<SignUp />} />
+        </Route>
+
+      </Routes>
+    </BrowserRouter>
   )
 }
 
