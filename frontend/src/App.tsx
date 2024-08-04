@@ -13,7 +13,6 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/cadastro" element={<SignUp />} />
         </Route>
-
       </Routes>
     </BrowserRouter>
   )
