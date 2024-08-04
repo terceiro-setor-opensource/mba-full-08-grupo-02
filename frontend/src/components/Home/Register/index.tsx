@@ -1,6 +1,6 @@
 import { Box, HStack } from "@chakra-ui/layout"
 import { Button, Hide, Image, Text } from '@chakra-ui/react'
-import LandingPage3 from '../../../../assets/images/landing3.png'
+import LandingPage3 from '../../../assets/images/landing3.png'
 
 
 export const Register = () => {

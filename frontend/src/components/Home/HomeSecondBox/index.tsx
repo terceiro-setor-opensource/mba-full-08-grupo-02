@@ -1,6 +1,6 @@
 import { Box, HStack, VStack } from "@chakra-ui/layout"
 import { Hide, Text } from '@chakra-ui/react'
-import { bannerInformation } from "../../../../consts/Home"
+import { bannerInformation } from "../../../consts/Home"
 
 export const HomeSecondBox = () => {
     return (

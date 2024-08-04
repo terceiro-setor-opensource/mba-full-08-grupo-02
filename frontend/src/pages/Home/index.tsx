@@ -1,9 +1,9 @@
 import { Box, Stack } from "@chakra-ui/layout"
 import LandingPage2 from '../../assets/images/landing2.png'
-import { HomeFirstBox } from "../../components/commons/HomeComponents/HomeFirstBox";
-import { HomeSecondBox } from "../../components/commons/HomeComponents/HomeSecondBox";
-import { ChooseActivity } from "../../components/commons/HomeComponents/ChooseActivity";
-import { Register } from "../../components/commons/HomeComponents/Register";
+import { HomeFirstBox } from "../../components/Home/HomeFirstBox";
+import { HomeSecondBox } from "../../components/Home/HomeSecondBox";
+import { ChooseActivity } from "../../components/Home/ChooseActivity";
+import { Register } from "../../components/Home/Register";
 
 export const Home = () => {
     return (
