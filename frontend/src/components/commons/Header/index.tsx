@@ -35,9 +35,9 @@ export const Header = () => {
             </Hide>
             <Hide below="md">
                 <ButtonGroup gap={12}>
-                    <Button cursor="pointer" fontSize={'button'} variant='link' color="green.200">Mapas</Button>
-                    <Button cursor="pointer" fontSize={'button'} variant='link' color="green.200">Pesquisar</Button>
-                    <Button cursor="pointer" fontSize={'button'} variant='link' color="green.200">Sobre</Button>
+                    <Button cursor="pointer" fontSize={'button'} variant='link' >Mapas</Button>
+                    <Button cursor="pointer" fontSize={'button'} variant='link' color="neutral.400">Pesquisar</Button>
+                    <Button cursor="pointer" fontSize={'button'} variant='link' color="neutral.400">Sobre</Button>
                     <Button cursor="pointer" paddingX={20} borderRadius="20px" bg="green.200" color="neutral.100" borderColor="green.200">Login</Button>
                 </ButtonGroup>
             </Hide>
