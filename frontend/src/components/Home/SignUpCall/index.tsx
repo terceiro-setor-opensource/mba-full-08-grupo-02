@@ -3,7 +3,7 @@ import { Button, Hide, Image, Text } from '@chakra-ui/react'
 import LandingPage3 from '../../../assets/images/landing3.png'
 
 
-export const Register = () => {
+export const SignUpCall = () => {
     return (
         <HStack alignItems="flex-start" justifyContent={"space-around"} p={10}>
         <Box>

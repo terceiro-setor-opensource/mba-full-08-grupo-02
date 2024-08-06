@@ -3,7 +3,7 @@ import LandingPage2 from '../../assets/images/landing2.png'
 import { HomeFirstBox } from "../../components/Home/HomeFirstBox";
 import { HomeSecondBox } from "../../components/Home/HomeSecondBox";
 import { ChooseActivity } from "../../components/Home/ChooseActivity";
-import { Register } from "../../components/Home/Register";
+import { SignUpCall } from "../../components/Home/SignUpCall";
 
 export const Home = () => {
     return (
@@ -23,7 +23,7 @@ export const Home = () => {
             <Stack>
                 <HomeSecondBox />
                 <ChooseActivity />
-                <Register />
+                <SignUpCall />
             </Stack>
         </>
     )
