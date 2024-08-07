@@ -19,7 +19,7 @@ export const HomeFirstBox = () => {
                         borderRadius="8px"
                         objectFit='cover'
                         src={LandingPage1}
-                        alt='mulher correndo na rua'
+                        alt='uma mulher treinando corrida na rua'
                     />
                 </Box>
             </Hide>
