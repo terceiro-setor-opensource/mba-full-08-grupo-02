@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { supabase } from "../services/supabase"
+import { Request, Response } from "express";
+import { supabase } from "../services/supabase";
 
 export class UserController {
 

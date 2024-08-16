@@ -1,5 +1,6 @@
-import express from 'express';
-import userRouter from './routes';
+import express from "express";
+import { Request, Response } from "express";
+import userRouter from "./routes";
 
 const app = express();
 const port = 3000;
@@ -15,5 +16,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-
