@@ -1,6 +1,6 @@
 import { Box, HStack, Image, Text } from '@chakra-ui/react'
 import { Hide } from "@chakra-ui/react"
-import LandingPage1 from '../../../assets/images/landing1.png'
+import LandingPage1 from '@/assets/images/landing1.png'
 
 
 export const HomeFirstBox = () => {

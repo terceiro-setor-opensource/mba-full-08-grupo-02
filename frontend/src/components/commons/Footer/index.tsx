@@ -1,4 +1,4 @@
-import { Box, HStack, Link, ListItem, Stack, UnorderedList, VStack } from "@chakra-ui/layout"
+import { HStack, Link, ListItem, UnorderedList, VStack } from "@chakra-ui/layout"
 import { IconButton, Text } from '@chakra-ui/react'
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa"
 
