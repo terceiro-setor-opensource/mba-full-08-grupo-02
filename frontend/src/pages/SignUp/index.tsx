@@ -37,7 +37,7 @@ export const SignUp = () => {
     <VStack height={'100vh'} pt={36}>
       <Stack w={{ base: '90%', md: '80%', lg: '40%' }}>
         <VStack pb={20} alignItems="flex-start">
-          <Text textStyle={'h1'}>Crie sua conta!</Text>
+          <Text textStyle={'h1'}>Crie sua conta</Text>
           <Text textStyle={'subtitle'} textColor="neutral.400">
             É gratuito e simples!
           </Text>
@@ -96,7 +96,7 @@ export const SignUp = () => {
                 />
                 <InputRightElement width="4.5rem">
                   <Button h="1.75rem" onClick={() => setShow(!show)}>
-                    {show ? 'Hide' : 'Show'}
+                    {show ? 'Ocultar' : 'Exibir'}
                   </Button>
                 </InputRightElement>
               </InputGroup>
