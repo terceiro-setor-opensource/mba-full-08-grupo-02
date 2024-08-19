@@ -3,6 +3,7 @@ import { Layout } from "./pages/Layout"
 import { Home } from "./pages/Home"
 import { SignUp } from "./pages/SignUp"
 
+import './i18n'
 
 
 function App() {
