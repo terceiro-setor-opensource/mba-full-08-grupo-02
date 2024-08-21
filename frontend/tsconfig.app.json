@@ -27,5 +27,5 @@
     "noFallthroughCasesInSwitch": true
   },
   // "include": ["src"]
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/i18n.js"],
 }

@@ -2,16 +2,18 @@ import { Box, HStack } from '@chakra-ui/layout'
 import { Button, Hide, Image, Text } from '@chakra-ui/react'
 import LandingPage3 from '@/assets/images/landing3.png'
 import { useNavigate } from 'react-router-dom'
-
+import { useTranslation } from 'react-i18next'
 
 export const SignUpCall = () => {
-    const navigate = useNavigate()
-    
+  const navigate = useNavigate()
+
+  const { t } = useTranslation()
+
   return (
     <HStack alignItems="flex-start" justifyContent={'space-around'} p={10}>
       <Box>
         <Text textStyle={'h1'} mb={12}>
-          Pronto para essa jornada?
+          {t('readyForThisJourney')}
         </Text>
         <Button
           padding={20}
@@ -21,7 +23,7 @@ export const SignUpCall = () => {
           color="neutral.100"
           borderColor="green.200"
           onClick={() => {
-            navigate("/cadastro")
+            navigate('/cadastro')
           }}
         >
           Cadastre-se
