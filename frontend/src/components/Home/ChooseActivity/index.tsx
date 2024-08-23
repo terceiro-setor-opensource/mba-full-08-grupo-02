@@ -1,6 +1,6 @@
 import { HStack, VStack } from "@chakra-ui/layout"
 import { Icon, IconButton, Text } from '@chakra-ui/react'
-import { chooseActivity } from "../../../consts/Home";
+import { chooseActivity } from "@/consts/Home";
 
 export const ChooseActivity = () => {
     return (
