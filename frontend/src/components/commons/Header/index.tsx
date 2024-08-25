@@ -12,8 +12,11 @@ import {
 } from '@chakra-ui/react'
 import { TiThMenuOutline } from 'react-icons/ti'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export const Header = () => {
+  const { t } = useTranslation()
+
   const navigate = useNavigate()
 
   return (
@@ -34,7 +37,7 @@ export const Header = () => {
         }}
       />
       <Heading color="neutral.400" size={{ base: 'sm', md: 'md', lg: 'md' }}>
-        Cidade Ativa
+        {t('activeCity')}
       </Heading>
       <Spacer />
       <Hide above="md">
@@ -46,23 +49,23 @@ export const Header = () => {
             variant="outline"
           />
           <MenuList>
-            <MenuItem>Mapas</MenuItem>
-            <MenuItem>Pesquisar</MenuItem>
-            <MenuItem>Sobre</MenuItem>
-            <MenuItem>Login</MenuItem>
+            <MenuItem> {t('maps')}</MenuItem>
+            <MenuItem> {t('search')}</MenuItem>
+            <MenuItem> {t('about')}</MenuItem>
+            <MenuItem> {t('login')}</MenuItem>
           </MenuList>
         </Menu>
       </Hide>
       <Hide below="md">
         <ButtonGroup gap={12}>
           <Button cursor="pointer" fontSize={'button'} variant="link">
-            Mapas
+            {t('maps')}
           </Button>
           <Button cursor="pointer" fontSize={'button'} variant="link" color="neutral.400">
-            Pesquisar
+            {t('search')}
           </Button>
           <Button cursor="pointer" fontSize={'button'} variant="link" color="neutral.400">
-            Sobre
+            {t('about')}
           </Button>
           <Button
             cursor="pointer"
@@ -72,7 +75,7 @@ export const Header = () => {
             color="neutral.100"
             borderColor="green.200"
           >
-            Login
+            {t('login')}
           </Button>
         </ButtonGroup>
       </Hide>
