@@ -57,7 +57,13 @@ export const Header = () => {
             <MenuItem> {t('maps')}</MenuItem>
             <MenuItem> {t('search')}</MenuItem>
             <MenuItem> {t('about')}</MenuItem>
-            <MenuItem> {t('login')}</MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/login')
+              }}
+            >
+              {t('login')}
+            </MenuItem>
           </MenuList>
         </Menu>
       </Hide>
@@ -79,6 +85,9 @@ export const Header = () => {
             bg="green.200"
             color="neutral.100"
             borderColor="green.200"
+            onClick={() => {
+              navigate('/login')
+            }}
           >
             {t('login')}
           </Button>

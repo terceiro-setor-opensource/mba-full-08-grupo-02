@@ -9,10 +9,14 @@ import {
   InputRightElement,
   Text,
 } from '@chakra-ui/react'
-import { Stack, VStack } from '@chakra-ui/layout'
+import { Box, HStack, Stack, VStack } from '@chakra-ui/layout'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { FormPurpleButton } from '@/components/commons/FormPurpleButton'
+import { SocialMedia } from '@/components/commons/SocialMedia'
+import { Link } from 'react-router-dom'
+import theme from '@/theme'
 
 interface IFormInput {
   name: string
@@ -37,7 +41,7 @@ export const SignUp = () => {
   }
 
   return (
-    <VStack height={'100vh'} pt={36}>
+    <VStack height={'100%'} marginY={theme.space[36]} justifyContent="center">
       <Stack w={{ base: '90%', md: '80%', lg: '40%' }}>
         <VStack pb={20} alignItems="flex-start">
           <Text textStyle={'h1'}> {t('getAccount')}</Text>
@@ -118,20 +122,16 @@ export const SignUp = () => {
                 <FormErrorMessage> {t('formSignUp.requiredTerms')}</FormErrorMessage>
               )}
             </FormControl>
-            <Button
-              mt={28}
-              isLoading={isSubmitting}
-              borderRadius="20px"
-              w="100%"
-              bg="purple.200"
-              color="neutral.100"
-              borderColor="purple.200"
-              type="submit"
-            >
-              {t('formSignUp.register')}
-            </Button>
+            <FormPurpleButton isLoading={isSubmitting} title={t('formSignUp.register')} />
           </form>
         </VStack>
+        <SocialMedia />
+        <HStack justifyContent="center" pt={theme.space[36]}>
+          <Text color={theme.colors.neutral['400']}>{t('hasAnAccount')}</Text>
+          <Link color={theme.colors.neutral['500']} to={'/login'}>
+            {t('entry')}
+          </Link>
+        </HStack>
       </Stack>
     </VStack>
   )
