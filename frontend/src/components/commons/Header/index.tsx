@@ -27,18 +27,23 @@ export const Header = () => {
       borderBottom="1px"
       borderBottomColor="neutral.300"
     >
-      <IconButton
-        aria-label={'futebol'}
-        icon={<Logo width="32" height="32" />}
-        bg="transparent"
-        _hover={{ bd: 'transparent' }}
+      <Button
+        variant="ghost"
+        _hover={{ bg: 'transparent' }}
         onClick={() => {
           navigate('/')
         }}
-      />
-      <Heading color="neutral.400" size={{ base: 'sm', md: 'md', lg: 'md' }}>
-        {t('activeCity')}
-      </Heading>
+      >
+        <IconButton
+          aria-label={'futebol'}
+          icon={<Logo width="32" height="32" />}
+          bg="transparent"
+          _hover={{ bd: 'transparent' }}
+        />
+        <Heading color="neutral.400" size={{ base: 'sm', md: 'md', lg: 'md' }}>
+          {t('activeCity')}
+        </Heading>
+      </Button>
       <Spacer />
       <Hide above="md">
         <Menu>
