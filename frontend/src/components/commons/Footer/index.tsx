@@ -1,7 +1,8 @@
-import { HStack, Link, ListItem, UnorderedList, VStack } from '@chakra-ui/layout'
+import { HStack, ListItem, UnorderedList, VStack } from '@chakra-ui/layout'
 import { IconButton, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 
 export const Footer = () => {
   const { t } = useTranslation()
@@ -18,18 +19,18 @@ export const Footer = () => {
       <VStack alignItems="flex-start">
         <Text textStyle={'h2'}>{t('activeCity')}</Text>
         <Text textStyle={'p'}>{t('getInTouch')}</Text>
-        <Link>{t('emailActiveCity')}</Link>
+        <Link to={''}>{t('emailActiveCity')}</Link>
         <Text textStyle={'p'}>+1-2345-6789</Text>
         <Text textStyle={'p'}>{t('saoPaulo')}</Text>
       </VStack>
       <VStack>
         <Text textStyle={'h2'}>{t('products')}</Text>
         <UnorderedList>
-          <ListItem>{t('locations')}</ListItem>
-          <ListItem>{t('events')}</ListItem>
-          <ListItem>{t('benefits')}</ListItem>
-          <ListItem>{t('login')}</ListItem>
-          <ListItem>{t('signUp')}</ListItem>
+          <ListItem cursor="pointer">{t('locations')}</ListItem>
+          <ListItem cursor="pointer">{t('events')}</ListItem>
+          <ListItem cursor="pointer">{t('benefits')}</ListItem>
+          <ListItem cursor="pointer"><Link to={'/login'}>{t('login')}</Link></ListItem>
+          <ListItem cursor="pointer" ><Link to={'/cadastro'}>{t('signUp')}</Link></ListItem>
         </UnorderedList>
       </VStack>
       <HStack pt={2} wrap="wrap" justifyContent="space-between">
