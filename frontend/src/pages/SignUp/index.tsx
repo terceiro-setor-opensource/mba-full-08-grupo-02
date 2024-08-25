@@ -41,7 +41,7 @@ export const SignUp = () => {
   }
 
   return (
-    <VStack height={'100%'} marginY={theme.space[36]} justifyContent="center">
+    <VStack height={'100%'} marginY={theme.space[52]} justifyContent="center">
       <Stack w={{ base: '90%', md: '80%', lg: '40%' }}>
         <VStack pb={20} alignItems="flex-start">
           <Text textStyle={'h1'}> {t('getAccount')}</Text>
