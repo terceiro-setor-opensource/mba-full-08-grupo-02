@@ -18,7 +18,7 @@ import {
   import { Link } from 'react-router-dom'
   import theme from '@/theme'
   
-  interface IFormInput {
+  interface IFormInputSignIn {
     email: string
     password: string
   }
@@ -32,7 +32,7 @@ import {
       handleSubmit,
       register,
       formState: { errors, isSubmitting },
-    } = useForm<IFormInput>()
+    } = useForm<IFormInputSignIn>()
   
     const onSubmit = (data: any) => {
       console.log(data)
