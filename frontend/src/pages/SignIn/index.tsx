@@ -36,8 +36,12 @@ import * as z from "zod"
       resolver: zodResolver(schema),
     })
   
-    const onSubmit = (data: IFormInputSignIn) => {
-      login(data);
+    const onSubmit = async (data: IFormInputSignIn) => {
+      try {
+        await login(data);
+      } catch (error) {
+        console.error(error);        
+      }
     }
     return (
       <VStack height={'100%'} marginY={theme.space[12]} justifyContent="center">

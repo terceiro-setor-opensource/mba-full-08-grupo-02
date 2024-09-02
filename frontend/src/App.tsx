@@ -5,19 +5,29 @@ import { SignUp } from "./pages/SignUp"
 
 import './i18n'
 import { SignIn } from "./pages/SignIn"
+import { ProtectedRoute } from "./components/commons/ProtectedRoute"
+import { Dashboard } from "./pages/Dashboard"
+import { AuthProvider } from "./contexts/AuthContext"
 
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="/cadastro" element={<SignUp />} />
-          <Route path="/login" element={<SignIn />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="/cadastro" element={<SignUp />} />
+                <Route path="/login" element={<SignIn />} />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                  } />
+              </Route>
+            </Routes>
+        </AuthProvider>
+      </BrowserRouter>
   )
 }
 
