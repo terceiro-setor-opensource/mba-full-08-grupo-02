@@ -12,7 +12,7 @@ import { HStack, Stack, VStack } from '@chakra-ui/layout'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { FormPurpleButton } from '@/components/commons/FormPurpleButton'
+import { FormButton } from '@/components/commons/FormButton'
 import { SocialMedia } from '@/components/commons/SocialMedia'
 import { Link } from 'react-router-dom'
 import theme from '@/theme'
@@ -89,7 +89,7 @@ import * as z from "zod"
                 </InputGroup>
                 {!!errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
               </FormControl>
-              <FormPurpleButton isLoading={isSubmitting} title={t('entry')} />
+              <FormButton isLoading={isSubmitting} title={t('entry')} />
             </form>
           </VStack>
           <SocialMedia />

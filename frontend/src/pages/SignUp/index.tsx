@@ -9,11 +9,11 @@ import {
   InputRightElement,
   Text,
 } from '@chakra-ui/react'
-import { Box, HStack, Stack, VStack } from '@chakra-ui/layout'
+import { HStack, Stack, VStack } from '@chakra-ui/layout'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { FormPurpleButton } from '@/components/commons/FormPurpleButton'
+import { FormButton } from '@/components/commons/FormButton'
 import { SocialMedia } from '@/components/commons/SocialMedia'
 import { Link } from 'react-router-dom'
 import theme from '@/theme'
@@ -122,7 +122,7 @@ export const SignUp = () => {
                 <FormErrorMessage> {t('formSignUp.requiredTerms')}</FormErrorMessage>
               )}
             </FormControl>
-            <FormPurpleButton isLoading={isSubmitting} title={t('formSignUp.register')} />
+            <FormButton isLoading={isSubmitting} title={t('formSignUp.register')} />
           </form>
         </VStack>
         <SocialMedia />
