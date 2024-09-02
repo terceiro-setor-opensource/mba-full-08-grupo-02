@@ -1,4 +1,4 @@
-import { HStack, Heading, Spacer } from '@chakra-ui/layout'
+import { Box, HStack, Heading, Spacer } from '@chakra-ui/layout'
 import { Logo } from '../Logo'
 import {
   ButtonGroup,
@@ -9,14 +9,16 @@ import {
   MenuItem,
   MenuList,
   Hide,
+  Img,
 } from '@chakra-ui/react'
 import { TiThMenuOutline } from 'react-icons/ti'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useAuth } from '@/hooks/useAuth'
 
 export const Header = () => {
   const { t } = useTranslation()
-
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
 
   return (
@@ -57,13 +59,26 @@ export const Header = () => {
             <MenuItem> {t('maps')}</MenuItem>
             <MenuItem> {t('search')}</MenuItem>
             <MenuItem> {t('about')}</MenuItem>
-            <MenuItem
-              onClick={() => {
-                navigate('/login')
-              }}
-            >
-              {t('login')}
-            </MenuItem>
+            {!user && (
+              <MenuItem
+                onClick={() => {
+                  navigate('/login')
+                }}
+              >
+                {t('login')}
+              </MenuItem>
+            )}
+            {user && (
+              <>
+                <MenuItem>{user.name}</MenuItem>
+                <MenuItem>Dashboard</MenuItem>
+                <MenuItem>{t('requestCatalog')}</MenuItem>
+                <MenuItem onClick={logout} cursor="pointer">
+                  {t('logout')}
+                </MenuItem>
+              </>
+            )}
+
           </MenuList>
         </Menu>
       </Hide>
@@ -78,19 +93,41 @@ export const Header = () => {
           <Button cursor="pointer" fontSize={'button'} variant="link" color="neutral.400">
             {t('about')}
           </Button>
-          <Button
-            cursor="pointer"
-            paddingX={20}
-            borderRadius="20px"
-            bg="green.200"
-            color="neutral.100"
-            borderColor="green.200"
-            onClick={() => {
-              navigate('/login')
-            }}
-          >
-            {t('login')}
-          </Button>
+          {!user && (
+            <Button
+              cursor="pointer"
+              paddingX={20}
+              borderRadius="20px"
+              bg="green.200"
+              color="neutral.100"
+              borderColor="green.200"
+              onClick={() => {
+                navigate('/login')
+              }}
+            >
+              {t('login')}
+            </Button>
+          )}
+          {user && (
+            <Menu>
+              <MenuButton as={Button} backgroundColor={'transparent'}>
+                <Box style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Img
+                    borderRadius="50%"
+                    src={'https://eu.ui-avatars.com/api/?name=U+Fe&size=250'}
+                    alt={user.name}
+                    boxSize="30px"
+                  />
+                  {user.name}
+                </Box>
+              </MenuButton>
+              <MenuList>
+                <MenuItem>Dashboard</MenuItem>
+                <MenuItem>{t('requestCatalog')}</MenuItem>
+                <MenuItem onClick={logout}>{t('logout')}</MenuItem>
+              </MenuList>
+            </Menu>
+          )}
         </ButtonGroup>
       </Hide>
     </HStack>
