@@ -4,6 +4,7 @@ import { Home } from "./pages/Home"
 import { SignUp } from "./pages/SignUp"
 
 import './i18n'
+import { SignIn } from "./pages/SignIn"
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="/cadastro" element={<SignUp />} />
+          <Route path="/login" element={<SignIn />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,15 +1,18 @@
 import { Box, HStack, Image, Text } from '@chakra-ui/react'
 import { Hide } from "@chakra-ui/react"
 import LandingPage1 from '@/assets/images/landing1.png'
+import { useTranslation } from 'react-i18next'
 
 
 export const HomeFirstBox = () => {
+    const { t } = useTranslation()
+
     return (
         <Box padding={60}>
             <HStack justifyContent="space-around">
             <Box w={{ base: "100%", md: "100%", lg: "40%" }} >
-                <Text textStyle={'h1'} mb={12}>Cidade Ativa</Text>
-                <Text textStyle={'subtitle'} lineHeight="1.5">Prepare-se para embarcar em uma jornada emocionante em direção a uma vida mais ativa e saudável! Estamos empenhados em ajudá-lo a encontrar os melhores lugares para praticar exercícios físicos, seja você um entusiasta experiente ou alguém que está apenas começando sua jornada de condicionamento físico.</Text>
+                <Text textStyle={'h1'} mb={12}>{t('activeCity')}</Text>
+                <Text textStyle={'subtitle'} lineHeight="1.5">{t('homeFirstBox')}</Text>
             </Box>
             <Hide below='lg'>
                 <Box width="12px" h="300px" bg="purple.200" borderRadius="8px"></Box>
