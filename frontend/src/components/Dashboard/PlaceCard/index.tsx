@@ -2,14 +2,16 @@ import { Image, Text } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import StarRating from '@/components/commons/StarRating'
 
-const PlaceCard: React.FC<PlaceCardProps> = ({ imageUrl, title, address, rating, reviewCount }: PlaceCardProps) => {
+const PlaceCard: React.FC<PlaceCardProps> = ({
+  imageUrl,
+  title,
+  address,
+  rating,
+  reviewCount,
+}: PlaceCardProps) => {
   return (
     <Card>
-      <CardHeader 
-        padding={0} 
-        borderTopEndRadius={4} 
-        borderTopStartRadius={4}
-      >
+      <CardHeader padding={0} borderTopEndRadius={4} borderTopStartRadius={4}>
         <Image
           src={imageUrl}
           alt={title}

@@ -6,7 +6,7 @@ type SearchBarProps = InputProps & {
   onSearch: (value: string) => void
 }
 
-export const SearchBar = ({ placeholder, onSearch, children, ...props }: SearchBarProps) => {
+export const SearchBar = ({ placeholder, onSearch, ...props }: SearchBarProps) => {
   return (
     <>
       <InputGroup borderRadius={5} size="md">

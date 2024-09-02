@@ -7,7 +7,11 @@ interface StarRatingProps {
   maxRating?: number
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ rating, reviewCount, maxRating = 5 }) => {
+const StarRating: React.FC<StarRatingProps> = ({
+  rating,
+  reviewCount,
+  maxRating = 5,
+}: StarRatingProps) => {
   return (
     <HStack spacing="1" alignItems="center">
       <HStack spacing="0.5" color="yellow.400">

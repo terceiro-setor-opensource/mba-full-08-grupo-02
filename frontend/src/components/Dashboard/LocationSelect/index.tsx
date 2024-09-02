@@ -1,12 +1,12 @@
-import theme from "@/theme";
-import { HStack } from "@chakra-ui/layout";
-import { Select } from "@chakra-ui/react";
-import { t } from "i18next";
-import { MdLocationOn } from "react-icons/md";
+import theme from '@/theme'
+import { HStack } from '@chakra-ui/layout'
+import { Select } from '@chakra-ui/react'
+import { t } from 'i18next'
+import { MdLocationOn } from 'react-icons/md'
 const responsiveWidth = {
   base: '100%',
   md: 'auto',
-};
+}
 export const LocationSelect = () => (
   <HStack width={responsiveWidth}>
     <MdLocationOn color={theme.colors.neutral['500']} size={24} />
@@ -14,4 +14,4 @@ export const LocationSelect = () => (
       <option value="option1">{t('dashboard.saoPaulo')}</option>
     </Select>
   </HStack>
-);
+)
