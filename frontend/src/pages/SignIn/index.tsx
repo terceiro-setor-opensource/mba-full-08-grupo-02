@@ -1,43 +1,44 @@
 import {
-    Button,
-    Checkbox,
-    FormControl,
-    FormErrorMessage,
-    FormLabel,
-    Input,
-    InputGroup,
-    InputRightElement,
-    Text,
-  } from '@chakra-ui/react'
-  import { Box, HStack, Stack, VStack } from '@chakra-ui/layout'
-  import { useState } from 'react'
-  import { useForm } from 'react-hook-form'
-  import { useTranslation } from 'react-i18next'
-  import { FormPurpleButton } from '@/components/commons/FormPurpleButton'
-  import { SocialMedia } from '@/components/commons/SocialMedia'
-  import { Link } from 'react-router-dom'
-  import theme from '@/theme'
-  
-  interface IFormInputSignIn {
-    email: string
-    password: string
-  }
-  
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Text,
+} from '@chakra-ui/react'
+import { HStack, Stack, VStack } from '@chakra-ui/layout'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { FormPurpleButton } from '@/components/commons/FormPurpleButton'
+import { SocialMedia } from '@/components/commons/SocialMedia'
+import { Link } from 'react-router-dom'
+import theme from '@/theme'
+import { useAuth } from '@/hooks/useAuth'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useSignInSchema } from './signInSchema'
+import * as z from "zod"
+
   export const SignIn = () => {
+    const schema = useSignInSchema(); 
+    type IFormInputSignIn = z.infer<typeof schema>;
     const [show, setShow] = useState<boolean>(false)
-  
     const { t } = useTranslation()
-  
+    const { login } = useAuth();
+
     const {
       handleSubmit,
       register,
       formState: { errors, isSubmitting },
-    } = useForm<IFormInputSignIn>()
+    } = useForm<IFormInputSignIn>({
+      resolver: zodResolver(schema),
+    })
   
-    const onSubmit = (data: any) => {
-      console.log(data)
+    const onSubmit = (data: IFormInputSignIn) => {
+      login(data);
     }
-  
     return (
       <VStack height={'100%'} marginY={theme.space[12]} justifyContent="center">
         <Stack w={{ base: '90%', md: '80%', lg: '40%' }}>
@@ -62,13 +63,7 @@ import {
                   type="email"
                   size="lg"
                   placeholder="Email"
-                  {...register('email', {
-                    required: 'Email é obrigatório',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Entre com um email válido',
-                    },
-                  })}
+                  {...register('email')}
                 />
                 {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
               </FormControl>
@@ -80,13 +75,7 @@ import {
                   <Input
                     type={show ? 'text' : 'password'}
                     placeholder="Senha"
-                    {...register('password', {
-                      required: 'Senha é obrigatória',
-                      minLength: {
-                        value: 8,
-                        message: 'A senha deve conter no mínimo 8 caracteres',
-                      },
-                    })}
+                    {...register('password')}
                   />
                   <InputRightElement width="4.5rem">
                     <Button h="1.75rem" onClick={() => setShow(!show)}>

@@ -23,6 +23,12 @@
     "name": "Nome completo",
     "email": "Email",
     "password": "Senha",
+    "errors": {
+      "emailRequired": "Email é obrigatório",
+      "emailInvalid": "Email inválido",
+      "passwordTooShort": "A senha deve ter pelo menos 8 caracteres",
+      "passwordRequired": "Senha é obrigatória"
+    },
     "register": "Cadastrar",
     "terms": "Concordo com os Termos e Condições",
     "requiredTerms": "O termo é obrigatório"
