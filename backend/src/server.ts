@@ -2,6 +2,7 @@ import express from "express";
 import placeRoutes from "./routes/PlaceRoutes";
 import activityRouter from "./routes/activity";
 import userRouter from "./routes/users";
+import imageRoutes from "./routes/image";
 
 const app = express();
 const port = 3000;
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRouter);
 app.use("/place", placeRoutes);
+app.use("/image", imageRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
