@@ -20,11 +20,6 @@ const insertBodySchema = {
   observations: z.string().optional(),
 };
 
-const updateBodySchema = {
-  id: z.number().int(),
-  ...insertBodySchema,
-};
-
 export default class PlaceController {
   static async create(req: Request, res: Response) {
     const { body } = req;
@@ -59,14 +54,50 @@ export default class PlaceController {
   }
 
   static async findAll(req: Request, res: Response) {
-    const { data } = await PlaceRef.select("*");
+    const { data, error } = await PlaceRef.select("*");
+
+    if(error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    if(data.length === 0) {
+      return res.status(204).json({
+        message: "No places found"
+      });
+    }
+
+    res.status(201).json(data);
+  }
+  
+  static async findById(req: Request, res: Response) {
+    const { id } = req.params;
+    const { data, error } = await PlaceRef.select("*").eq("id", id);
+
+    if(error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    if(data.length === 0) {
+      return res.status(204).json({
+        message: `No place found for the id = ${id}`
+      });
+    }
+
     res.status(201).json(data);
   }
 
   static async update(req: Request, res: Response) {
+    const { id } = req.params;
     const { body } = req;
 
-    const ZPlaceSchema = z.object(updateBodySchema);
+    if (!id) {
+      return res.status(404).json({
+        status: 404,
+        message: `id was not provided`,
+      });
+    }
+
+    const ZPlaceSchema = z.object(insertBodySchema);
     const validation = ZPlaceSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
@@ -78,7 +109,7 @@ export default class PlaceController {
 
     const updatedPlace = await PlaceRef.update(body, { count: "exact" }).eq(
       "id",
-      String(body.id) // Não sei pq, mas só funcionou quando dei parse pra string
+      String(id) // Não sei pq, mas só funcionou quando dei parse pra string
     );
 
     const { error, count } = updatedPlace;
