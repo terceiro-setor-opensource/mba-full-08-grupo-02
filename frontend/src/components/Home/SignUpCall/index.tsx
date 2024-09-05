@@ -26,7 +26,7 @@ export const SignUpCall = () => {
             navigate('/cadastro')
           }}
         >
-          Cadastre-se
+          {t('getSignUp')}
         </Button>
       </Box>
       <Hide below="md">
