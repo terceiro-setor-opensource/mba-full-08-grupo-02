@@ -2,40 +2,44 @@ import { Request, Response } from "express";
 import { supabase } from "../services/supabase";
 import PlaceResponse from "src/domains/Place";
 import ErrorHandling from "../util/ErrorHandling";
+import { z } from "zod";
 
 const PlaceRef = supabase.from("place");
+
+const insertBodySchema = {
+  name: z.string().min(1),
+  description: z.string().min(1),
+  addressId: z.number().int().positive(),
+  mapsLink: z.string().optional(),
+  linkSocial: z.string().optional(),
+  openingTime: z.string().min(5).max(5),
+  closingTime: z.string().min(5).max(5),
+  is24: z.boolean().optional(),
+  daysOfWeek: z.string().min(1),
+  restrictions: z.string().optional(),
+  observations: z.string().optional(),
+};
+
+const updateBodySchema = {
+  id: z.number().int(),
+  ...insertBodySchema,
+};
 
 export default class PlaceController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    if (!body)
-      return res.status(404).json({ status: 404, message: "Empty body" });
+    const ZPlaceSchema = z.object(insertBodySchema);
+    const validation = ZPlaceSchema.safeParse(body);
+    if (validation.error) {
+      return res.status(404).json({
+        status: 404,
+        message: `Validation error`,
+        errors: validation.error.errors,
+      });
+    }
 
-    const newPlace = body as PlaceResponse;
-
-    const {
-      name,
-      description,
-      addressId,
-      openingTime,
-      closingTime,
-      daysOfWeek,
-    } = newPlace;
-
-    if (
-      !name ||
-      !description ||
-      !addressId ||
-      !openingTime ||
-      !closingTime ||
-      !daysOfWeek
-    )
-      return res
-        .status(404)
-        .json({ status: 404, message: "Please fill all the mandatory fields" });
-
-    const placeInserted = await PlaceRef.insert(newPlace).select();
+    const placeInserted = await PlaceRef.insert(body).select();
 
     const { error } = placeInserted;
     if (error)
@@ -62,37 +66,19 @@ export default class PlaceController {
   static async update(req: Request, res: Response) {
     const { body } = req;
 
-    if (!body)
-      return res.status(404).json({ status: 404, message: "Empty body" });
+    const ZPlaceSchema = z.object(updateBodySchema);
+    const validation = ZPlaceSchema.safeParse(body);
+    if (validation.error) {
+      return res.status(404).json({
+        status: 404,
+        message: `Validation error`,
+        errors: validation.error.errors,
+      });
+    }
 
-    const newPlace = body as PlaceResponse;
-
-    const {
-      id,
-      name,
-      description,
-      addressId,
-      openingTime,
-      closingTime,
-      daysOfWeek,
-    } = newPlace;
-
-    if (
-      !id ||
-      !name ||
-      !description ||
-      !addressId ||
-      !openingTime ||
-      !closingTime ||
-      !daysOfWeek
-    )
-      return res
-        .status(404)
-        .json({ status: 404, message: "Please fill all the mandatory fields" });
-
-    const updatedPlace = await PlaceRef.update(newPlace, { count: "exact" }).eq(
+    const updatedPlace = await PlaceRef.update(body, { count: "exact" }).eq(
       "id",
-      newPlace.id
+      String(body.id) // Não sei pq, mas só funcionou quando dei parse pra string
     );
 
     const { error, count } = updatedPlace;
