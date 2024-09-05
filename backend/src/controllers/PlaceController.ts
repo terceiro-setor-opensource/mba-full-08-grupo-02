@@ -103,20 +103,25 @@ export default class PlaceController {
   static async delete(req: Request, res: Response) {
     const { body } = req;
 
-    if (!body) {
-      return res.status(404).json({ status: 404, message: "Empty body" });
+    const DeleteSchema = z.object({
+      id: z.number().int(),
+      userId: z.number().int(),
+    });
+    const validation = DeleteSchema.safeParse(body);
+    if (validation.error) {
+      return res.status(404).json({
+        status: 404,
+        message: `Validation error`,
+        errors: validation.error.errors,
+      });
     }
-
-    const { id, userId } = body;
-
-    if (!id || !userId)
-      return res
-        .status(404)
-        .json({ status: 404, message: "Please fill all the mandatory fields" });
 
     // In the future there will be here a validation to see if the user with the userId has the permission to delete a place from the database
 
-    const deletedPlace = await PlaceRef.delete({ count: "exact" }).eq("id", id);
+    const deletedPlace = await PlaceRef.delete({ count: "exact" }).eq(
+      "id",
+      body.id
+    );
 
     const { error, count } = deletedPlace;
     if (error)
