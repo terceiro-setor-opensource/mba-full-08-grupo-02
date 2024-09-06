@@ -7,6 +7,7 @@ import benefitsRoutes from "./routes/benefits";
 import accountTypeRoutes from "./routes/accountType";
 import accountRoutes from "./routes/account";
 import addressRoutes from "./routes/address";
+import feedbackRoutes from "./routes/feedback";
 
 const app = express();
 const port = 3000;
@@ -26,6 +27,7 @@ app.use("/benefits", benefitsRoutes);
 app.use("/account_types", accountTypeRoutes);
 app.use("/accounts", accountRoutes);
 app.use("/address", addressRoutes);
+app.use("/feedbacks", feedbackRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
