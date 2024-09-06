@@ -8,6 +8,7 @@ import accountTypeRoutes from "./routes/accountType";
 import accountRoutes from "./routes/account";
 import addressRoutes from "./routes/address";
 import feedbackRoutes from "./routes/feedback";
+import favoritePlaceRoutes from "./routes/favoritePlace";
 
 const app = express();
 const port = 3000;
@@ -28,6 +29,7 @@ app.use("/account_types", accountTypeRoutes);
 app.use("/accounts", accountRoutes);
 app.use("/address", addressRoutes);
 app.use("/feedbacks", feedbackRoutes);
+app.use("/favorite_places", favoritePlaceRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
