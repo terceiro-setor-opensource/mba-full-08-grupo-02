@@ -97,7 +97,7 @@ export default class FavoritePlaceController {
       .eq("userid", body.userid);
 
     if (resultFavorite.error) {
-      return res.status(500).json({ error: resultPlace.error.message });
+      return res.status(500).json({ error: resultFavorite.error.message });
     }
 
     if (resultFavorite.data.length > 0) {
