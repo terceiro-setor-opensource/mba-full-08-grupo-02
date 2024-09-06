@@ -12,9 +12,11 @@ const insertBodySchema = z.object({
   accounttypeid: z.number().int(),
 });
 
-export default class AccountTypeController {
+export default class AccountController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await AccountRef.select("*");
+    const { data, error } = await AccountRef.select(
+      "email, phonenumber, account_type(type, permissions)"
+    );
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -31,7 +33,9 @@ export default class AccountTypeController {
 
   static async findById(req: Request, res: Response) {
     const { id } = req.params;
-    const { data, error } = await AccountRef.select("*").eq("id", id);
+    const { data, error } = await AccountRef.select(
+      "email, phonenumber, account_type(type, permissions)"
+    ).eq("id", id);
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -59,8 +63,9 @@ export default class AccountTypeController {
     }
 
     // implement a hash for the password
-    const inserted = await AccountRef.insert(body).select();
-
+    const inserted = await AccountRef.insert(body).select(
+      "email, phonenumber, account_type(type, permissions)"
+    );
     const { error } = inserted;
     if (error)
       return res
