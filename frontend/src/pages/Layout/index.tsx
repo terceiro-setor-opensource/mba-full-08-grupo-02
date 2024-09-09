@@ -5,7 +5,7 @@ import { Box } from "@chakra-ui/layout"
 
 export const Layout = () => {
     return (
-        <Box w="100vw" h="100vh">
+        <Box w="100%" h="100vh">
             <Header />
             <Outlet />
             <Footer />

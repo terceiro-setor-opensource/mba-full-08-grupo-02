@@ -7,7 +7,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "baseUrl": ".",
+    "baseUrl": "",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -27,5 +27,5 @@
     "noFallthroughCasesInSwitch": true
   },
   // "include": ["src"]
-  "include": ["**/*.ts", "**/*.tsx", "src/i18n.js"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"]
 }
