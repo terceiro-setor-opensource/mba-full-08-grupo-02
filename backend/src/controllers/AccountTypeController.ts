@@ -47,7 +47,7 @@ export default class AccountTypeController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = accountTypeSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -84,7 +84,7 @@ export default class AccountTypeController {
       });
     }
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = accountTypeSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,

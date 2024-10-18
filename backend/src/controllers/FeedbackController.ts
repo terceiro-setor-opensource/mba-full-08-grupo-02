@@ -7,7 +7,7 @@ const UserRef = supabase.from("users");
 const PlaceRef = supabase.from("place");
 const FeedbackRef = supabase.from("feedback");
 
-const insertBodySchema = z.object({
+const feedbackSchema = z.object({
   placeid: z.number().int().positive(),
   userid: z.number().int().positive(),
   rating: z.number().positive(),
@@ -55,7 +55,7 @@ export default class FeedbackController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = feedbackSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -121,7 +121,7 @@ export default class FeedbackController {
       });
     }
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = feedbackSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
