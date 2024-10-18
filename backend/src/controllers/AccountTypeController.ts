@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const AccountTypeRef = supabase.from("account_type");
 
-const insertBodySchema = z.object({
+const accountTypeSchema = z.object({
   type: z.string().min(1),
   permissions: z.string().min(1),
 });
