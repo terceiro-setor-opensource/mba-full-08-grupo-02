@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const BenefitsRef = supabase.from("benefit");
 
-const insertBodySchema = z.object({
+const benefitSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
 });
