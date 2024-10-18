@@ -3,15 +3,20 @@ import { supabase } from "../services/supabase";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
 
-const ImageRef = supabase.from("image");
+const AccountRef = supabase.from("account");
 
-const insertBodySchema = z.object({
-  url: z.string().min(1),
+const accountSchema = z.object({
+  email: z.string().email().min(1),
+  phonenumber: z.string().min(1),
+  password: z.string().min(1),
+  accounttypeid: z.number().int(),
 });
 
-export default class ImageController {
+export default class AccountController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await ImageRef.select("*");
+    const { data, error } = await AccountRef.select(
+      "email, phonenumber, account_type(type, permissions)"
+    );
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -19,7 +24,7 @@ export default class ImageController {
 
     if (data.length === 0) {
       return res.status(204).json({
-        message: "No image found",
+        message: "No account found",
       });
     }
 
@@ -28,7 +33,9 @@ export default class ImageController {
 
   static async findById(req: Request, res: Response) {
     const { id } = req.params;
-    const { data, error } = await ImageRef.select("*").eq("id", id);
+    const { data, error } = await AccountRef.select(
+      "email, phonenumber, account_type(type, permissions)"
+    ).eq("id", id);
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -36,7 +43,7 @@ export default class ImageController {
 
     if (data.length === 0) {
       return res.status(204).json({
-        message: `No image found for the id = ${id}`,
+        message: `No account found for the id = ${id}`,
       });
     }
 
@@ -55,9 +62,11 @@ export default class ImageController {
       });
     }
 
-    const insertedImage = await ImageRef.insert(body).select();
-
-    const { error } = insertedImage;
+    // implement a hash for the password
+    const inserted = await AccountRef.insert(body).select(
+      "email, phonenumber, account_type(type, permissions)"
+    );
+    const { error } = inserted;
     if (error)
       return res
         .status(404)
@@ -65,11 +74,11 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "inserting a new Image"
+            "inserting a new account"
           ).returnObjectRequestError()
         );
 
-    res.status(201).json(insertedImage.data);
+    res.status(201).json(inserted.data);
   }
 
   static async update(req: Request, res: Response) {
@@ -92,12 +101,12 @@ export default class ImageController {
       });
     }
 
-    const updatedImage = await ImageRef.update(body, { count: "exact" }).eq(
+    const updated = await AccountRef.update(body, { count: "exact" }).eq(
       "id",
-      String(id) // Não sei pq, mas só funcionou quando dei parse pra string
+      id // Não sei pq, mas só funcionou quando dei parse pra string
     );
 
-    const { error, count } = updatedImage;
+    const { error, count } = updated;
     if (error)
       return res
         .status(404)
@@ -105,7 +114,7 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "updating Image"
+            "updating account"
           ).returnObjectRequestError()
         );
 
@@ -131,12 +140,14 @@ export default class ImageController {
       });
     }
 
-    const deletedImage = await ImageRef.delete({ count: "exact" }).eq(
+    // In the future there will be here a validation to see if the user with the userId has the permission to delete a place from the database
+
+    const deleted = await AccountRef.delete({ count: "exact" }).eq(
       "id",
       body.id
     );
 
-    const { error, count } = deletedImage;
+    const { error, count } = deleted;
     if (error)
       return res
         .send(401)
@@ -144,7 +155,7 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "removing Image"
+            "removing account"
           ).returnObjectRequestError()
         );
 

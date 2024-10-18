@@ -3,6 +3,12 @@ import placeRoutes from "./routes/PlaceRoutes";
 import activityRouter from "./routes/activity";
 import userRouter from "./routes/users";
 import imageRoutes from "./routes/image";
+import benefitsRoutes from "./routes/benefits";
+import accountTypeRoutes from "./routes/accountType";
+import accountRoutes from "./routes/account";
+import addressRoutes from "./routes/address";
+import feedbackRoutes from "./routes/feedback";
+import favoritePlaceRoutes from "./routes/favoritePlace";
 
 const app = express();
 const port = 3000;
@@ -16,8 +22,14 @@ app.get("/", (req, res) => {
 });
 
 app.use("/users", userRouter);
-app.use("/place", placeRoutes);
-app.use("/image", imageRoutes);
+app.use("/places", placeRoutes);
+app.use("/images", imageRoutes);
+app.use("/benefits", benefitsRoutes);
+app.use("/account_types", accountTypeRoutes);
+app.use("/accounts", accountRoutes);
+app.use("/address", addressRoutes);
+app.use("/feedbacks", feedbackRoutes);
+app.use("/favorite_places", favoritePlaceRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

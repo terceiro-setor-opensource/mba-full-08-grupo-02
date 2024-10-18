@@ -3,15 +3,22 @@ import { supabase } from "../services/supabase";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
 
-const ImageRef = supabase.from("image");
+const UserRef = supabase.from("users");
+const PlaceRef = supabase.from("place");
+const FeedbackRef = supabase.from("feedback");
 
 const insertBodySchema = z.object({
-  url: z.string().min(1),
+  placeid: z.number().int().positive(),
+  userid: z.number().int().positive(),
+  rating: z.number().positive(),
+  description: z.string(),
 });
 
-export default class ImageController {
+export default class FeedbackController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await ImageRef.select("*");
+    const { data, error } = await FeedbackRef.select(
+      "description, rating, users(name), place(name)"
+    );
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -19,7 +26,7 @@ export default class ImageController {
 
     if (data.length === 0) {
       return res.status(204).json({
-        message: "No image found",
+        message: "No feedback found",
       });
     }
 
@@ -28,7 +35,9 @@ export default class ImageController {
 
   static async findById(req: Request, res: Response) {
     const { id } = req.params;
-    const { data, error } = await ImageRef.select("*").eq("id", id);
+    const { data, error } = await FeedbackRef.select(
+      "description, rating, users(name), place(name)"
+    ).eq("id", id);
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -36,7 +45,7 @@ export default class ImageController {
 
     if (data.length === 0) {
       return res.status(204).json({
-        message: `No image found for the id = ${id}`,
+        message: `No feedback found for the id = ${id}`,
       });
     }
 
@@ -55,9 +64,38 @@ export default class ImageController {
       });
     }
 
-    const insertedImage = await ImageRef.insert(body).select();
+    // checking if the user exists
+    const resultUser = await UserRef.select("name").eq("id", body.userid);
 
-    const { error } = insertedImage;
+    if (resultUser.error) {
+      return res.status(500).json({ error: resultUser.error.message });
+    }
+
+    if (resultUser.data.length === 0) {
+      return res.status(404).json({
+        message: `No user found for the id = ${body.userid}`,
+      });
+    }
+
+    // checking if the place exists
+    const resultPlace = await PlaceRef.select("name").eq("id", String(body.placeid));
+
+    if (resultPlace.error) {
+      return res.status(500).json({ error: resultPlace.error.message });
+    }
+
+    if (resultPlace.data.length === 0) {
+      return res.status(404).json({
+        message: `No place found for the id = ${body.placeid}`,
+      });
+    }
+
+    // Everithing is ok, so insert
+    const inserted = await FeedbackRef.insert(body).select(
+      "description, rating, users(name), place(name)"
+    );
+
+    const { error } = inserted;
     if (error)
       return res
         .status(404)
@@ -65,11 +103,11 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "inserting a new Image"
+            "inserting a new feedback"
           ).returnObjectRequestError()
         );
 
-    res.status(201).json(insertedImage.data);
+    res.status(201).json(inserted.data);
   }
 
   static async update(req: Request, res: Response) {
@@ -92,12 +130,12 @@ export default class ImageController {
       });
     }
 
-    const updatedImage = await ImageRef.update(body, { count: "exact" }).eq(
+    const updated = await FeedbackRef.update(body, { count: "exact" }).eq(
       "id",
-      String(id) // Não sei pq, mas só funcionou quando dei parse pra string
+      id // Não sei pq, mas só funcionou quando dei parse pra string
     );
 
-    const { error, count } = updatedImage;
+    const { error, count } = updated;
     if (error)
       return res
         .status(404)
@@ -105,7 +143,7 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "updating Image"
+            "updating feedback"
           ).returnObjectRequestError()
         );
 
@@ -131,12 +169,14 @@ export default class ImageController {
       });
     }
 
-    const deletedImage = await ImageRef.delete({ count: "exact" }).eq(
+    // In the future there will be here a validation to see if the user with the userId has the permission to delete a place from the database
+
+    const deleted = await FeedbackRef.delete({ count: "exact" }).eq(
       "id",
       body.id
     );
 
-    const { error, count } = deletedImage;
+    const { error, count } = deleted;
     if (error)
       return res
         .send(401)
@@ -144,7 +184,7 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "removing Image"
+            "removing feedback"
           ).returnObjectRequestError()
         );
 

@@ -3,15 +3,20 @@ import { supabase } from "../services/supabase";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
 
-const ImageRef = supabase.from("image");
+const UserRef = supabase.from("users");
+const PlaceRef = supabase.from("place");
+const FavoritePlaceRef = supabase.from("favorite_place");
 
 const insertBodySchema = z.object({
-  url: z.string().min(1),
+  placeid: z.number().int().positive(),
+  userid: z.number().int().positive(),
 });
 
-export default class ImageController {
+export default class FavoritePlaceController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await ImageRef.select("*");
+    const { data, error } = await FavoritePlaceRef.select(
+      "users(id, name), place(*)"
+    );
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -19,7 +24,7 @@ export default class ImageController {
 
     if (data.length === 0) {
       return res.status(204).json({
-        message: "No image found",
+        message: "No favorite place found",
       });
     }
 
@@ -27,8 +32,10 @@ export default class ImageController {
   }
 
   static async findById(req: Request, res: Response) {
-    const { id } = req.params;
-    const { data, error } = await ImageRef.select("*").eq("id", id);
+    const { userid } = req.params;
+    const { data, error } = await FavoritePlaceRef.select(
+      "users(id, name), place(*)"
+    ).eq("userid", userid);
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -36,7 +43,7 @@ export default class ImageController {
 
     if (data.length === 0) {
       return res.status(204).json({
-        message: `No image found for the id = ${id}`,
+        message: `No favorite place found for the id = ${userid}`,
       });
     }
 
@@ -55,9 +62,56 @@ export default class ImageController {
       });
     }
 
-    const insertedImage = await ImageRef.insert(body).select();
+    // checking if the user exists
+    const resultUser = await UserRef.select("name").eq("id", body.userid);
 
-    const { error } = insertedImage;
+    if (resultUser.error) {
+      return res.status(500).json({ error: resultUser.error.message });
+    }
+
+    if (resultUser.data.length === 0) {
+      return res.status(404).json({
+        message: `No user found for the id = ${body.userid}`,
+      });
+    }
+
+    // checking if the place exists
+    const resultPlace = await PlaceRef.select("name").eq(
+      "id",
+      String(body.placeid)
+    );
+
+    if (resultPlace.error) {
+      return res.status(500).json({ error: resultPlace.error.message });
+    }
+
+    if (resultPlace.data.length === 0) {
+      return res.status(404).json({
+        message: `No place found for the id = ${body.placeid}`,
+      });
+    }
+
+    // checking if the place has already been set as favorite by the user
+    const resultFavorite = await FavoritePlaceRef.select("id")
+      .eq("placeid", body.placeid)
+      .eq("userid", body.userid);
+
+    if (resultFavorite.error) {
+      return res.status(500).json({ error: resultFavorite.error.message });
+    }
+
+    if (resultFavorite.data.length > 0) {
+      return res.status(404).json({
+        message: `This place has already been set as favorite by this user`,
+      });
+    }
+
+    // Everithing is ok, so insert
+    const inserted = await FavoritePlaceRef.insert(body).select(
+      "users(id, name), place(*)"
+    );
+
+    const { error } = inserted;
     if (error)
       return res
         .status(404)
@@ -65,11 +119,11 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "inserting a new Image"
+            "inserting a new favorite place"
           ).returnObjectRequestError()
         );
 
-    res.status(201).json(insertedImage.data);
+    res.status(201).json(inserted.data);
   }
 
   static async update(req: Request, res: Response) {
@@ -92,12 +146,12 @@ export default class ImageController {
       });
     }
 
-    const updatedImage = await ImageRef.update(body, { count: "exact" }).eq(
+    const updated = await FavoritePlaceRef.update(body, { count: "exact" }).eq(
       "id",
-      String(id) // Não sei pq, mas só funcionou quando dei parse pra string
+      id // Não sei pq, mas só funcionou quando dei parse pra string
     );
 
-    const { error, count } = updatedImage;
+    const { error, count } = updated;
     if (error)
       return res
         .status(404)
@@ -105,7 +159,7 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "updating Image"
+            "updating favorite place"
           ).returnObjectRequestError()
         );
 
@@ -131,12 +185,14 @@ export default class ImageController {
       });
     }
 
-    const deletedImage = await ImageRef.delete({ count: "exact" }).eq(
+    // In the future there will be here a validation to see if the user with the userId has the permission to delete a place from the database
+
+    const deleted = await FavoritePlaceRef.delete({ count: "exact" }).eq(
       "id",
       body.id
     );
 
-    const { error, count } = deletedImage;
+    const { error, count } = deleted;
     if (error)
       return res
         .send(401)
@@ -144,7 +200,7 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "removing Image"
+            "removing favorite place"
           ).returnObjectRequestError()
         );
 

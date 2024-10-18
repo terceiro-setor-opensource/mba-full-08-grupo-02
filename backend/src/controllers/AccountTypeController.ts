@@ -3,15 +3,16 @@ import { supabase } from "../services/supabase";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
 
-const ImageRef = supabase.from("image");
+const AccountTypeRef = supabase.from("account_type");
 
-const insertBodySchema = z.object({
-  url: z.string().min(1),
+const accountTypeSchema = z.object({
+  type: z.string().min(1),
+  permissions: z.string().min(1),
 });
 
-export default class ImageController {
+export default class AccountTypeController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await ImageRef.select("*");
+    const { data, error } = await AccountTypeRef.select("*");
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -19,7 +20,7 @@ export default class ImageController {
 
     if (data.length === 0) {
       return res.status(204).json({
-        message: "No image found",
+        message: "No account type found",
       });
     }
 
@@ -28,7 +29,7 @@ export default class ImageController {
 
   static async findById(req: Request, res: Response) {
     const { id } = req.params;
-    const { data, error } = await ImageRef.select("*").eq("id", id);
+    const { data, error } = await AccountTypeRef.select("*").eq("id", id);
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -36,7 +37,7 @@ export default class ImageController {
 
     if (data.length === 0) {
       return res.status(204).json({
-        message: `No image found for the id = ${id}`,
+        message: `No account type found for the id = ${id}`,
       });
     }
 
@@ -55,9 +56,9 @@ export default class ImageController {
       });
     }
 
-    const insertedImage = await ImageRef.insert(body).select();
+    const inserted = await AccountTypeRef.insert(body).select();
 
-    const { error } = insertedImage;
+    const { error } = inserted;
     if (error)
       return res
         .status(404)
@@ -65,11 +66,11 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "inserting a new Image"
+            "inserting a new account type"
           ).returnObjectRequestError()
         );
 
-    res.status(201).json(insertedImage.data);
+    res.status(201).json(inserted.data);
   }
 
   static async update(req: Request, res: Response) {
@@ -92,12 +93,12 @@ export default class ImageController {
       });
     }
 
-    const updatedImage = await ImageRef.update(body, { count: "exact" }).eq(
+    const updated = await AccountTypeRef.update(body, { count: "exact" }).eq(
       "id",
-      String(id) // Não sei pq, mas só funcionou quando dei parse pra string
+      id // Não sei pq, mas só funcionou quando dei parse pra string
     );
 
-    const { error, count } = updatedImage;
+    const { error, count } = updated;
     if (error)
       return res
         .status(404)
@@ -105,7 +106,7 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "updating Image"
+            "updating account type"
           ).returnObjectRequestError()
         );
 
@@ -131,12 +132,14 @@ export default class ImageController {
       });
     }
 
-    const deletedImage = await ImageRef.delete({ count: "exact" }).eq(
+    // In the future there will be here a validation to see if the user with the userId has the permission to delete a place from the database
+
+    const deleted = await AccountTypeRef.delete({ count: "exact" }).eq(
       "id",
       body.id
     );
 
-    const { error, count } = deletedImage;
+    const { error, count } = deleted;
     if (error)
       return res
         .send(401)
@@ -144,7 +147,7 @@ export default class ImageController {
           new ErrorHandling(
             error.code,
             error.message,
-            "removing Image"
+            "removing account type"
           ).returnObjectRequestError()
         );
 
