@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const AccountRef = supabase.from("account");
 
-const insertBodySchema = z.object({
+const accountSchema = z.object({
   email: z.string().email().min(1),
   phonenumber: z.string().min(1),
   password: z.string().min(1),
