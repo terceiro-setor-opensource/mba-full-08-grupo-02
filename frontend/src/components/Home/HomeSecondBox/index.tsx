@@ -27,8 +27,8 @@ export const HomeSecondBox = () => {
           bgColor="green.100"
           bgSize="cover"
         >
-          {bannerInformation.map((item) => (
-            <VStack justifyContent="start" alignItems="center">
+          {bannerInformation.map((item, index) => (
+            <VStack justifyContent="start" alignItems="center" key={index}>
               <Box as={item.icon} color="purple.100" size="4rem" />
               <Text
                 maxW="200px"

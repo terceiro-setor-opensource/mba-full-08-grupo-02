@@ -15,7 +15,8 @@ export const useGetPlacesAroundMe = ({
     {
       id: '1',
       name: 'Parque ibirapuera',
-      address: 'Av. Pedro Álvares Cabral - Vila Mariana, São Paulo - SP, 04094-050',
+      address:
+        'Av. Pedro Álvares Cabral - Vila Mariana, São Paulo - SP, 04094-050',
       distance: 1.5,
       rating: 4.5,
       image:

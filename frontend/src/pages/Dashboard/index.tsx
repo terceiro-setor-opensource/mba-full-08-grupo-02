@@ -57,7 +57,10 @@ export const Dashboard = () => {
           </HStack>
         </Stack>
         <Stack padding={'3rem'}>
-          <ChooseActivity title={t('dashboard.lookingFor')} color="neutral.500" />
+          <ChooseActivity
+            title={t('dashboard.lookingFor')}
+            color="neutral.500"
+          />
         </Stack>
         <Stack>
           <Text textStyle="h2" fontSize="2rem" alignSelf="start">

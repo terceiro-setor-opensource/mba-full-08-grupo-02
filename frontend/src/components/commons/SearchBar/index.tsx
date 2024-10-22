@@ -1,4 +1,9 @@
-import { Input, InputGroup, InputLeftElement, InputProps } from '@chakra-ui/react'
+import {
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputProps,
+} from '@chakra-ui/react'
 import { BiSearch } from 'react-icons/bi'
 
 type SearchBarProps = InputProps & {
@@ -6,7 +11,11 @@ type SearchBarProps = InputProps & {
   onSearch: (value: string) => void
 }
 
-export const SearchBar = ({ placeholder, onSearch, ...props }: SearchBarProps) => {
+export const SearchBar = ({
+  placeholder,
+  onSearch,
+  ...props
+}: SearchBarProps) => {
   return (
     <>
       <InputGroup borderRadius={5} size="md">

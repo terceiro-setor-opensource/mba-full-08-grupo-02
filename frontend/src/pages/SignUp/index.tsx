@@ -65,7 +65,9 @@ export const SignUp = () => {
                   required: 'Nome é obrigatório',
                 })}
               />
-              {!!errors.name && <FormErrorMessage>{errors.name.message}</FormErrorMessage>}
+              {!!errors.name && (
+                <FormErrorMessage>{errors.name.message}</FormErrorMessage>
+              )}
             </FormControl>
             <FormControl isInvalid={!!errors.email}>
               <FormLabel htmlFor="email" mt={12}>
@@ -83,7 +85,9 @@ export const SignUp = () => {
                   },
                 })}
               />
-              {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
+              {!!errors.email && (
+                <FormErrorMessage>{errors.email.message}</FormErrorMessage>
+              )}
             </FormControl>
             <FormControl isInvalid={!!errors.password}>
               <FormLabel htmlFor="password" mt={12}>
@@ -107,7 +111,9 @@ export const SignUp = () => {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              {!!errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
+              {!!errors.password && (
+                <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+              )}
             </FormControl>
             <FormControl isInvalid={!!errors.terms}>
               <Checkbox
@@ -119,10 +125,16 @@ export const SignUp = () => {
                 {t('formSignUp.terms')}
               </Checkbox>
               {!!errors.terms && (
-                <FormErrorMessage> {t('formSignUp.requiredTerms')}</FormErrorMessage>
+                <FormErrorMessage>
+                  {' '}
+                  {t('formSignUp.requiredTerms')}
+                </FormErrorMessage>
               )}
             </FormControl>
-            <FormButton isLoading={isSubmitting} title={t('formSignUp.register')} />
+            <FormButton
+              isLoading={isSubmitting}
+              title={t('formSignUp.register')}
+            />
           </form>
         </VStack>
         <SocialMedia />

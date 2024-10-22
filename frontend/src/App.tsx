@@ -1,4 +1,3 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Layout } from './pages/Layout'
 import { Home } from './pages/Home'
 import { SignUp } from './pages/SignUp'
@@ -8,28 +7,43 @@ import { SignIn } from './pages/SignIn'
 import { ProtectedRoute } from './components/commons/ProtectedRoute'
 import { Dashboard } from './pages/Dashboard'
 import { AuthProvider } from './contexts/AuthContext'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-function App() {
-  return (
-    <BrowserRouter>
+// Define the routes using createBrowserRouter
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: 'register',
+        element: <SignUp />,
+      },
+      {
+        path: 'login',
+        element: <SignIn />,
+      },
+      {
+        path: 'dashboard',
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
+      },
+    ],
+  },
+])
+
+  function App() {
+    return (
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="/cadastro" element={<SignUp />} />
-            <Route path="/login" element={<SignIn />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-        </Routes>
+        <RouterProvider router={router} />
       </AuthProvider>
-    </BrowserRouter>
   )
 }
 

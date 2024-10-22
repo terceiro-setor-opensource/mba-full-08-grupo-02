@@ -11,7 +11,11 @@ const responsiveWidth = {
 export const SearchAndFilter = () => (
   <>
     <Box width="100%">
-      <SearchBar placeholder={t('dashboard.searchPlace')} onSearch={console.log} variant="filled" />
+      <SearchBar
+        placeholder={t('dashboard.searchPlace')}
+        onSearch={console.log}
+        variant="filled"
+      />
     </Box>
     <Button width={responsiveWidth}>
       <BiFilter />

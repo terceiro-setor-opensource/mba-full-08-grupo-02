@@ -29,7 +29,7 @@ export const Header = () => {
       borderBottom="1px"
       borderBottomColor="neutral.300"
     >
-      <Button
+      <ButtonGroup
         variant="ghost"
         _hover={{ bg: 'transparent' }}
         onClick={() => {
@@ -45,7 +45,7 @@ export const Header = () => {
         <Heading color="neutral.400" size={{ base: 'sm', md: 'md', lg: 'md' }}>
           {t('activeCity')}
         </Heading>
-      </Button>
+      </ButtonGroup>
       <Spacer />
       <Hide above="md">
         <Menu>
@@ -78,7 +78,6 @@ export const Header = () => {
                 </MenuItem>
               </>
             )}
-
           </MenuList>
         </Menu>
       </Hide>
@@ -87,10 +86,20 @@ export const Header = () => {
           <Button cursor="pointer" fontSize={'button'} variant="link">
             {t('maps')}
           </Button>
-          <Button cursor="pointer" fontSize={'button'} variant="link" color="neutral.400">
+          <Button
+            cursor="pointer"
+            fontSize={'button'}
+            variant="link"
+            color="neutral.400"
+          >
             {t('search')}
           </Button>
-          <Button cursor="pointer" fontSize={'button'} variant="link" color="neutral.400">
+          <Button
+            cursor="pointer"
+            fontSize={'button'}
+            variant="link"
+            color="neutral.400"
+          >
             {t('about')}
           </Button>
           {!user && (
@@ -111,7 +120,9 @@ export const Header = () => {
           {user && (
             <Menu>
               <MenuButton as={Button} backgroundColor={'transparent'}>
-                <Box style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Box
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+                >
                   <Img
                     borderRadius="50%"
                     src={'https://eu.ui-avatars.com/api/?name=U+Fe&size=250'}
