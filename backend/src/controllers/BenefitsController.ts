@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const BenefitsRef = supabase.from("benefit");
 
-const insertBodySchema = z.object({
+const benefitSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
 });
@@ -47,7 +47,7 @@ export default class BenefitsController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = benefitSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -84,7 +84,7 @@ export default class BenefitsController {
       });
     }
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = benefitSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,

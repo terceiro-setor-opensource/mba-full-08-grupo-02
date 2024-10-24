@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const AddressRef = supabase.from("address");
 
-const insertBodySchema = z.object({
+const addressSchema = z.object({
   addressnumber: z.string().min(1).max(10),
   postalcode: z.string().min(1).max(9),
   streetname: z.string().min(1),
@@ -55,7 +55,7 @@ export default class AddressController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = addressSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -92,7 +92,7 @@ export default class AddressController {
       });
     }
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = addressSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,

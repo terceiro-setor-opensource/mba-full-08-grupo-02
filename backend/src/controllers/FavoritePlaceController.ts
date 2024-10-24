@@ -7,7 +7,7 @@ const UserRef = supabase.from("users");
 const PlaceRef = supabase.from("place");
 const FavoritePlaceRef = supabase.from("favorite_place");
 
-const insertBodySchema = z.object({
+const favoritePlaceSchema = z.object({
   placeid: z.number().int().positive(),
   userid: z.number().int().positive(),
 });
@@ -53,7 +53,7 @@ export default class FavoritePlaceController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = favoritePlaceSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -137,7 +137,7 @@ export default class FavoritePlaceController {
       });
     }
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = favoritePlaceSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,

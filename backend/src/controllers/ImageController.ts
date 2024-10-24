@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const ImageRef = supabase.from("image");
 
-const insertBodySchema = z.object({
+const imageSchema = z.object({
   url: z.string().min(1),
 });
 
@@ -46,7 +46,7 @@ export default class ImageController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = imageSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -83,7 +83,7 @@ export default class ImageController {
       });
     }
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = imageSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,

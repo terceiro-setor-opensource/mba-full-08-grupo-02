@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const AccountRef = supabase.from("account");
 
-const insertBodySchema = z.object({
+const accountSchema = z.object({
   email: z.string().email().min(1),
   phonenumber: z.string().min(1),
   password: z.string().min(1),
@@ -53,7 +53,7 @@ export default class AccountController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = accountSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -92,7 +92,7 @@ export default class AccountController {
       });
     }
 
-    const validation = insertBodySchema.safeParse(body);
+    const validation = accountSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,

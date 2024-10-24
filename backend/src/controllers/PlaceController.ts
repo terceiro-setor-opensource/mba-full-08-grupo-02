@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import { supabase } from "../services/supabase";
-import PlaceResponse from "src/domains/Place";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
 
 const PlaceRef = supabase.from("place");
 
-const insertBodySchema = {
+const placeSchema = {
   name: z.string().min(1),
   description: z.string().min(1),
   addressId: z.number().int().positive(),
@@ -24,7 +23,7 @@ export default class PlaceController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const ZPlaceSchema = z.object(insertBodySchema);
+    const ZPlaceSchema = z.object(placeSchema);
     const validation = ZPlaceSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
@@ -97,7 +96,7 @@ export default class PlaceController {
       });
     }
 
-    const ZPlaceSchema = z.object(insertBodySchema);
+    const ZPlaceSchema = z.object(placeSchema);
     const validation = ZPlaceSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
