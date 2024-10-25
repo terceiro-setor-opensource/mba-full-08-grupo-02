@@ -79,3 +79,15 @@ create table event (
   name text,
   url text
 );
+
+ALTER TABLE place
+ALTER COLUMN "addressId" TYPE bigint USING "addressId"::bigint;
+
+UPDATE place
+SET "addressId" = 1
+WHERE "addressId" NOT IN (SELECT id FROM address);
+
+ALTER TABLE place
+ADD CONSTRAINT fk_place_address
+FOREIGN KEY ("addressId")
+REFERENCES address(id);

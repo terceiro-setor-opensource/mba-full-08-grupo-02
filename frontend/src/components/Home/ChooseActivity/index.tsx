@@ -11,15 +11,28 @@ export const ChooseActivity = ({
   title = 'Escolha sua atividade favorita',
   color = 'neutral.400',
 }: ChooseActivityProps) => {
+  function handleNavigateToActivity(activity: string) {
+    window.location.href = `/places?q=${activity}`
+  }
+
   return (
     <HStack justifyContent="center" padding={60}>
       <VStack>
         <Text textAlign="center" textStyle={'h1'} color={color}>
           {title}
         </Text>
-        <HStack wrap="wrap" gap={{ base: 2, md: 2, lg: 6 }} p={4} justifyContent="space-around">
+        <HStack
+          wrap="wrap"
+          gap={{ base: 2, md: 2, lg: 6 }}
+          p={4}
+          justifyContent="space-around"
+        >
           {chooseActivity.map((item, index) => (
-            <VStack key={index} gap={2}>
+            <VStack
+              key={index}
+              gap={2}
+              onClick={() => handleNavigateToActivity(item.activity)}
+            >
               <IconButton
                 aria-label={item.activity}
                 icon={<Icon as={item.icon} color="#46F08F" w={12} h={12} />}

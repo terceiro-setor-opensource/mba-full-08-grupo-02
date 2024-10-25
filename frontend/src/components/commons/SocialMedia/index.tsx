@@ -22,8 +22,8 @@ export const SocialMedia = () => {
           border={'solid'}
           borderColor={theme.colors.neutral['100']}
           shadow="md"
-          w='52px'
-          height='52px'
+          w="52px"
+          height="52px"
         />
         <IconButton
           aria-label={'facebook'}
@@ -33,9 +33,8 @@ export const SocialMedia = () => {
           border={'solid'}
           borderColor={theme.colors.neutral['100']}
           shadow="md"
-          w='52px'
-          height='52px'
-
+          w="52px"
+          height="52px"
         />
         <IconButton
           aria-label={'facebook'}
@@ -45,8 +44,8 @@ export const SocialMedia = () => {
           border={'solid'}
           borderColor={theme.colors.neutral['100']}
           shadow="md"
-          w='52px'
-          height='52px'
+          w="52px"
+          height="52px"
         />
       </HStack>
     </>

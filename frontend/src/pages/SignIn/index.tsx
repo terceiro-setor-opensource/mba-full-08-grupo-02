@@ -63,8 +63,15 @@ export const SignIn = () => {
               <FormLabel htmlFor="email" mt={12}>
                 {t('formSignUp.email')}
               </FormLabel>
-              <Input type="email" size="lg" placeholder="Email" {...register('email')} />
-              {!!errors.email && <FormErrorMessage>{errors.email.message}</FormErrorMessage>}
+              <Input
+                type="email"
+                size="lg"
+                placeholder="Email"
+                {...register('email')}
+              />
+              {!!errors.email && (
+                <FormErrorMessage>{errors.email.message}</FormErrorMessage>
+              )}
             </FormControl>
             <FormControl isInvalid={!!errors.password}>
               <FormLabel htmlFor="password" mt={12}>
@@ -82,7 +89,9 @@ export const SignIn = () => {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              {!!errors.password && <FormErrorMessage>{errors.password.message}</FormErrorMessage>}
+              {!!errors.password && (
+                <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+              )}
             </FormControl>
             <FormButton isLoading={isSubmitting} title={t('entry')} />
           </form>
@@ -90,7 +99,7 @@ export const SignIn = () => {
         <SocialMedia />
         <HStack justifyContent="center" pt={theme.space[36]}>
           <Text color={theme.colors.neutral['400']}>{t('doentAccount')}</Text>
-          <Link color={theme.colors.neutral['500']} to={'/cadastro'}>
+          <Link color={theme.colors.neutral['500']} to={'/register'}>
             {t('formSignUp.register')}
           </Link>
         </HStack>

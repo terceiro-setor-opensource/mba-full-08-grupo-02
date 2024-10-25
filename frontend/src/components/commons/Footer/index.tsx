@@ -29,8 +29,12 @@ export const Footer = () => {
           <ListItem cursor="pointer">{t('locations')}</ListItem>
           <ListItem cursor="pointer">{t('events')}</ListItem>
           <ListItem cursor="pointer">{t('benefits')}</ListItem>
-          <ListItem cursor="pointer"><Link to={'/login'}>{t('login')}</Link></ListItem>
-          <ListItem cursor="pointer" ><Link to={'/cadastro'}>{t('signUp')}</Link></ListItem>
+          <ListItem cursor="pointer">
+            <Link to={'/login'}>{t('login')}</Link>
+          </ListItem>
+          <ListItem cursor="pointer">
+            <Link to={'/register'}>{t('signUp')}</Link>
+          </ListItem>
         </UnorderedList>
       </VStack>
       <HStack pt={2} wrap="wrap" justifyContent="space-between">

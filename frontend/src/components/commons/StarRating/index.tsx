@@ -16,7 +16,11 @@ const StarRating: React.FC<StarRatingProps> = ({
     <HStack spacing="1" alignItems="center">
       <HStack spacing="0.5" color="yellow.400">
         {Array.from({ length: maxRating }, (_, i) => (
-          <Icon as={AiFillStar} key={i} color={i < rating ? 'yellow.400' : 'gray.300'} />
+          <Icon
+            as={AiFillStar}
+            key={i}
+            color={i < rating ? 'yellow.400' : 'gray.300'}
+          />
         ))}
       </HStack>
       {reviewCount !== undefined && (
