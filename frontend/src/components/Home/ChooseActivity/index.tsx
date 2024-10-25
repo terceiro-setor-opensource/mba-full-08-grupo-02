@@ -11,9 +11,8 @@ export const ChooseActivity = ({
   title = 'Escolha sua atividade favorita',
   color = 'neutral.400',
 }: ChooseActivityProps) => {
-
   function handleNavigateToActivity(activity: string) {
-    window.location.href = `/activities?q=${activity}`
+    window.location.href = `/places?q=${activity}`
   }
 
   return (
@@ -29,7 +28,11 @@ export const ChooseActivity = ({
           justifyContent="space-around"
         >
           {chooseActivity.map((item, index) => (
-            <VStack key={index} gap={2} onClick={() => handleNavigateToActivity(item.activity)}>
+            <VStack
+              key={index}
+              gap={2}
+              onClick={() => handleNavigateToActivity(item.activity)}
+            >
               <IconButton
                 aria-label={item.activity}
                 icon={<Icon as={item.icon} color="#46F08F" w={12} h={12} />}

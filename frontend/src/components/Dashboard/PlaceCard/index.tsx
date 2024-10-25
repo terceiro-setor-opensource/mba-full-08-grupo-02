@@ -1,20 +1,19 @@
 import { Image, Text } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import StarRating from '@/components/commons/StarRating'
+import { Place } from '@/models/place'
 
-const PlaceCard: React.FC<PlaceCardProps> = ({
-  imageUrl,
-  title,
-  address,
-  rating,
-  reviewCount,
-}: PlaceCardProps) => {
+type PlaceCardProps = {
+  place: Place
+  onClick?: () => void
+}
+const PlaceCard = ({ place, onClick }: PlaceCardProps) => {
   return (
-    <Card>
+    <Card onClick={onClick}>
       <CardHeader padding={0} borderTopEndRadius={4} borderTopStartRadius={4}>
         <Image
-          src={imageUrl}
-          alt={title}
+          src={place.image}
+          alt={place.name}
           objectFit="cover"
           width="100%"
           height="200px"
@@ -24,14 +23,18 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
       </CardHeader>
       <CardBody textAlign={'start'} paddingBottom={0}>
         <Text fontWeight="bold" fontSize="lg">
-          {title}
+          {place.name}
         </Text>
         <Text color="gray.600" fontSize="sm">
-          {address}
+          {place.address.streetname} - {place.address.neighborhood},{' '}
+          {place.address.addressnumber}
         </Text>
       </CardBody>
       <CardFooter>
-        <StarRating rating={rating} reviewCount={reviewCount} />
+        <StarRating
+          rating={place.rating_avg || 0}
+          reviewCount={place.feedback.length}
+        />
       </CardFooter>
     </Card>
   )

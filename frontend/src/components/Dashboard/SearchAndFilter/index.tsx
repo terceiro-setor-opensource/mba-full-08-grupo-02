@@ -8,12 +8,16 @@ const responsiveWidth = {
   base: '100%',
   md: 'auto',
 }
-export const SearchAndFilter = () => (
+type SearchAndFilterProps = {
+  onSearch: (search: string) => void
+}
+
+export const SearchAndFilter = ({ onSearch }: SearchAndFilterProps) => (
   <>
     <Box width="100%">
       <SearchBar
         placeholder={t('dashboard.searchPlace')}
-        onSearch={console.log}
+        onSearch={onSearch}
         variant="filled"
       />
     </Box>
