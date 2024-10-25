@@ -1,19 +1,22 @@
 import { Layout } from './pages/Layout'
 import { Home } from './pages/Home'
 import { SignUp } from './pages/SignUp'
-
 import './i18n'
 import { SignIn } from './pages/SignIn'
 import { ProtectedRoute } from './components/commons/ProtectedRoute'
 import { Dashboard } from './pages/Dashboard'
 import { AuthProvider } from './contexts/AuthContext'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { Places } from './pages/Places'
 
-// Define the routes using createBrowserRouter
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: (
+      <AuthProvider>
+        <Layout />
+      </AuthProvider>
+    ),
     children: [
       {
         index: true,
@@ -28,6 +31,10 @@ const router = createBrowserRouter([
         element: <SignIn />,
       },
       {
+        path: 'places',
+        element: <Places />,
+      },
+      {
         path: 'dashboard',
         element: (
           <ProtectedRoute>
@@ -39,12 +46,8 @@ const router = createBrowserRouter([
   },
 ])
 
-  function App() {
-    return (
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-  )
+function App() {
+  return <RouterProvider router={router} />
 }
 
 export default App
