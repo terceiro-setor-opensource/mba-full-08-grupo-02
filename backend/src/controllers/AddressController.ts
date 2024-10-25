@@ -2,68 +2,50 @@ import { Request, Response } from "express";
 import { supabase } from "../services/supabase";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
-import { ExtendedPlace } from "src/domains/Place";
 
-const PlaceRef = supabase.from("place");
+const AddressRef = supabase.from("address");
 
-const placeSchema = {
-  name: z.string().min(1),
-  description: z.string().min(1),
-  addressId: z.number().int().positive(),
-  mapsLink: z.string().optional(),
-  linkSocial: z.string().optional(),
-  openingTime: z.string().min(5).max(5),
-  closingTime: z.string().min(5).max(5),
-  is24: z.boolean().optional(),
-  daysOfWeek: z.string().min(1),
-  restrictions: z.string().optional(),
-  observations: z.string().optional(),
-};
+const addressSchema = z.object({
+  addressnumber: z.string().min(1).max(10),
+  postalcode: z.string().min(1).max(9),
+  streetname: z.string().min(1),
+  neighborhood: z.string().min(1),
+  city: z.string().min(1),
+  state: z.string().min(1),
+  complement: z.string().optional(),
+  reference: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+});
 
-export default class PlaceController {
-
-
+export default class AddressController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await PlaceRef
-    .select(`
-      *,
-      address(*),
-      place_image(imageid),
-      feedback(rating)
-    `)
+    const { data, error } = await AddressRef.select("*");
 
-    if(error) {
+    if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    if(data.length === 0) {
+    if (data.length === 0) {
       return res.status(204).json({
-        message: "No places found"
+        message: "No address found",
       });
     }
-     const places: ExtendedPlace[] = data?.map((place) => {
-      return {
-        ...place,
-        address: place.address,
-        image: 'https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        rating_avg: place.feedback.reduce((acc, curr) => acc + curr.rating, 0) / place.feedback.length
-      };
-    });
 
-    res.status(201).json(places);
+    res.status(201).json(data);
   }
-  
+
   static async findById(req: Request, res: Response) {
     const { id } = req.params;
-    const { data, error } = await PlaceRef.select("*").eq("id", id);
+    const { data, error } = await AddressRef.select("*").eq("id", id);
 
-    if(error) {
+    if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    if(data.length === 0) {
+    if (data.length === 0) {
       return res.status(204).json({
-        message: `No place found for the id = ${id}`
+        message: `No address found for the id = ${id}`,
       });
     }
 
@@ -73,8 +55,7 @@ export default class PlaceController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const ZPlaceSchema = z.object(placeSchema);
-    const validation = ZPlaceSchema.safeParse(body);
+    const validation = addressSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -83,9 +64,9 @@ export default class PlaceController {
       });
     }
 
-    const placeInserted = await PlaceRef.insert(body).select();
+    const inserted = await AddressRef.insert(body).select();
 
-    const { error } = placeInserted;
+    const { error } = inserted;
     if (error)
       return res
         .status(404)
@@ -93,13 +74,11 @@ export default class PlaceController {
           new ErrorHandling(
             error.code,
             error.message,
-            "inserting a new Place"
+            "inserting a new address"
           ).returnObjectRequestError()
         );
 
-    const { data } = placeInserted;
-
-    res.status(201).json(data);
+    res.status(201).json(inserted.data);
   }
 
   static async update(req: Request, res: Response) {
@@ -113,8 +92,7 @@ export default class PlaceController {
       });
     }
 
-    const ZPlaceSchema = z.object(placeSchema);
-    const validation = ZPlaceSchema.safeParse(body);
+    const validation = addressSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -123,12 +101,12 @@ export default class PlaceController {
       });
     }
 
-    const updatedPlace = await PlaceRef.update(body, { count: "exact" }).eq(
+    const updated = await AddressRef.update(body, { count: "exact" }).eq(
       "id",
-      String(id) // Não sei pq, mas só funcionou quando dei parse pra string
+      id // Não sei pq, mas só funcionou quando dei parse pra string
     );
 
-    const { error, count } = updatedPlace;
+    const { error, count } = updated;
     if (error)
       return res
         .status(404)
@@ -136,7 +114,7 @@ export default class PlaceController {
           new ErrorHandling(
             error.code,
             error.message,
-            "updating Place"
+            "updating address"
           ).returnObjectRequestError()
         );
 
@@ -152,7 +130,6 @@ export default class PlaceController {
 
     const DeleteSchema = z.object({
       id: z.number().int(),
-      userId: z.number().int(),
     });
     const validation = DeleteSchema.safeParse(body);
     if (validation.error) {
@@ -165,12 +142,12 @@ export default class PlaceController {
 
     // In the future there will be here a validation to see if the user with the userId has the permission to delete a place from the database
 
-    const deletedPlace = await PlaceRef.delete({ count: "exact" }).eq(
+    const deleted = await AddressRef.delete({ count: "exact" }).eq(
       "id",
       body.id
     );
 
-    const { error, count } = deletedPlace;
+    const { error, count } = deleted;
     if (error)
       return res
         .send(401)
@@ -178,7 +155,7 @@ export default class PlaceController {
           new ErrorHandling(
             error.code,
             error.message,
-            "removing Place"
+            "removing address"
           ).returnObjectRequestError()
         );
 

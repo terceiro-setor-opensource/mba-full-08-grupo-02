@@ -2,68 +2,50 @@ import { Request, Response } from "express";
 import { supabase } from "../services/supabase";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
-import { ExtendedPlace } from "src/domains/Place";
 
+const UserRef = supabase.from("users");
 const PlaceRef = supabase.from("place");
+const FeedbackRef = supabase.from("feedback");
 
-const placeSchema = {
-  name: z.string().min(1),
-  description: z.string().min(1),
-  addressId: z.number().int().positive(),
-  mapsLink: z.string().optional(),
-  linkSocial: z.string().optional(),
-  openingTime: z.string().min(5).max(5),
-  closingTime: z.string().min(5).max(5),
-  is24: z.boolean().optional(),
-  daysOfWeek: z.string().min(1),
-  restrictions: z.string().optional(),
-  observations: z.string().optional(),
-};
+const feedbackSchema = z.object({
+  placeid: z.number().int().positive(),
+  userid: z.number().int().positive(),
+  rating: z.number().positive(),
+  description: z.string(),
+});
 
-export default class PlaceController {
-
-
+export default class FeedbackController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await PlaceRef
-    .select(`
-      *,
-      address(*),
-      place_image(imageid),
-      feedback(rating)
-    `)
+    const { data, error } = await FeedbackRef.select(
+      "description, rating, users(name), place(name)"
+    );
 
-    if(error) {
+    if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    if(data.length === 0) {
+    if (data.length === 0) {
       return res.status(204).json({
-        message: "No places found"
+        message: "No feedback found",
       });
     }
-     const places: ExtendedPlace[] = data?.map((place) => {
-      return {
-        ...place,
-        address: place.address,
-        image: 'https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        rating_avg: place.feedback.reduce((acc, curr) => acc + curr.rating, 0) / place.feedback.length
-      };
-    });
 
-    res.status(201).json(places);
+    res.status(201).json(data);
   }
-  
+
   static async findById(req: Request, res: Response) {
     const { id } = req.params;
-    const { data, error } = await PlaceRef.select("*").eq("id", id);
+    const { data, error } = await FeedbackRef.select(
+      "description, rating, users(name), place(name)"
+    ).eq("id", id);
 
-    if(error) {
+    if (error) {
       return res.status(500).json({ error: error.message });
     }
 
-    if(data.length === 0) {
+    if (data.length === 0) {
       return res.status(204).json({
-        message: `No place found for the id = ${id}`
+        message: `No feedback found for the id = ${id}`,
       });
     }
 
@@ -73,8 +55,7 @@ export default class PlaceController {
   static async create(req: Request, res: Response) {
     const { body } = req;
 
-    const ZPlaceSchema = z.object(placeSchema);
-    const validation = ZPlaceSchema.safeParse(body);
+    const validation = feedbackSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -83,9 +64,38 @@ export default class PlaceController {
       });
     }
 
-    const placeInserted = await PlaceRef.insert(body).select();
+    // checking if the user exists
+    const resultUser = await UserRef.select("name").eq("id", body.userid);
 
-    const { error } = placeInserted;
+    if (resultUser.error) {
+      return res.status(500).json({ error: resultUser.error.message });
+    }
+
+    if (resultUser.data.length === 0) {
+      return res.status(404).json({
+        message: `No user found for the id = ${body.userid}`,
+      });
+    }
+
+    // checking if the place exists
+    const resultPlace = await PlaceRef.select("name").eq("id", String(body.placeid));
+
+    if (resultPlace.error) {
+      return res.status(500).json({ error: resultPlace.error.message });
+    }
+
+    if (resultPlace.data.length === 0) {
+      return res.status(404).json({
+        message: `No place found for the id = ${body.placeid}`,
+      });
+    }
+
+    // Everithing is ok, so insert
+    const inserted = await FeedbackRef.insert(body).select(
+      "description, rating, users(name), place(name)"
+    );
+
+    const { error } = inserted;
     if (error)
       return res
         .status(404)
@@ -93,13 +103,11 @@ export default class PlaceController {
           new ErrorHandling(
             error.code,
             error.message,
-            "inserting a new Place"
+            "inserting a new feedback"
           ).returnObjectRequestError()
         );
 
-    const { data } = placeInserted;
-
-    res.status(201).json(data);
+    res.status(201).json(inserted.data);
   }
 
   static async update(req: Request, res: Response) {
@@ -113,8 +121,7 @@ export default class PlaceController {
       });
     }
 
-    const ZPlaceSchema = z.object(placeSchema);
-    const validation = ZPlaceSchema.safeParse(body);
+    const validation = feedbackSchema.safeParse(body);
     if (validation.error) {
       return res.status(404).json({
         status: 404,
@@ -123,12 +130,12 @@ export default class PlaceController {
       });
     }
 
-    const updatedPlace = await PlaceRef.update(body, { count: "exact" }).eq(
+    const updated = await FeedbackRef.update(body, { count: "exact" }).eq(
       "id",
-      String(id) // Não sei pq, mas só funcionou quando dei parse pra string
+      id // Não sei pq, mas só funcionou quando dei parse pra string
     );
 
-    const { error, count } = updatedPlace;
+    const { error, count } = updated;
     if (error)
       return res
         .status(404)
@@ -136,7 +143,7 @@ export default class PlaceController {
           new ErrorHandling(
             error.code,
             error.message,
-            "updating Place"
+            "updating feedback"
           ).returnObjectRequestError()
         );
 
@@ -152,7 +159,6 @@ export default class PlaceController {
 
     const DeleteSchema = z.object({
       id: z.number().int(),
-      userId: z.number().int(),
     });
     const validation = DeleteSchema.safeParse(body);
     if (validation.error) {
@@ -165,12 +171,12 @@ export default class PlaceController {
 
     // In the future there will be here a validation to see if the user with the userId has the permission to delete a place from the database
 
-    const deletedPlace = await PlaceRef.delete({ count: "exact" }).eq(
+    const deleted = await FeedbackRef.delete({ count: "exact" }).eq(
       "id",
       body.id
     );
 
-    const { error, count } = deletedPlace;
+    const { error, count } = deleted;
     if (error)
       return res
         .send(401)
@@ -178,7 +184,7 @@ export default class PlaceController {
           new ErrorHandling(
             error.code,
             error.message,
-            "removing Place"
+            "removing feedback"
           ).returnObjectRequestError()
         );
 
