@@ -47,7 +47,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     fetchUserData(token)
   }, [token])
 
-  const login = async ({ email, password }: { email: string; password: string }) => {
+  const login = async ({
+    email,
+    password,
+  }: {
+    email: string
+    password: string
+  }) => {
     try {
       // TODO:Substituir por chamada à API de login
       console.log(email, password)

@@ -1,4 +1,9 @@
-import { ChakraTheme, Colors, extendTheme, type ThemeConfig } from '@chakra-ui/react'
+import {
+  ChakraTheme,
+  Colors,
+  extendTheme,
+  type ThemeConfig,
+} from '@chakra-ui/react'
 
 const config: ThemeConfig = {
   initialColorMode: 'light',
@@ -93,6 +98,12 @@ interface CustomTheme extends ChakraTheme {
   space: typeof space
 }
 
-const theme = extendTheme({ colors, textStyles, config, styles, space }) as CustomTheme
+const theme = extendTheme({
+  colors,
+  textStyles,
+  config,
+  styles,
+  space,
+}) as CustomTheme
 
 export default theme

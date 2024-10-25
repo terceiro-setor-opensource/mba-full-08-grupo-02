@@ -50,5 +50,9 @@
     "nearYou": "Perto de você",
     "saoPaulo": "São Paulo - SP",
     "running": "Corrida"
-  }
+  },
+  "locationsPage": {
+    "searchResults": "Exibindo resultados para pesquisa:"
+  },
+  "loading": "Carregando..."
 }

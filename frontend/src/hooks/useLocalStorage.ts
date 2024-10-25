@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 
-function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+function useLocalStorage<T>(
+  key: string,
+  initialValue: T,
+): [T, (value: T) => void] {
   const prefixedKey = `@cidade-ativa:${key}`
 
   const [storedValue, setStoredValue] = useState<T>(() => {
@@ -30,7 +33,9 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => voi
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === prefixedKey) {
-        setStoredValue(event.newValue ? JSON.parse(event.newValue) : initialValue)
+        setStoredValue(
+          event.newValue ? JSON.parse(event.newValue) : initialValue,
+        )
       }
     }
 

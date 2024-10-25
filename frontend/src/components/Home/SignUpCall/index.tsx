@@ -23,7 +23,7 @@ export const SignUpCall = () => {
           color="neutral.100"
           borderColor="green.200"
           onClick={() => {
-            navigate('/cadastro')
+            navigate('/register')
           }}
         >
           {t('getSignUp')}
