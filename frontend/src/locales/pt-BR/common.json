@@ -54,5 +54,14 @@
   "locationsPage": {
     "searchResults": "Exibindo resultados para pesquisa:"
   },
-  "loading": "Carregando..."
+  "detailedLocationPage": {
+    "description": "Descrição",
+    "seeMapButton": "Ver no mapa",
+    "locationEvents": "Eventos no local",
+    "benefitsForHealth": "Benefícios para saúde",
+    "seeMoreButton": "Ver mais",
+    "locationFeedbacks": "Avaliações do local"
+  },
+  "loading": "Carregando...",
+  "backButton": "Voltar"
 }

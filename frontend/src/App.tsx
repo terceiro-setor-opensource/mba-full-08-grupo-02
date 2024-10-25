@@ -8,6 +8,7 @@ import { Dashboard } from './pages/Dashboard'
 import { AuthProvider } from './contexts/AuthContext'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Places } from './pages/Places'
+import { DetailedPlace } from './pages/DetailedPlace'
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: 'places',
         element: <Places />,
+      },
+      {
+        path: 'places/:id',
+        element: <DetailedPlace />,
       },
       {
         path: 'dashboard',

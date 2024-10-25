@@ -35,7 +35,7 @@ export default class AccountController {
     const { id } = req.params;
     const { data, error } = await AccountRef.select(
       "email, phonenumber, account_type(type, permissions)"
-    ).eq("id", id);
+    ).eq("id", id).limit(1).single();
 
     if (error) {
       return res.status(500).json({ error: error.message });
