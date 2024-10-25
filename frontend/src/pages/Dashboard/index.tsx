@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { t } from 'i18next'
 import { Box, HStack, SimpleGrid, Stack, Text } from '@chakra-ui/layout'
 import { ChooseActivity } from '@/components/Home/ChooseActivity'
@@ -5,7 +6,9 @@ import { SportSelect } from '@/components/Dashboard/SportSelect'
 import { SearchAndFilter } from '@/components/Dashboard/SearchAndFilter'
 import { LocationSelect } from '@/components/Dashboard/LocationSelect'
 import PlaceCard from '@/components/Dashboard/PlaceCard'
-import { useGetPlacesAroundMe } from '@/hooks/api/useGetPlacesAroundMe'
+import { placeService } from '@/services/place.service'
+import { Place } from '@/models/place'
+import { useNavigate } from 'react-router-dom'
 
 const containerStyles = {
   paddingY: {
@@ -32,11 +35,27 @@ const headingStyles = {
 }
 
 export const Dashboard = () => {
-  const places = useGetPlacesAroundMe({
-    latitude: 23.5505,
-    longitude: 46.6333,
-    radius: 10,
-  })
+  const [places, setPlaces] = useState<Place[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        const response = await placeService.getByUserLocation({
+          latitude: 23.5505,
+          longitude: 46.6333,
+          radius: 10,
+        })
+        setPlaces(response)
+      } catch (err) {
+        setError('Failed to fetch places')
+        console.error(err)
+      }
+    }
+
+    fetchPlaces()
+  }, [])
 
   return (
     <Box sx={containerStyles}>
@@ -53,7 +72,7 @@ export const Dashboard = () => {
           >
             <LocationSelect />
             <SportSelect />
-            <SearchAndFilter />
+            <SearchAndFilter onSearch={console.log} />
           </HStack>
         </Stack>
         <Stack padding={'3rem'}>
@@ -66,17 +85,20 @@ export const Dashboard = () => {
           <Text textStyle="h2" fontSize="2rem" alignSelf="start">
             {t('dashboard.nearYou')}
           </Text>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
-            {places?.map((place) => (
-              <PlaceCard
-                key={place.id}
-                imageUrl={place.image}
-                title={place.name}
-                reviewCount={place.rating}
-                {...place}
-              />
-            ))}
-          </SimpleGrid>
+
+          {error ? (
+            <Text color="red.500">{error}</Text>
+          ) : (
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
+              {places?.map((place) => (
+                <PlaceCard
+                  key={place.id}
+                  place={place}
+                  onClick={() => navigate(`/places/${place.id}`)}
+                />
+              ))}
+            </SimpleGrid>
+          )}
         </Stack>
       </Stack>
     </Box>
