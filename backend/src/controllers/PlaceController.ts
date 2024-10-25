@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { supabase } from "../services/supabase";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
+import { ExtendedPlace } from "src/domains/Place";
 
 const PlaceRef = supabase.from("place");
 
@@ -20,6 +21,55 @@ const placeSchema = {
 };
 
 export default class PlaceController {
+
+
+  static async findAll(req: Request, res: Response) {
+    const { data, error } = await PlaceRef
+    .select(`
+      *,
+      address(*),
+      place_image(imageid),
+      feedback(rating)
+    `)
+
+    if(error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    if(data.length === 0) {
+      return res.status(204).json({
+        message: "No places found"
+      });
+    }
+     const places: ExtendedPlace[] = data?.map((place) => {
+      return {
+        ...place,
+        address: place.address,
+        image: 'https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        rating_avg: place.feedback.reduce((acc, curr) => acc + curr.rating, 0) / place.feedback.length
+      };
+    });
+
+    res.status(201).json(places);
+  }
+  
+  static async findById(req: Request, res: Response) {
+    const { id } = req.params;
+    const { data, error } = await PlaceRef.select("*").eq("id", id);
+
+    if(error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    if(data.length === 0) {
+      return res.status(204).json({
+        message: `No place found for the id = ${id}`
+      });
+    }
+
+    res.status(201).json(data);
+  }
+
   static async create(req: Request, res: Response) {
     const { body } = req;
 
@@ -48,39 +98,6 @@ export default class PlaceController {
         );
 
     const { data } = placeInserted;
-
-    res.status(201).json(data);
-  }
-
-  static async findAll(req: Request, res: Response) {
-    const { data, error } = await PlaceRef.select("*");
-
-    if(error) {
-      return res.status(500).json({ error: error.message });
-    }
-
-    if(data.length === 0) {
-      return res.status(204).json({
-        message: "No places found"
-      });
-    }
-
-    res.status(201).json(data);
-  }
-  
-  static async findById(req: Request, res: Response) {
-    const { id } = req.params;
-    const { data, error } = await PlaceRef.select("*").eq("id", id);
-
-    if(error) {
-      return res.status(500).json({ error: error.message });
-    }
-
-    if(data.length === 0) {
-      return res.status(204).json({
-        message: `No place found for the id = ${id}`
-      });
-    }
 
     res.status(201).json(data);
   }

@@ -1,16 +1,12 @@
-type PlaceResponse = {
-  id: number;
-  name: string;
-  description: string;
-  addressId: number;
-  mapsLink?: string;
-  linkSocial?: string;
-  openingTime: string;
-  closingTime: string;
-  is24?: boolean;
-  daysOfWeek: string;
-  restrictions?: string;
-  observations?: string;
+import { Database } from "./database.types";
+
+type PlaceRow = Database["public"]["Tables"]["place"]["Row"];
+type AddressRow = Database["public"]["Tables"]["address"]["Row"];
+
+export type ExtendedPlace = PlaceRow & {
+  imageUrl: string | null; 
+  rating: number | null; 
+  address: AddressRow
 };
 
-export default PlaceResponse;
+export default PlaceRow;

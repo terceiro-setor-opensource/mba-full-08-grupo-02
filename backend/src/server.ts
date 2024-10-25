@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import placeRoutes from "./routes/PlaceRoutes";
 import activityRouter from "./routes/activity";
 import userRouter from "./routes/users";
@@ -13,6 +14,7 @@ import favoritePlaceRoutes from "./routes/favoritePlace";
 const app = express();
 const port = 3000;
 
+app.use(cors());
 app.use(express.json());
 app.use(userRouter, activityRouter);
 
