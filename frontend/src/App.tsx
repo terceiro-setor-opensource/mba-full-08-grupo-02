@@ -8,6 +8,7 @@ import { Dashboard } from './pages/Dashboard'
 import { AuthProvider } from './contexts/AuthContext'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Places } from './pages/Places'
+import { Benefits } from './pages/BenefitsCiclism'
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
             <Dashboard />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'benefitsCiclism',
+        element: <Benefits />,
       },
     ],
   },
