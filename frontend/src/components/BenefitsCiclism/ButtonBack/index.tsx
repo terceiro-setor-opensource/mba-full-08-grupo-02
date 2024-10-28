@@ -6,16 +6,16 @@ const BackButton = () => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate(-1); // -1 indica que deve voltar para a página anterior
+    navigate(-1);
   };
 
   return (
-    <Button px={10} display="flex" justifyContent="flex-start" width="10%"
-     ml="auto"
+    <Button padding={8} px={10} display="flex" justifyContent="flex-end" width="10%"
      size="sm"
      variant="ghost"
      leftIcon={<FaArrowLeft color="black.500" />}
      iconSpacing="2" 
+     _hover={{ bg: "transparent" }}
      onClick={handleBack}>
       Voltar
     </Button>
