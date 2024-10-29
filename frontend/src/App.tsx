@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'benefitsCiclism',
+        path: 'benefits-ciclism',
         element: <Benefits />,
       },
     ],
