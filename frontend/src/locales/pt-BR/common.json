@@ -38,6 +38,7 @@
   "otherAccounts": "ou faça isso através de outras contas",
   "hasAnAccount": "Já possui uma conta?",
   "entry": "Entrar",
+  "send": "Enviar",
   "welcomeAgain": "Bem vindo novamente!",
   "infoCredentials": "Informe suas credenciais.",
   "doentAccount": "Não tem uma conta?",
@@ -60,7 +61,11 @@
     "locationEvents": "Eventos no local",
     "benefitsForHealth": "Benefícios para saúde",
     "seeMoreButton": "Ver mais",
-    "locationFeedbacks": "Avaliações do local"
+    "locationFeedbacks": "Avaliações do local",
+    "addEvent": "Adicionar evento",
+    "noEventsListed": "Sem eventos listados nesse local",
+    "feedbacksStackTitle": "Avaliações do local",
+    "feedbackInputPlaceholder": "Compartilhe sua experiência"
   },
   "loading": "Carregando...",
   "backButton": "Voltar"

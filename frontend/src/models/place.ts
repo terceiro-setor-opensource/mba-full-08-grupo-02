@@ -1,3 +1,6 @@
+import { Event } from './event'
+import { PlaceByActivity } from './place_by_activity'
+
 export interface Place {
   id: number
   name: string
@@ -16,6 +19,8 @@ export interface Place {
   image: string
   feedback: Rating[]
   address: Address
+  events?: Event[]
+  place_by_activity?: PlaceByActivity[]
 }
 
 type Rating = {

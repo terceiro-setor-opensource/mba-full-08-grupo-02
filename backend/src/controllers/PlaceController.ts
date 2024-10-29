@@ -3,6 +3,7 @@ import { supabase } from "../services/supabase";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
 import { ExtendedPlace } from "src/domains/Place";
+import { EventResponse } from "src/domains/Event";
 
 const PlaceRef = supabase.from("place");
 
@@ -26,8 +27,8 @@ export default class PlaceController {
       *,
       address(*),
       place_image(imageid),
-      feedback(rating)
-    `);
+      feedback(rating),
+      event(*)`);
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -59,7 +60,9 @@ export default class PlaceController {
       `*,
       address(*),
       place_image(imageid),
-      feedback(rating)`
+      feedback(rating),
+      event(*),
+      place_by_activity(activity(*, activity_benefit(benefit(*))))`
     )
       .eq("id", id)
       .limit(1)
@@ -78,6 +81,13 @@ export default class PlaceController {
     res.status(201).json({
       ...data,
       address: data.address,
+      events: (data.event || []).map((event: EventResponse) => {
+        return {
+          ...event,
+          banner:
+            "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        };
+      }),
       image:
         "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
       rating_avg:
