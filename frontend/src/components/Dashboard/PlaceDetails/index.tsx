@@ -3,13 +3,22 @@ import StarRating from '@/components/commons/StarRating'
 import { UnderlinedTitle } from '@/components/commons/UnderlinedTitle'
 import { Event } from '@/models/event'
 import { Place } from '@/models/place'
-import { Flex, SimpleGrid, Stack, Text } from '@chakra-ui/layout'
+import {
+  Flex,
+  List,
+  ListItem,
+  SimpleGrid,
+  Stack,
+  Text,
+} from '@chakra-ui/layout'
 import { border, Button, Image, Input } from '@chakra-ui/react'
 import { color } from 'framer-motion'
 import { t } from 'i18next'
 import EventCard from '../EventCard'
 import { TextButton } from '@/components/commons/TextButton'
 import { RiArrowRightLine } from 'react-icons/ri'
+import { FeedbackCard } from '../FeedbackCard'
+import { OrderSelect } from '../OrderSelect'
 
 const stackStyles = {
   width: {
@@ -67,8 +76,18 @@ const sendButtonStyle = {
   width: '20%',
 }
 
+const titleTextStyle = {
+  textStyle: 'h2',
+  fontSize: '1.7rem',
+  fontWeight: 'bold',
+}
+
 const stackFeedbackList = {
-  
+  margin: '2rem auto auto auto',
+  width: {
+    base: '100%',
+    md: '80%',
+  },
 }
 
 export const PlaceDetails = ({ place }: { place: Place }) => {
@@ -78,9 +97,7 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
         <Image src={place?.image} alt={place?.name} sx={placeImageStyles} />
         <Stack sx={stackDetailsStyles}>
           <Flex justifyContent="space-between">
-            <Text textStyle="h2" fontSize="1.7rem" fontWeight="bold">
-              {place?.name}
-            </Text>
+            <Text sx={titleTextStyle}>{place?.name}</Text>
             <FavoriteButton />
           </Flex>
           <Text textStyle="h3" fontSize="1.2rem" fontWeight="bold">
@@ -138,8 +155,8 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
           <TextButton text={t('detailedLocationPage.seeMoreButton')} />
         </Stack>
       </Stack>
-      <Stack sx={stackOtherInfosStyle}>
-        <Text textStyle="h2" fontSize="1.7rem" fontWeight="bold">
+      <Stack sx={{ ...stackOtherInfosStyle, ...stackFeedbackList }}>
+        <Text sx={titleTextStyle}>
           {t('detailedLocationPage.feedbacksStackTitle')}
         </Text>
         <Stack sx={stackShareFeedbackStyle}>
@@ -153,9 +170,27 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
             <RiArrowRightLine />
           </Button>
         </Stack>
-        <Stack sx={stackFeedbackList} >
-
-
+        <Stack marginTop="1rem">
+          <Stack display="flex" justifyContent="space-between" flexDir="row">
+            <Text sx={titleTextStyle}>
+              {place?.feedback?.length || 0}{' '}
+              {t(
+                place?.feedback?.length > 1
+                  ? 'detailedLocationPage.feedbackListTitleMultiple'
+                  : 'detailedLocationPage.feedbackListTitleSingle',
+              )}
+            </Text>
+            <OrderSelect />
+          </Stack>
+          <List>
+            {place?.feedback?.map((feedback) => {
+              return (
+                <ListItem marginBottom="1rem">
+                  <FeedbackCard feedback={feedback} />{' '}
+                </ListItem>
+              )
+            })}
+          </List>
         </Stack>
       </Stack>
     </Stack>

@@ -42,6 +42,7 @@
   "welcomeAgain": "Bem vindo novamente!",
   "infoCredentials": "Informe suas credenciais.",
   "doentAccount": "Não tem uma conta?",
+  "like": "Like",
   "dashboard": {
     "discoverBestExercises": "Descubra as melhores opções de exercícios físicos",
     "selectCity": "Selecione uma cidade",
@@ -65,7 +66,14 @@
     "addEvent": "Adicionar evento",
     "noEventsListed": "Sem eventos listados nesse local",
     "feedbacksStackTitle": "Avaliações do local",
-    "feedbackInputPlaceholder": "Compartilhe sua experiência"
+    "feedbackInputPlaceholder": "Compartilhe sua experiência",
+    "feedbackListTitleMultiple": "Avaliações",
+    "feedbackListTitleSingle": "Avaliação"
+  },
+  "orderSelection": {
+    "select": "Ordenar",
+    "newer": "Mais recentes",
+    "older": "Mais antigos"
   },
   "loading": "Carregando...",
   "backButton": "Voltar"

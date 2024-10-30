@@ -60,7 +60,7 @@ export default class PlaceController {
       `*,
       address(*),
       place_image(imageid),
-      feedback(rating),
+      feedback(*,users(name)),
       event(*),
       place_by_activity(activity(*, activity_benefit(benefit(*))))`
     )
