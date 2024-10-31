@@ -37,7 +37,7 @@ export default class FeedbackController {
     const { id } = req.params;
     const { data, error } = await FeedbackRef.select(
       "description, rating, users(name), place(name)"
-    ).eq("id", id);
+    ).eq("id", id).limit(1).single();
 
     if (error) {
       return res.status(500).json({ error: error.message });

@@ -19,7 +19,7 @@ export async function findAll(req: Request, res: Response): Promise<Response> {
 export async function findById(req: Request, res: Response): Promise<Response> {
   const { id } = req.params;
 
-  const { data, error } = await supabase.from('users').select("id, name, birthdate").eq("id", id);
+  const { data, error } = await supabase.from('users').select("id, name, birthdate").eq("id", id).limit(1).single();
   
   if(error) {
     return res.status(500).json({ error: error.message });
