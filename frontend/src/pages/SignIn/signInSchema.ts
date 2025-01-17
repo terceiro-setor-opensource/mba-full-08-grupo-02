@@ -10,7 +10,7 @@ export const useSignInSchema = () => {
     }),
     password: z
       .string()
-      .min(8, {
+      .min(6, {
         message: t('formSignUp.errors.passwordTooShort'),
       })
       .nonempty({

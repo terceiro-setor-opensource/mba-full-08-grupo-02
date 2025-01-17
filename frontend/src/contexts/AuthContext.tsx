@@ -1,11 +1,20 @@
 import React, { createContext, ReactNode, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User } from '@/types/User'
 import useLocalStorage from '@/hooks/useLocalStorage'
+import axios from 'axios'
+import { Account } from '@/models/account'
+import api from '@/services/api'
 
 export interface AuthContextType {
-  user: User | null
+  user: Account | null
   login: (data: { email: string; password: string }) => Promise<void>
+  register: (data: {
+    name: string
+    email: string
+    password: string
+    phone_number?: string
+    account_type_id: number
+  }) => Promise<void>
   logout: () => void
   token: string | null
 }
@@ -16,24 +25,18 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useLocalStorage<string | null>('auth_token', null)
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<Account | null>(null)
   const navigate = useNavigate()
 
-  const fetchUserData = (token: string) => {
+  const fetchUserData = async (token: string) => {
     try {
-      //TODO:Substituir por chamada à API
-      console.log(token)
-      setUser({
-        id: '1',
-        name: 'John Doe',
-        birthdate: '12/12/2000',
-        email: 'user@gmail.com',
-        addressId: null,
-        accountId: null,
-        datetime_creation: '12/12/2021',
+      const response = await api.get(`/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
+      setUser(response.data)
     } catch (error) {
       setUser(null)
     }
@@ -47,26 +50,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     fetchUserData(token)
   }, [token])
 
-  const login = async ({
-    email,
-    password,
-  }: {
-    email: string
-    password: string
-  }) => {
+  const login = async ({ email, password }: { email: string; password: string }) => {
     try {
-      // TODO:Substituir por chamada à API de login
-      console.log(email, password)
-      const token = await new Promise<string>((resolve) => {
-        setTimeout(() => {
-          resolve(`mocked_token`)
-        }, 1000)
-      })
+      const response = await api.post(`/login`, { email, password })
+      const token = response.data.token
 
       setToken(token)
+      fetchUserData(token)
       navigate('/dashboard')
     } catch (error) {
       console.error('Login error:', error)
+      throw new Error('Invalid credentials')
+    }
+  }
+
+  const register = async ({
+    name,
+    email,
+    password,
+    phone_number,
+    account_type_id,
+  }: {
+    name: string
+    email: string
+    password: string
+    phone_number?: string
+    account_type_id: number
+  }) => {
+    try {
+      await api.post(`/register`, {
+        name,
+        email,
+        password,
+        phone_number,
+        account_type_id,
+      })
+      navigate('/login')
+    } catch (error) {
+      console.error('Registration error:', error)
+      throw new Error('Registration failed')
     }
   }
 
@@ -76,7 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     navigate('/', { replace: true })
   }
 
-  const value = { user, login, logout, token }
+  const value = { user, login, register, logout, token }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

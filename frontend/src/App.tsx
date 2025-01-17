@@ -10,6 +10,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Places } from './pages/Places'
 import { Benefits } from './pages/BenefitsCiclism'
 import { DetailedPlace } from './pages/DetailedPlace'
+import { ToastContainer } from 'react-toastify'
 
 const router = createBrowserRouter([
   {
@@ -57,7 +58,12 @@ const router = createBrowserRouter([
 ])
 
 function App() {
-  return <RouterProvider router={router} />
+  return (
+    <>
+    <ToastContainer />
+    <RouterProvider router={router} />
+  </>
+  )
 }
 
 export default App

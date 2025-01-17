@@ -1,42 +1,27 @@
-import { Place } from '@/models/place'
+import { Place } from "@/models/place";
+import api from "./api";
 
 class PlaceService {
-  private url = 'http://localhost:3000/places'
+  private basePath = "/places"; // Base path for places
 
-  private getHeaders() {
-    return {
-      'Content-Type': 'application/json',
-    } as HeadersInit
-  }
-
-  private async getData(response: Response) {
-    if (response.status >= 200 && response.status < 300) {
-      return await response.json()
+  public async getPlaces({ search = "" }: { search?: string }): Promise<Place[]> {
+    try {
+      const response = await api.get(this.basePath, {
+        params: { search },
+      });
+      return response.data;
+    } catch (error: any) {
+      this.handleError(error);
     }
-    throw new Error(response.statusText, {
-      cause: response.status,
-    })
   }
 
-  public async getPlaces({ search = '' }: { search?: string }) {
-    const urlWithSearch = search
-      ? `${this.url}?search=${encodeURIComponent(search)}`
-      : this.url
-
-    const response = await fetch(urlWithSearch, {
-      method: 'GET',
-      headers: this.getHeaders(),
-    })
-
-    return (await this.getData(response)) as Place[]
-  }
-
-  public async getById(id: number) {
-    const response = await fetch(`${this.url}/${id}`, {
-      method: 'GET',
-      headers: this.getHeaders(),
-    })
-    return (await this.getData(response)) as Place
+  public async getById(id: number): Promise<Place> {
+    try {
+      const response = await api.get(`${this.basePath}/${id}`);
+      return response.data;
+    } catch (error: any) {
+      this.handleError(error);
+    }
   }
 
   public async getByUserLocation({
@@ -44,19 +29,29 @@ class PlaceService {
     longitude,
     radius,
   }: {
-    latitude: number
-    longitude: number
-    radius: number
-  }) {
-    const response = await fetch(
-      `${this.url}?latitude=${latitude}&longitude=${longitude}&radius=${radius}`,
-      {
-        method: 'GET',
-        headers: this.getHeaders(),
-      },
-    )
-    return (await this.getData(response)) as Place[]
+    latitude: number;
+    longitude: number;
+    radius: number;
+  }): Promise<Place[]> {
+    try {
+      const response = await api.get(this.basePath, {
+        params: { latitude, longitude, radius },
+      });
+      return response.data;
+    } catch (error: any) {
+      this.handleError(error);
+    }
+  }
+
+  private handleError(error: any): never {
+    if (error.response) {
+      throw new Error(error.response.data?.message || error.response.statusText);
+    } else if (error.request) {
+      throw new Error("No response from server");
+    } else {
+      throw new Error(error.message);
+    }
   }
 }
 
-export const placeService = new PlaceService()
+export const placeService = new PlaceService();

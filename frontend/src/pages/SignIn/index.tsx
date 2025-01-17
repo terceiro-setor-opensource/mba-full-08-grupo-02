@@ -20,6 +20,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSignInSchema } from './signInSchema'
 import * as z from 'zod'
+import { toast } from 'react-toastify'
 
 export const SignIn = () => {
   const schema = useSignInSchema()
@@ -39,8 +40,10 @@ export const SignIn = () => {
   const onSubmit = async (data: IFormInputSignIn) => {
     try {
       await login(data)
+      toast.success(t('formSignIn.success'))
     } catch (error) {
-      console.error(error)
+      console.error('Login error:', error)
+      toast.error(t('formSignIn.error: {{error}}', { error }))
     }
   }
   return (
