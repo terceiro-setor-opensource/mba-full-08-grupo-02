@@ -8,9 +8,12 @@ import {
 } from '@chakra-ui/react'
 import LandingPage1 from '@/assets/images/landing1.png'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 export const HeroSection = () => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
   const boxWidth = useBreakpointValue({ base: '100%', lg: '60%' })
   const imageWidth = useBreakpointValue({ base: '100%', lg: '40%' })
 
@@ -65,6 +68,7 @@ export const HeroSection = () => {
               borderStyle={'solid'}
               color="green.200"
               borderColor="green.200"
+              onClick={() => navigate('/places')}
             >
               Explorar
             </Button>

@@ -8,9 +8,11 @@ import {
 } from '@chakra-ui/react'
 import LandingPage3 from '@/assets/images/landing3.png'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 export const SignUpCall = () => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const boxWidth = useBreakpointValue({ base: '100%', lg: '60%' })
   const imageWidth = useBreakpointValue({ base: '100%', lg: '40%' })
 
@@ -48,6 +50,7 @@ export const SignUpCall = () => {
               borderStyle={'solid'}
               color="green.200"
               borderColor="green.200"
+              onClick={() => navigate('/register')}
             >
               {t('getSignUp')}
             </Button>

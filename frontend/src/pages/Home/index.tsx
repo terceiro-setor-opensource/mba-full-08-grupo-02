@@ -1,9 +1,10 @@
-import { Box, Stack, VStack } from '@chakra-ui/react'
+import { Box, VStack } from '@chakra-ui/react'
 import LandingPage2 from '../../assets/images/landing2.png'
 import { HomeSecondBox } from '@/components/Home/HomeSecondBox'
 import { ChooseActivity } from '@/components/Home/ChooseActivity'
 import { SignUpCall } from '@/components/Home/SignUpCall'
 import { HeroSection } from '@/components/Home/HomeFirstBox'
+import { HomeThirdBox } from '@/components/Home/HomeThirdBox'
 
 export const Home = () => {
   return (
@@ -27,11 +28,10 @@ export const Home = () => {
         spacing={6}
         align="stretch"
         justifyContent="center"
-        px={{ base: 6, md: 12, lg: 20 }}
-        py={{ base: 8, md: 12 }}
         w="100%"
       >
         <HomeSecondBox />
+        <HomeThirdBox />
         <ChooseActivity />
         <SignUpCall />
       </VStack>

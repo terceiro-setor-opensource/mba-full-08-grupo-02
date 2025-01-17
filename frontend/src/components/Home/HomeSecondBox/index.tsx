@@ -1,36 +1,30 @@
-import { Box, Text, VStack } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
 export const HomeSecondBox = () => {
   const { t } = useTranslation()
 
   return (
-    <VStack
-      spacing={6}
-      align="stretch" // Make children stretch to full width
-      justifyContent="center"
-      px={{ base: 6, md: 12, lg: 20 }}
-      py={{ base: 8, md: 12 }}
-      w="100%" // Ensure the VStack takes full width
+    <Box
+      textAlign={{ base: 'center' }}
+      minH="300px"
+      maxW={{ base: '100%', lg: '50%' }}
+      mx="auto"
+      justifyContent="space-around"
+      py={{ base: 8, md: 12, lg: 16 }}
     >
-      <Box
-        maxW="800px" // Control the width of the text section
-        mx="auto" // Center the Box horizontally
-        textAlign={{ base: 'center' }}
+      <Text
+        textStyle="h1"
+        mb={4}
+        fontSize={{ base: '1xl', md: '2xl', lg: '4xl' }}
+        fontFamily="Montserrat"
+        fontWeight="bold"
       >
-        <Text
-          textStyle="h1"
-          mb={4}
-          fontSize={{ base: '1xl', md: '2xl', lg: '4xl' }}
-          fontFamily="Montserrat"
-          fontWeight="bold"
-        >
-          {t('resources')}
-        </Text>
-        <Text fontSize={{ base: 'sm', md: 'lg', lg: 'xl' }} color="neutral.400">
-          {t('homeSecondBox')}
-        </Text>
-      </Box>
-    </VStack>
+        {t('resources')}
+      </Text>
+      <Text fontSize={{ base: 'sm', md: 'lg', lg: 'xl' }} color="neutral.400">
+        {t('homeSecondBox')}
+      </Text>
+    </Box>
   )
 }
