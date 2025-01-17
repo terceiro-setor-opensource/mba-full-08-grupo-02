@@ -48,7 +48,7 @@ representante nomeado em um evento online ou offline.
 ## Aplicação
 
 Instâncias de comportamento abusivo, assediador ou inaceitável podem ser
-relatadas aos líderes da comunidade responsáveis ​​pela aplicação em <bibliotecadezines@gmail.com>.
+relatadas aos líderes da comunidade responsáveis ​​pela aplicação.
 Todas as reclamações serão revisadas e investigadas prontamente e de forma justa.
 
 Todos os líderes da comunidade são obrigados a respeitar a privacidade e a segurança do
