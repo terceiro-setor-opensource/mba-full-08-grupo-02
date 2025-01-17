@@ -1,49 +1,36 @@
-import { Box, HStack, VStack } from '@chakra-ui/layout'
-import { Hide, Text } from '@chakra-ui/react'
-import { bannerInformation } from '@/consts/Home'
+import { Box, Text, VStack } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
 export const HomeSecondBox = () => {
   const { t } = useTranslation()
 
   return (
-    <Box>
-      <VStack justifyContent="center" alignItems="center">
-        <Box padding={60} w={'90%'}>
-          <Text textStyle={'h1'} mb={12}>
-            {t('resources')}
-          </Text>
-          <Text textStyle={'subtitle'} lineHeight="1.5">
-            {t('homeScondBox')}
-          </Text>
-        </Box>
-      </VStack>
-      <Hide below="md">
-        <HStack
-          padding={36}
-          wrap="wrap"
-          justifyContent="space-around"
-          alignItems="baseline"
-          bgColor="green.100"
-          bgSize="cover"
+    <VStack
+      spacing={6}
+      align="stretch" // Make children stretch to full width
+      justifyContent="center"
+      px={{ base: 6, md: 12, lg: 20 }}
+      py={{ base: 8, md: 12 }}
+      w="100%" // Ensure the VStack takes full width
+    >
+      <Box
+        maxW="800px" // Control the width of the text section
+        mx="auto" // Center the Box horizontally
+        textAlign={{ base: 'center' }}
+      >
+        <Text
+          textStyle="h1"
+          mb={4}
+          fontSize={{ base: '1xl', md: '2xl', lg: '4xl' }}
+          fontFamily="Montserrat"
+          fontWeight="bold"
         >
-          {bannerInformation.map((item, index) => (
-            <VStack justifyContent="start" alignItems="center" key={index}>
-              <Box as={item.icon} color="purple.100" size="4rem" />
-              <Text
-                maxW="200px"
-                textAlign="center"
-                pt={4}
-                color="purple.100"
-                fontWeight="bold"
-                lineHeight="1.5"
-              >
-                {item.description}
-              </Text>
-            </VStack>
-          ))}
-        </HStack>
-      </Hide>
-    </Box>
+          {t('resources')}
+        </Text>
+        <Text fontSize={{ base: 'sm', md: 'lg', lg: 'xl' }} color="neutral.400">
+          {t('homeSecondBox')}
+        </Text>
+      </Box>
+    </VStack>
   )
 }

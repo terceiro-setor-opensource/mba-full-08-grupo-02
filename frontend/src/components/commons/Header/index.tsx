@@ -142,13 +142,10 @@ export const Header: React.FC = () => {
       >
         <IconButton
           aria-label={'futebol'}
-          icon={<Logo width="32" height="32" />}
+          icon={<Logo width="64" height="64" />}
           bg="transparent"
           _hover={{ bd: 'transparent' }}
         />
-        <Heading color="neutral.400" size={{ base: 'sm', md: 'md', lg: 'md' }}>
-          {t('activeCity')}
-        </Heading>
       </ButtonGroup>
 
       <Spacer />

@@ -1,43 +1,69 @@
-import { Box, HStack } from '@chakra-ui/layout'
-import { Button, Hide, Image, Text } from '@chakra-ui/react'
+import {
+  Box,
+  HStack,
+  Image,
+  Text,
+  useBreakpointValue,
+  Button,
+} from '@chakra-ui/react'
 import LandingPage3 from '@/assets/images/landing3.png'
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 export const SignUpCall = () => {
-  const navigate = useNavigate()
-
   const { t } = useTranslation()
+  const boxWidth = useBreakpointValue({ base: '100%', lg: '60%' })
+  const imageWidth = useBreakpointValue({ base: '100%', lg: '40%' })
 
   return (
-    <HStack alignItems="flex-start" justifyContent={'space-around'} p={10}>
-      <Box>
-        <Text textStyle={'h1'} mb={12}>
-          {t('readyForThisJourney')}
-        </Text>
-        <Button
-          padding={20}
-          cursor="pointer"
-          borderRadius="20px"
-          bg="green.200"
-          color="neutral.100"
-          borderColor="green.200"
-          onClick={() => {
-            navigate('/register')
-          }}
+    <Box display="flex" alignItems="center" justifyContent={'center'}>
+      <HStack
+        justifyContent="space-between"
+        display={'flex'}
+        flexDirection={{ base: 'column', lg: 'row' }}
+        gap={{ base: 6, md: 8, lg: 12 }}
+        spacing={{ base: 6, md: 8, lg: 12 }}
+      >
+        <Box
+          w={boxWidth}
+          textAlign={{ base: 'center', lg: 'left' }}
+          maxW="612px"
         >
-          {t('getSignUp')}
-        </Button>
-      </Box>
-      <Hide below="md">
-        <Image
-          maxW="50%"
-          borderRadius="8px"
-          objectFit="cover"
-          src={LandingPage3}
-          alt="homem correndo na rua"
-        />
-      </Hide>
-    </HStack>
+          <Text
+            textStyle="h1"
+            mb={4}
+            fontSize={{ base: '2xl', md: '4xl', lg: '6xl' }}
+            fontFamily={'Montserrat'}
+            fontWeight={'bold'}
+          >
+            {t('readyForThisJourney')}
+          </Text>
+          <Box mt={8}>
+            <Button
+              cursor="pointer"
+              paddingX={22}
+              paddingY={6}
+              bg="transparent"
+              borderRadius="20px"
+              border={1}
+              borderStyle={'solid'}
+              color="green.200"
+              borderColor="green.200"
+            >
+              {t('getSignUp')}
+            </Button>
+          </Box>
+        </Box>
+
+        <Box w={imageWidth} maxW="500px">
+          <Image
+            borderRadius="12px"
+            objectFit="cover"
+            src={LandingPage3}
+            alt={t('imageAltText', 'A woman running on the street')}
+            aria-label={t('imageAriaLabel', 'Training image')}
+          />
+        </Box>
+      </HStack>
+    </Box>
   )
 }
