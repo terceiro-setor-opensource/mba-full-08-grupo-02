@@ -8,8 +8,8 @@ create table account (
   id bigint generated always as identity primary key,
   email text not null,
   password text not null,
-  phoneNumber int,
-  accountTypeId bigint references account_type(id)
+  phone_number int,
+  account_type_id bigint references account_type(id)
 );
 
 create table address (
