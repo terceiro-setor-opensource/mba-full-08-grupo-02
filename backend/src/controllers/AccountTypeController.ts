@@ -29,7 +29,7 @@ export default class AccountTypeController {
 
   static async findById(req: Request, res: Response) {
     const { id } = req.params;
-    const { data, error } = await AccountTypeRef.select("*").eq("id", id);
+    const { data, error } = await AccountTypeRef.select("*").eq("id", id).limit(1).single();
 
     if (error) {
       return res.status(500).json({ error: error.message });

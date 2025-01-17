@@ -35,7 +35,7 @@ export default class FavoritePlaceController {
     const { userid } = req.params;
     const { data, error } = await FavoritePlaceRef.select(
       "users(id, name), place(*)"
-    ).eq("userid", userid);
+    ).eq("userid", userid).limit(1).single();
 
     if (error) {
       return res.status(500).json({ error: error.message });

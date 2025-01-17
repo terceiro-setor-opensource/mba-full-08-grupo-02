@@ -39,9 +39,11 @@
   "otherAccounts": "ou faça isso através de outras contas",
   "hasAnAccount": "Já possui uma conta?",
   "entry": "Entrar",
+  "send": "Enviar",
   "welcomeAgain": "Bem vindo novamente!",
   "infoCredentials": "Informe suas credenciais.",
   "doentAccount": "Não tem uma conta?",
+  "like": "Like",
   "dashboard": {
     "discoverBestExercises": "Descubra as melhores opções de exercícios físicos",
     "selectCity": "Selecione uma cidade",
@@ -55,5 +57,25 @@
   "locationsPage": {
     "searchResults": "Exibindo resultados para pesquisa:"
   },
-  "loading": "Carregando..."
+  "detailedLocationPage": {
+    "description": "Descrição",
+    "seeMapButton": "Ver no mapa",
+    "locationEvents": "Eventos no local",
+    "benefitsForHealth": "Benefícios para saúde",
+    "seeMoreButton": "Ver mais",
+    "locationFeedbacks": "Avaliações do local",
+    "addEvent": "Adicionar evento",
+    "noEventsListed": "Sem eventos listados nesse local",
+    "feedbacksStackTitle": "Avaliações do local",
+    "feedbackInputPlaceholder": "Compartilhe sua experiência",
+    "feedbackListTitleMultiple": "Avaliações",
+    "feedbackListTitleSingle": "Avaliação"
+  },
+  "orderSelection": {
+    "select": "Ordenar",
+    "newer": "Mais recentes",
+    "older": "Mais antigos"
+  },
+  "loading": "Carregando...",
+  "backButton": "Voltar"
 }
