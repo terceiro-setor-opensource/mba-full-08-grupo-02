@@ -37,21 +37,27 @@ export const Places = () => {
     [],
   )
 
-  useEffect(() => {
-    const fetchPlaces = async () => {
-      setLoading(true)
-      try {
-        const response = await placeService.getPlaces({
-          search: `sport=${sportQuery?.toString()}&name=${nameSearch || ''}`,
-        })
-        setPlaces(response)
-      } catch (err) {
-        setError((err as Error).message || 'Failed to fetch places.')
-      } finally {
-        setLoading(false)
-      }
+  const fetchPlaces = async () => {
+    setLoading(true)
+    try {
+      const response = await placeService.getPlaces({
+        filter: {
+          order: '',
+          order_by: '',
+          searchByCity: "",
+          searchByNameDescription: '',
+          searchBySportId: undefined,
+        },
+      })
+      setPlaces(response)
+    } catch (err) {
+      setError((err as Error).message || 'Failed to fetch places.')
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchPlaces()
   }, [sportQuery, nameSearch])
 

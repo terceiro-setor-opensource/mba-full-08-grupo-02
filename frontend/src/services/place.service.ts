@@ -1,5 +1,14 @@
 import { Place } from '@/models/place'
 
+export interface SelectFilter {
+  pg?: number
+  order_by?: string
+  order?: string
+  searchByNameDescription?: string
+  searchBySportId?: number
+  searchByCity?: string
+}
+
 class PlaceService {
   private url = 'http://localhost:3000/places'
 
@@ -18,12 +27,16 @@ class PlaceService {
     })
   }
 
-  public async getPlaces({ search = '' }: { search?: string }) {
-    const urlWithSearch = search
-      ? `${this.url}?search=${encodeURIComponent(search)}`
-      : this.url
+  public async getPlaces({ filter = {} }: { filter: SelectFilter }) {
+    let finalUrl = this.url
 
-    const response = await fetch(urlWithSearch, {
+    finalUrl += filter
+      ? `?${Object.entries(filter)
+          .map(([key, value]) => `${key}=${encodeURIComponent(value || '')}`)
+          .join('&')}`
+      : ''
+
+    const response = await fetch(finalUrl, {
       method: 'GET',
       headers: this.getHeaders(),
     })

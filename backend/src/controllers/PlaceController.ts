@@ -4,6 +4,16 @@ import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
 import { ExtendedPlace } from "src/domains/Place";
 import { EventResponse } from "src/domains/Event";
+import { FeedbackResponse } from "src/domains/Feedback";
+
+export interface PlaceSelectFilter {
+  pg?: number;
+  order_by?: string;
+  order?: string;
+  searchByNameDescription?: string;
+  searchBySportId?: number;
+  searchByCity?: string;
+}
 
 const PlaceRef = supabase.from("place");
 
@@ -23,12 +33,56 @@ const placeSchema = {
 
 export default class PlaceController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await PlaceRef.select(`
-      *,
-      address(*),
-      place_image(imageid),
-      feedback(rating),
-      event(*)`);
+    console.log(req.query);
+    const {
+      order,
+      order_by,
+      pg,
+      searchByCity,
+      searchByNameDescription,
+      searchBySportId,
+    } = (req.query as unknown as PlaceSelectFilter) || {};
+
+    const isForeignOrder = {
+      feedback_rating: "feedback(rating)",
+      distance: "address(postalcode)",
+    };
+
+    const orderBy =
+      isForeignOrder[(order_by || "") as keyof typeof isForeignOrder] ||
+      order_by ||
+      "name";
+
+    let findAllPlaces = PlaceRef.select(
+      `
+        *,
+        address(*),
+        place_image(imageid),
+        feedback(rating),
+        event(*),
+        place_by_activity(activity(*))`
+    ).order(orderBy, {
+      ascending: (order && order === "DESC") || true,
+    });
+
+    if (searchByNameDescription) {
+      findAllPlaces = findAllPlaces.or(
+        `name.ilike.%${searchByNameDescription}%,description.ilike.%${searchByNameDescription}%`
+      );
+    }
+
+    if (searchBySportId) {
+      findAllPlaces = findAllPlaces.eq(
+        "place_by_activity(activity(id))",
+        searchBySportId
+      );
+    }
+
+    if (searchByCity) {
+      findAllPlaces = findAllPlaces.like("address(city)", `%${searchByCity}%`);
+    }
+
+    const { data, error } = await findAllPlaces;
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -46,8 +100,10 @@ export default class PlaceController {
         image:
           "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
         rating_avg:
-          place.feedback.reduce((acc, curr) => acc + curr.rating, 0) /
-          place.feedback.length,
+          place.feedback.reduce(
+            (acc: number, curr: FeedbackResponse) => acc + curr.rating,
+            0
+          ) / place.feedback.length,
       };
     });
 
@@ -91,8 +147,10 @@ export default class PlaceController {
       image:
         "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
       rating_avg:
-        data.feedback.reduce((acc, curr) => acc + curr.rating, 0) /
-        data.feedback.length,
+        data.feedback.reduce(
+          (acc: number, curr: FeedbackResponse) => acc + curr.rating,
+          0
+        ) / data.feedback.length,
     });
   }
 
