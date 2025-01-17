@@ -28,7 +28,7 @@ export default class ImageController {
 
   static async findById(req: Request, res: Response) {
     const { id } = req.params;
-    const { data, error } = await ImageRef.select("*").eq("id", id);
+    const { data, error } = await ImageRef.select("*").eq("id", id).limit(1).single();
 
     if (error) {
       return res.status(500).json({ error: error.message });
