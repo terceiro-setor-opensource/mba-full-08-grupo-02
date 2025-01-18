@@ -17,6 +17,8 @@ import { FormButton } from '@/components/commons/FormButton'
 import { SocialMedia } from '@/components/commons/SocialMedia'
 import { Link } from 'react-router-dom'
 import theme from '@/theme'
+import { useAuth } from '@/hooks/useAuth'
+import { toast } from 'react-toastify'
 
 interface IFormInput {
   name: string
@@ -27,6 +29,7 @@ interface IFormInput {
 
 export const SignUp = () => {
   const [show, setShow] = useState<boolean>(false)
+  const { register: authRegister } = useAuth()
 
   const { t } = useTranslation()
 
@@ -36,8 +39,17 @@ export const SignUp = () => {
     formState: { errors, isSubmitting },
   } = useForm<IFormInput>()
 
-  const onSubmit = (data: any) => {
-    console.log(data)
+  const onSubmit = async (data: IFormInput) => {
+    const ACCOUNT_TYPE_DEFAULT = 2
+    try {
+      await authRegister({
+        ...data,
+        account_type_id: ACCOUNT_TYPE_DEFAULT,
+      })
+      toast.success(t('formSignUp.success'))
+    } catch (error) {
+      toast.error(t('formSignUp.error'))
+    }
   }
 
   return (
@@ -100,8 +112,8 @@ export const SignUp = () => {
                   {...register('password', {
                     required: 'Senha é obrigatória',
                     minLength: {
-                      value: 8,
-                      message: 'A senha deve conter no mínimo 8 caracteres',
+                      value: 6,
+                      message: 'A senha deve conter no mínimo 6 caracteres',
                     },
                   })}
                 />

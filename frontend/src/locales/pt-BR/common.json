@@ -34,7 +34,13 @@
     },
     "register": "Cadastrar",
     "terms": "Concordo com os Termos e Condições",
-    "requiredTerms": "O termo é obrigatório"
+    "requiredTerms": "O termo é obrigatório",
+    "success": "Cadastro realizado com sucesso!Faça login para continuar.",
+    "error": "Erro ao realizar cadastro"
+  },
+  "formSignIn": {
+    "success": "Login realizado com sucesso!",
+    "error": "Erro ao realizar login"
   },
   "otherAccounts": "ou faça isso através de outras contas",
   "hasAnAccount": "Já possui uma conta?",
