@@ -1,34 +1,89 @@
-import { Box, HStack, Image, Text } from '@chakra-ui/react'
-import { Hide } from '@chakra-ui/react'
+import {
+  Box,
+  HStack,
+  Image,
+  Text,
+  useBreakpointValue,
+  Button,
+} from '@chakra-ui/react'
 import LandingPage1 from '@/assets/images/landing1.png'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
-export const HomeFirstBox = () => {
+export const HeroSection = () => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  const boxWidth = useBreakpointValue({ base: '100%', lg: '60%' })
+  const imageWidth = useBreakpointValue({ base: '100%', lg: '40%' })
 
   return (
-    <Box padding={60}>
-      <HStack justifyContent="space-around">
-        <Box w={{ base: '100%', md: '100%', lg: '40%' }}>
-          <Text textStyle={'h1'} mb={12}>
+    <Box
+      minHeight="70vh"
+      px={{ base: 6, md: 12, lg: 20 }}
+      py={{ base: 8, md: 12 }}
+      display="flex"
+      alignItems="center"
+      justifyContent={'center'}
+    >
+      <HStack
+        justifyContent="space-between"
+        display={'flex'}
+        flexDirection={{ base: 'column', lg: 'row' }}
+        gap={{ base: 6, md: 8, lg: 12 }}
+        spacing={{ base: 6, md: 8, lg: 12 }}
+      >
+        <Box
+          w={boxWidth}
+          textAlign={{ base: 'center', lg: 'left' }}
+          maxW="612px"
+        >
+          <Text
+            textStyle="h1"
+            mb={4}
+            fontSize={{ base: '2xl', md: '4xl', lg: '6xl' }}
+            fontFamily={'Montserrat'}
+            fontWeight={'bold'}
+          >
             {t('activeCity')}
           </Text>
-          <Text textStyle={'subtitle'} lineHeight="1.5">
+          <Text
+            fontSize={{
+              base: 'sm',
+              md: 'lg',
+              lg: 'xl',
+            }}
+            color={'neutral.400'}
+          >
             {t('homeFirstBox')}
           </Text>
-        </Box>
-        <Hide below="lg">
-          <Box width="12px" h="300px" bg="purple.200" borderRadius="8px"></Box>
-          <Box>
-            <Image
-              w="100%"
-              borderRadius="8px"
-              objectFit="cover"
-              src={LandingPage1}
-              alt="uma mulher treinando corrida na rua"
-            />
+          <Box mt={8}>
+            <Button
+              cursor="pointer"
+              paddingX={22}
+              paddingY={6}
+              bg="transparent"
+              borderRadius="20px"
+              border={1}
+              borderStyle={'solid'}
+              color="green.200"
+              borderColor="green.200"
+              onClick={() => navigate('/places')}
+            >
+              Explorar
+            </Button>
           </Box>
-        </Hide>
+        </Box>
+
+        <Box w={imageWidth} maxW="500px">
+          <Image
+            borderRadius="12px"
+            objectFit="cover"
+            src={LandingPage1}
+            alt={t('imageAltText', 'A woman running on the street')}
+            aria-label={t('imageAriaLabel', 'Training image')}
+          />
+        </Box>
       </HStack>
     </Box>
   )

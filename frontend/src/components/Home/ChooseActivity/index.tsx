@@ -16,7 +16,7 @@ export const ChooseActivity = ({
   }
 
   return (
-    <HStack justifyContent="center" padding={60}>
+    <HStack justifyContent="center" padding={60} my={12}>
       <VStack>
         <Text textAlign="center" textStyle={'h1'} color={color}>
           {title}

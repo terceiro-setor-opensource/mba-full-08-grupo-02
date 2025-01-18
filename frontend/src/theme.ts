@@ -85,7 +85,10 @@ const colors = {
 const styles = {
   global: {
     'html, body': {
-      fontFamily: `'Source Sans 3', sans-serif`,
+      fontFamily: `'Poppins', serif`,
+    },
+    '.montserrat': {
+      fontFamily: `'Montserrat', sans-serif`,
     },
   },
 }

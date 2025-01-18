@@ -38,7 +38,12 @@ export const FeedbackCard = ({ feedback }: FeedbackCardProps) => {
               <Text color="gray.500" textStyle="sm" fontSize=".8rem">
                 we don't have this info yet
               </Text>
-              <Button variant="plain" width="fit-content" height="fit-content" fontSize=".8rem">
+              <Button
+                variant="plain"
+                width="fit-content"
+                height="fit-content"
+                fontSize=".8rem"
+              >
                 {t('like')}
               </Button>
             </Stack>
