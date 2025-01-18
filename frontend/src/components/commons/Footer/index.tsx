@@ -1,62 +1,132 @@
-import { HStack, ListItem, UnorderedList, VStack } from '@chakra-ui/layout'
-import { IconButton, Text } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
-import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { ReactNode } from 'react'
+import {
+  Box,
+  Container,
+  Stack,
+  SimpleGrid,
+  Text,
+  VisuallyHidden,
+  chakra,
+  useColorModeValue,
+} from '@chakra-ui/react'
+import { FaTwitter, FaYoutube, FaInstagram } from 'react-icons/fa'
+
+const ListHeader = ({ children }: { children: ReactNode }) => {
+  return (
+    <Text fontWeight={'500'} fontSize={'lg'} mb={2}>
+      {children}
+    </Text>
+  )
+}
+
+const SocialButton = ({
+  children,
+  label,
+  href,
+}: {
+  children: ReactNode
+  label: string
+  href: string
+}) => {
+  return (
+    <chakra.button
+      bg={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
+      rounded={'full'}
+      w={8}
+      h={8}
+      cursor={'pointer'}
+      as={'a'}
+      href={href}
+      display={'inline-flex'}
+      alignItems={'center'}
+      justifyContent={'center'}
+      transition={'background 0.3s ease'}
+      _hover={{
+        bg: useColorModeValue('blackAlpha.200', 'whiteAlpha.200'),
+      }}
+    >
+      <VisuallyHidden>{label}</VisuallyHidden>
+      {children}
+    </chakra.button>
+  )
+}
+
+function LargeWithAppLinksAndSocial() {
+  return (
+    <Box
+      bg={useColorModeValue('gray.50', 'gray.900')}
+      color={useColorModeValue('gray.700', 'gray.200')}
+    >
+      <Container as={Stack} maxW={'6xl'} py={10}>
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={8}>
+          <Stack align={'flex-start'}>
+            <ListHeader>Cidade Ativa</ListHeader>
+            <Box as="a" href={'#'}>
+              Entre em contato
+            </Box>
+            <Box as="a" href={'#'}>
+              cidadeativa@suporte.com
+            </Box>
+            <Box as="a" href={'#'}>
+              +1-2345-6789
+            </Box>
+            <Box as="a" href={'#'}>
+              São Paulo, Brasil
+            </Box>
+            <Container
+              as={Stack}
+              maxW={'6xl'}
+              py={4}
+              direction={{ base: 'column', md: 'row' }}
+              spacing={4}
+              justify={{ md: 'space-between' }}
+              align={{ md: 'center' }}
+            >
+              <Stack direction={'row'} spacing={6}>
+                <SocialButton label={'Twitter'} href={'#'}>
+                  <FaTwitter />
+                </SocialButton>
+                <SocialButton label={'YouTube'} href={'#'}>
+                  <FaYoutube />
+                </SocialButton>
+                <SocialButton label={'Instagram'} href={'#'}>
+                  <FaInstagram />
+                </SocialButton>
+              </Stack>
+            </Container>
+          </Stack>
+
+          <Stack align={'flex-start'}>
+            <ListHeader>Produtos</ListHeader>
+            <Box as="a" href={'#'}>
+              Locais
+            </Box>
+            <Box as="a" href={'#'}>
+              Eventos
+            </Box>
+            <Box as="a" href={'#'}>
+              Benefícios
+            </Box>
+            <Box as="a" href={'#'}>
+              Login
+            </Box>
+            <Box as="a" href={'#'}>
+              Cadastro
+            </Box>
+          </Stack>
+
+          <Stack align={'flex-start'}>
+            <ListHeader>Sobre</ListHeader>
+            <Box as="a" href={'/about'}>
+              Faculdade Impacta
+            </Box>
+          </Stack>
+        </SimpleGrid>
+      </Container>
+    </Box>
+  )
+}
 
 export const Footer = () => {
-  const { t } = useTranslation()
-
-  return (
-    <HStack
-      wrap="wrap"
-      bg="neutral.200"
-      paddingY={20}
-      backgroundSize="cover"
-      justifyContent="space-around"
-      alignItems="flex-start"
-    >
-      <VStack alignItems="flex-start">
-        <Text textStyle={'h2'}>{t('activeCity')}</Text>
-        <Text textStyle={'p'}>{t('getInTouch')}</Text>
-        <Link to={''}>{t('emailActiveCity')}</Link>
-        <Text textStyle={'p'}>+1-2345-6789</Text>
-        <Text textStyle={'p'}>{t('saoPaulo')}</Text>
-      </VStack>
-      <VStack>
-        <Text textStyle={'h2'}>{t('products')}</Text>
-        <UnorderedList>
-          <ListItem cursor="pointer">{t('locations')}</ListItem>
-          <ListItem cursor="pointer">{t('events')}</ListItem>
-          <ListItem cursor="pointer">{t('benefits')}</ListItem>
-          <ListItem cursor="pointer">
-            <Link to={'/login'}>{t('login')}</Link>
-          </ListItem>
-          <ListItem cursor="pointer">
-            <Link to={'/register'}>{t('signUp')}</Link>
-          </ListItem>
-        </UnorderedList>
-      </VStack>
-      <HStack pt={2} wrap="wrap" justifyContent="space-between">
-        <IconButton
-          marginInline={2}
-          aria-label={'facebook'}
-          icon={<FaFacebook size={36} />}
-          bg="transparent"
-        />
-        <IconButton
-          marginInline={2}
-          aria-label={'facebook'}
-          icon={<FaInstagram size={36} />}
-          bg="transparent"
-        />
-        <IconButton
-          marginInline={2}
-          aria-label={'facebook'}
-          icon={<FaTwitter size={36} />}
-          bg="transparent"
-        />
-      </HStack>
-    </HStack>
-  )
+  return <LargeWithAppLinksAndSocial />
 }

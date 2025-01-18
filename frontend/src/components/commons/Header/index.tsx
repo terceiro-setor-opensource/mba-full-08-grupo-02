@@ -68,6 +68,7 @@ const LargeScreenMenu: React.FC<LargeScreenMenuProps> = ({
       fontSize={'button'}
       variant="link"
       color="neutral.400"
+      onClick={() => navigate('/dashboard')}
     >
       {t('search')}
     </Button>
@@ -76,6 +77,7 @@ const LargeScreenMenu: React.FC<LargeScreenMenuProps> = ({
       fontSize={'button'}
       variant="link"
       color="neutral.400"
+      onClick={() => navigate('/about')}
     >
       {t('about')}
     </Button>

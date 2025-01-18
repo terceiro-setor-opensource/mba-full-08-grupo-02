@@ -11,6 +11,7 @@ import { Places } from './pages/Places'
 import { Benefits } from './pages/BenefitsCiclism'
 import { DetailedPlace } from './pages/DetailedPlace'
 import { ToastContainer } from 'react-toastify'
+import About from './pages/About'
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
         path: 'benefits-ciclism',
         element: <Benefits />,
       },
+      {
+        path: 'about',
+        element: <About />,
+      },
     ],
   },
 ])
@@ -60,9 +65,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-    <ToastContainer />
-    <RouterProvider router={router} />
-  </>
+      <ToastContainer />
+      <RouterProvider router={router} />
+    </>
   )
 }
 
