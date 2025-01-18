@@ -61,8 +61,10 @@ export default class PlaceController {
         event(*),
         place_by_activity(activity(*))`
     ).order(orderBy, {
-      ascending: (order && order === "DESC") || true,
+      ascending: (order && order === "DESC") ? false : true,
     });
+
+    console.log((order && order === "DESC") ? false : true);
 
     if (searchByNameDescription) {
       findAllPlaces = findAllPlaces.or(
