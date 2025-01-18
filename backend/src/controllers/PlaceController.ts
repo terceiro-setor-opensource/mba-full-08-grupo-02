@@ -15,8 +15,6 @@ export interface PlaceSelectFilter {
   searchByCity?: string;
 }
 
-const PlaceRef = supabase.from("place");
-
 const placeSchema = {
   name: z.string().min(1),
   description: z.string().min(1),
@@ -33,6 +31,7 @@ const placeSchema = {
 
 export default class PlaceController {
   static async findAll(req: Request, res: Response) {
+    const PlaceRef = supabase.from("place");
     console.log(req.query);
     const {
       order,
@@ -111,6 +110,7 @@ export default class PlaceController {
   }
 
   static async findById(req: Request, res: Response) {
+    const PlaceRef = supabase.from("place");
     const { id } = req.params;
     const { data, error } = await PlaceRef.select(
       `*,
@@ -155,6 +155,7 @@ export default class PlaceController {
   }
 
   static async create(req: Request, res: Response) {
+    const PlaceRef = supabase.from("place");
     const { body } = req;
 
     const ZPlaceSchema = z.object(placeSchema);
@@ -187,6 +188,7 @@ export default class PlaceController {
   }
 
   static async update(req: Request, res: Response) {
+    const PlaceRef = supabase.from("place");
     const { id } = req.params;
     const { body } = req;
 
@@ -232,6 +234,7 @@ export default class PlaceController {
   }
 
   static async delete(req: Request, res: Response) {
+    const PlaceRef = supabase.from("place");
     const { body } = req;
 
     const DeleteSchema = z.object({
