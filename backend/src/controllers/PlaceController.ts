@@ -61,10 +61,8 @@ export default class PlaceController {
         event(*),
         place_by_activity(activity(*))`
     ).order(orderBy, {
-      ascending: (order && order === "DESC") ? false : true,
+      ascending: order && order === "DESC" ? false : true,
     });
-
-    console.log((order && order === "DESC") ? false : true);
 
     if (searchByNameDescription) {
       findAllPlaces = findAllPlaces.or(
@@ -80,7 +78,14 @@ export default class PlaceController {
     }
 
     if (searchByCity) {
-      findAllPlaces = findAllPlaces.like("address(city)", `%${searchByCity}%`);
+      const brokenCityInfo = searchByCity.split("-");
+      brokenCityInfo.splice(-1);
+      const city = brokenCityInfo.join("-");
+      const state = searchByCity.split("-").at(-1);
+      findAllPlaces = findAllPlaces
+        .ilike("address.city", `%${city}%`)
+        .ilike("address.state", `%${state}%`)
+        .not("address", "is", null);
     }
 
     const { data, error } = await findAllPlaces;
