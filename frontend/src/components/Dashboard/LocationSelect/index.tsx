@@ -21,6 +21,7 @@ export const LocationSelect = ({
       onChange={onChange}
     >
       <option value="São Paulo-SP">{t('dashboard.saoPaulo')}</option>
+      <option value="Santo André-SP">{t('dashboard.santoAndre')}</option>
     </Select>
   </HStack>
 )
