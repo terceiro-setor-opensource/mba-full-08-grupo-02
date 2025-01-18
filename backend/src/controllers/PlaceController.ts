@@ -32,7 +32,7 @@ const placeSchema = {
 export default class PlaceController {
   static async findAll(req: Request, res: Response) {
     const PlaceRef = supabase.from("place");
-    
+
     const {
       order,
       order_by,

@@ -9,6 +9,7 @@ import { placeService } from '@/services/place.service'
 import { Place } from '@/models/place'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { debounce } from 'lodash' // Optional, for debouncing
+import { activityService } from '@/services/activity.service'
 
 const stackStyles = {
   width: {
@@ -23,16 +24,24 @@ export const Places = () => {
   const navigate = useNavigate()
 
   const [places, setPlaces] = useState<Place[]>([])
+  const [activities, setActivities] = useState<
+    { text: string; value: number }[]
+  >([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
-  const [searchParams] = useSearchParams()
 
-  const sportQuery = searchParams.get('q')
-  const [nameSearch, setNameSearch] = useState<string | null>(null)
+  const [stateOrder, setStateOrder] = useState('')
+  const [stateOrderBy, setStateOrderBy] = useState('')
+  const [stateSearchByCity, setStateSearchByCity] = useState('')
+  const [stateSearchByNameDescription, setSearchStateByNameDescription] =
+    useState('')
+  const [stateSearchBySportId, setStateSearchBySportId] = useState<
+    number | undefined
+  >(undefined)
 
   const handleSearch = useCallback(
     debounce((search: string) => {
-      setNameSearch(search)
+      setSearchStateByNameDescription(search)
     }, 300),
     [],
   )
@@ -42,11 +51,11 @@ export const Places = () => {
     try {
       const response = await placeService.getPlaces({
         filter: {
-          order: '',
-          order_by: '',
-          searchByCity: "",
-          searchByNameDescription: '',
-          searchBySportId: undefined,
+          order: stateOrder,
+          order_by: stateOrderBy,
+          searchByCity: stateSearchByCity,
+          searchByNameDescription: stateSearchByNameDescription,
+          searchBySportId: stateSearchBySportId,
         },
       })
       setPlaces(response)
@@ -56,10 +65,32 @@ export const Places = () => {
       setLoading(false)
     }
   }
+  const fetchActivities = async () => {
+    try {
+      const response = await activityService.getActivities()
+      setActivities(
+        (response || []).map((option) => {
+          return { text: option.name, value: option.id }
+        }),
+      )
+    } catch (err) {
+      setError((err as Error).message || 'Failed to fetch activities.')
+    }
+  }
 
   useEffect(() => {
     fetchPlaces()
-  }, [sportQuery, nameSearch])
+  }, [
+    stateOrder,
+    stateOrderBy,
+    stateSearchByCity,
+    stateSearchByNameDescription,
+    stateSearchBySportId,
+  ])
+
+  useEffect(() => {
+    fetchActivities()
+  }, [])
 
   return (
     <Box paddingY={'2rem'}>
@@ -71,8 +102,20 @@ export const Places = () => {
             justifyContent="space-between"
             width="100%"
           >
-            <LocationSelect />
-            <SportSelect />
+            <LocationSelect
+              onChange={(e) => setStateSearchByCity(e.currentTarget.value)}
+            />
+
+            <SportSelect
+              onChange={(e) =>
+                setStateSearchBySportId(
+                  e.currentTarget.value
+                    ? parseInt(e.currentTarget.value)
+                    : undefined,
+                )
+              }
+              options={activities}
+            />
             <SearchAndFilter onSearch={handleSearch} />
           </HStack>
         </Stack>
@@ -87,7 +130,7 @@ export const Places = () => {
             <Text color="red.500">{error}</Text>
           ) : (
             <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
-              {places?.map((place) => (
+              {(places || []).map((place) => (
                 <PlaceCard
                   key={place.id}
                   place={place}

@@ -20,7 +20,7 @@ class PlaceService {
   }): Promise<Place[]> {
     try {
       const response = await api.get(this.basePath, {
-        params: { filter },
+        params: { ...filter },
       })
       return response.data
     } catch (error: any) {
