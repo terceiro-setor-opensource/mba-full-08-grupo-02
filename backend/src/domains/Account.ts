@@ -1,7 +1,7 @@
 export type AccountResponse = {
   id: number;
   email: string;
-  phonenumber: string;
+  phone_number: string;
   password: string;
-  accounttypeid: string;
+  account_type_id: string;
 };

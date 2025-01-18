@@ -10,13 +10,14 @@ import accountRoutes from "./routes/account";
 import addressRoutes from "./routes/address";
 import feedbackRoutes from "./routes/feedback";
 import favoritePlaceRoutes from "./routes/favoritePlace";
+import authRoutes from "./routes/auth";
 
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(userRouter, activityRouter);
+app.use(userRouter, activityRouter, authRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello Word");

@@ -11,30 +11,30 @@ export type Database = {
     Tables: {
       account: {
         Row: {
-          accounttypeid: number | null
+          account_type_id: number | null
           email: string
           id: number
           password: string
-          phonenumber: string | null
+          phone_number: string | null
         }
         Insert: {
-          accounttypeid?: number | null
+          account_type_id?: number | null
           email: string
           id?: never
           password: string
-          phonenumber?: string | null
+          phone_number?: string | null
         }
         Update: {
-          accounttypeid?: number | null
+          account_type_id?: number | null
           email?: string
           id?: never
           password?: string
-          phonenumber?: string | null
+          phone_number?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "account_accounttypeid_fkey"
-            columns: ["accounttypeid"]
+            foreignKeyName: "account_account_type_id_fkey"
+            columns: ["account_type_id"]
             isOneToOne: false
             referencedRelation: "account_type"
             referencedColumns: ["id"]

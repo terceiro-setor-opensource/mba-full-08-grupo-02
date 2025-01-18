@@ -7,15 +7,15 @@ const AccountRef = supabase.from("account");
 
 const accountSchema = z.object({
   email: z.string().email().min(1),
-  phonenumber: z.string().min(1),
+  phone_number: z.string().min(1).optional(),
   password: z.string().min(1),
-  accounttypeid: z.number().int(),
+  account_type_id: z.number().int().default(2),
 });
 
 export default class AccountController {
   static async findAll(req: Request, res: Response) {
     const { data, error } = await AccountRef.select(
-      "email, phonenumber, account_type(type, permissions)"
+      "email, phone_number, account_type(type, permissions)"
     );
 
     if (error) {
@@ -34,7 +34,7 @@ export default class AccountController {
   static async findById(req: Request, res: Response) {
     const { id } = req.params;
     const { data, error } = await AccountRef.select(
-      "email, phonenumber, account_type(type, permissions)"
+      "email, phone_number, account_type(type, permissions)"
     ).eq("id", id).limit(1).single();
 
     if (error) {
@@ -48,37 +48,6 @@ export default class AccountController {
     }
 
     res.status(201).json(data);
-  }
-
-  static async create(req: Request, res: Response) {
-    const { body } = req;
-
-    const validation = accountSchema.safeParse(body);
-    if (validation.error) {
-      return res.status(404).json({
-        status: 404,
-        message: `Validation error`,
-        errors: validation.error.errors,
-      });
-    }
-
-    // implement a hash for the password
-    const inserted = await AccountRef.insert(body).select(
-      "email, phonenumber, account_type(type, permissions)"
-    );
-    const { error } = inserted;
-    if (error)
-      return res
-        .status(404)
-        .json(
-          new ErrorHandling(
-            error.code,
-            error.message,
-            "inserting a new account"
-          ).returnObjectRequestError()
-        );
-
-    res.status(201).json(inserted.data);
   }
 
   static async update(req: Request, res: Response) {
