@@ -57,7 +57,10 @@ export async function login(req: Request, res: Response): Promise<Response> {
   });
 }
 
-export async function refreshToken(req: Request, res: Response): Promise<Response> {
+export async function refreshToken(
+  req: Request,
+  res: Response
+): Promise<Response> {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ message: "Authorization token missing" });
@@ -81,6 +84,41 @@ export async function refreshToken(req: Request, res: Response): Promise<Respons
     );
 
     return res.status(200).json({ token: newToken });
+  } catch (err) {
+    return res.status(403).json({ message: "Invalid token" });
+  }
+}
+
+export async function profile(req: Request, res: Response): Promise<Response> {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "Authorization token missing" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      id: string;
+      email: string;
+      account_type_id: number;
+    };
+
+    const { data: account, error } = await supabase
+      .from("account")
+      .select("id, email, account_type_id, name, phone_number")
+      .eq("id", decoded.id)
+      .single();
+
+    if (error || !account) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    return res.status(200).json({
+      id: account.id,
+      name: account.name,
+      email: account.email,
+      phone_number: account.phone_number,
+      account_type_id: account.account_type_id,
+    });
   } catch (err) {
     return res.status(403).json({ message: "Invalid token" });
   }
