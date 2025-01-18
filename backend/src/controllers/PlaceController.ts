@@ -32,7 +32,7 @@ const placeSchema = {
 export default class PlaceController {
   static async findAll(req: Request, res: Response) {
     const PlaceRef = supabase.from("place");
-    console.log(req.query);
+    
     const {
       order,
       order_by,
@@ -71,10 +71,10 @@ export default class PlaceController {
     }
 
     if (searchBySportId) {
-      findAllPlaces = findAllPlaces.eq(
-        "place_by_activity(activity(id))",
-        searchBySportId
-      );
+      findAllPlaces = findAllPlaces
+        .eq("place_by_activity.activity.id", searchBySportId)
+        .not("place_by_activity", "is", null)
+        .not("place_by_activity.activity", "is", null);
     }
 
     if (searchByCity) {
