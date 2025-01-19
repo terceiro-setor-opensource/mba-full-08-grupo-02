@@ -116,7 +116,18 @@ export const Places = () => {
               }
               options={activities}
             />
-            <SearchAndFilter onSearch={handleSearch} />
+            <SearchAndFilter
+              onSearch={handleSearch}
+              sortChange={(e) => {
+                if (e.currentTarget.value) {
+                  setStateOrder(e.currentTarget.value.split('/')[1])
+                  setStateOrderBy(e.currentTarget.value.split('/')[0])
+                } else {
+                  setStateOrder('')
+                  setStateOrderBy('')
+                }
+              }}
+            />
           </HStack>
         </Stack>
         <Stack spacing={8} paddingTop={12} alignItems={'start'}>

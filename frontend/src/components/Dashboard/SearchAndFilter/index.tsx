@@ -3,6 +3,8 @@ import { Box } from '@chakra-ui/layout'
 import { Button } from '@chakra-ui/react'
 import { t } from 'i18next'
 import { BiFilter } from 'react-icons/bi'
+import { SortSelect } from '../SortSelect'
+import { ChangeEvent } from 'react'
 
 const responsiveWidth = {
   base: '100%',
@@ -10,9 +12,13 @@ const responsiveWidth = {
 }
 type SearchAndFilterProps = {
   onSearch: (search: string) => void
+  sortChange?: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
-export const SearchAndFilter = ({ onSearch }: SearchAndFilterProps) => (
+export const SearchAndFilter = ({
+  onSearch,
+  sortChange,
+}: SearchAndFilterProps) => (
   <>
     <Box width="100%">
       <SearchBar
@@ -21,8 +27,6 @@ export const SearchAndFilter = ({ onSearch }: SearchAndFilterProps) => (
         variant="filled"
       />
     </Box>
-    <Button width={responsiveWidth}>
-      <BiFilter />
-    </Button>
+    <SortSelect onChange={sortChange} />
   </>
 )
