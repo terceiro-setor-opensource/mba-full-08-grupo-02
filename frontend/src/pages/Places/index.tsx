@@ -33,6 +33,7 @@ export const Places = () => {
   const [stateOrder, setStateOrder] = useState('')
   const [stateOrderBy, setStateOrderBy] = useState('')
   const [stateSearchByCity, setStateSearchByCity] = useState('')
+  const [stateSelectedActivityName, setStateSelectedActivityName] = useState('')
   const [stateSearchByNameDescription, setSearchStateByNameDescription] =
     useState('')
   const [stateSearchBySportId, setStateSearchBySportId] = useState<
@@ -107,13 +108,17 @@ export const Places = () => {
             />
 
             <SportSelect
-              onChange={(e) =>
+              onChange={(e) => {
                 setStateSearchBySportId(
                   e.currentTarget.value
                     ? parseInt(e.currentTarget.value)
                     : undefined,
                 )
-              }
+                setStateSelectedActivityName(
+                  e.currentTarget.options[e.currentTarget.selectedIndex]
+                    .innerText,
+                )
+              }}
               options={activities}
             />
             <SearchAndFilter
@@ -133,6 +138,11 @@ export const Places = () => {
         <Stack spacing={8} paddingTop={12} alignItems={'start'}>
           <Text textStyle="h2" fontSize="1.2rem">
             {t('locationsPage.searchResults')}
+            {stateSelectedActivityName
+              ? ` ${t(
+                  'locationsPage.searchResultsFor',
+                )} ${stateSelectedActivityName}:`
+              : ''}
           </Text>
 
           {loading ? (

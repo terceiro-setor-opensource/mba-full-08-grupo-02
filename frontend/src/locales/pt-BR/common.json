@@ -63,7 +63,8 @@
     "running": "Corrida"
   },
   "locationsPage": {
-    "searchResults": "Exibindo resultados para pesquisa:"
+    "searchResults": "Exibindo resultados para pesquisa",
+    "searchResultsFor": "em"
   },
   "detailedLocationPage": {
     "description": "Descrição",

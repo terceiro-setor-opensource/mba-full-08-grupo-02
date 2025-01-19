@@ -49,6 +49,7 @@ export const Dashboard = () => {
   const [stateOrder, setStateOrder] = useState('')
   const [stateOrderBy, setStateOrderBy] = useState('')
   const [stateSearchByCity, setStateSearchByCity] = useState('')
+  const [stateSelectedActivityName, setStateSelectedActivityName] = useState('')
   const [stateSearchByNameDescription, setSearchStateByNameDescription] =
     useState('')
   const [stateSearchBySportId, setStateSearchBySportId] = useState<
@@ -126,13 +127,17 @@ export const Dashboard = () => {
             />
 
             <SportSelect
-              onChange={(e) =>
+              onChange={(e) => {
                 setStateSearchBySportId(
                   e.currentTarget.value
                     ? parseInt(e.currentTarget.value)
                     : undefined,
                 )
-              }
+                setStateSelectedActivityName(
+                  e.currentTarget.options[e.currentTarget.selectedIndex]
+                    .innerText,
+                )
+              }}
               options={activities}
             />
             <SearchAndFilter
@@ -153,10 +158,13 @@ export const Dashboard = () => {
           <ChooseActivity
             title={t('dashboard.lookingFor')}
             color="neutral.500"
+            setStateSearchBySportId={setStateSearchBySportId}
+            setStateSelectedActivityName={setStateSelectedActivityName}
           />
         </Stack>
         <Stack>
           <Text textStyle="h2" fontSize="2rem" alignSelf="start">
+            {stateSelectedActivityName ? `${stateSelectedActivityName} ` : ''}
             {t('dashboard.nearYou')}
           </Text>
 
@@ -164,7 +172,7 @@ export const Dashboard = () => {
             <Text color="red.500">{error}</Text>
           ) : (
             <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
-              {places?.map((place) => (
+              {(places || []).map((place) => (
                 <PlaceCard
                   key={place.id}
                   place={place}

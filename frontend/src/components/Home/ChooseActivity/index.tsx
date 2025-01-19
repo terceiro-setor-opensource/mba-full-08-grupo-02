@@ -1,18 +1,26 @@
 import { HStack, VStack } from '@chakra-ui/layout'
 import { Icon, IconButton, Text } from '@chakra-ui/react'
 import { chooseActivity } from '@/consts/Home'
+import { Dispatch, SetStateAction } from 'react'
+import { Activity } from '@/models/activity'
 
 interface ChooseActivityProps {
   title?: string
   color?: 'neutral.400' | 'neutral.500'
+  setStateSearchBySportId: Dispatch<SetStateAction<number | undefined>>
+  setStateSelectedActivityName?: Dispatch<SetStateAction<string>>
 }
 
 export const ChooseActivity = ({
   title = 'Escolha sua atividade favorita',
   color = 'neutral.400',
+  setStateSearchBySportId,
+  setStateSelectedActivityName,
 }: ChooseActivityProps) => {
-  function handleNavigateToActivity(activity: string) {
-    window.location.href = `/places?q=${activity}`
+  function handleFilterByActivity(activity: any) {
+    setStateSearchBySportId(activity.id)
+    if (setStateSelectedActivityName)
+      setStateSelectedActivityName(activity.activity)
   }
 
   return (
@@ -31,7 +39,7 @@ export const ChooseActivity = ({
             <VStack
               key={index}
               gap={2}
-              onClick={() => handleNavigateToActivity(item.activity)}
+              onClick={() => handleFilterByActivity(item)}
             >
               <IconButton
                 aria-label={item.activity}
