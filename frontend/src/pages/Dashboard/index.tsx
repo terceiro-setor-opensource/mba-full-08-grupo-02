@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { t } from 'i18next'
 import { Box, HStack, SimpleGrid, Stack, Text } from '@chakra-ui/layout'
 import { ChooseActivity } from '@/components/Home/ChooseActivity'
@@ -9,6 +9,8 @@ import PlaceCard from '@/components/Dashboard/PlaceCard'
 import { placeService } from '@/services/place.service'
 import { Place } from '@/models/place'
 import { useNavigate } from 'react-router-dom'
+import { activityService } from '@/services/activity.service'
+import { debounce } from 'lodash'
 
 const containerStyles = {
   paddingY: {
@@ -35,26 +37,75 @@ const headingStyles = {
 }
 
 export const Dashboard = () => {
-  const [places, setPlaces] = useState<Place[]>([])
-  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const fetchPlaces = async () => {
-      try {
-        const response = await placeService.getByUserLocation({
-          latitude: 23.5505,
-          longitude: 46.6333,
-          radius: 10,
-        })
-        setPlaces(response)
-      } catch (err) {
-        setError('Failed to fetch places')
-        console.error(err)
-      }
-    }
+  const [places, setPlaces] = useState<Place[]>([])
+  const [activities, setActivities] = useState<
+    { text: string; value: number }[]
+  >([])
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
+  const [stateOrder, setStateOrder] = useState('')
+  const [stateOrderBy, setStateOrderBy] = useState('')
+  const [stateSearchByCity, setStateSearchByCity] = useState('')
+  const [stateSearchByNameDescription, setSearchStateByNameDescription] =
+    useState('')
+  const [stateSearchBySportId, setStateSearchBySportId] = useState<
+    number | undefined
+  >(undefined)
+
+  const handleSearch = useCallback(
+    debounce((search: string) => {
+      setSearchStateByNameDescription(search)
+    }, 300),
+    [],
+  )
+
+  const fetchPlaces = async () => {
+    setLoading(true)
+    try {
+      const response = await placeService.getPlaces({
+        filter: {
+          order: stateOrder,
+          order_by: stateOrderBy,
+          searchByCity: stateSearchByCity,
+          searchByNameDescription: stateSearchByNameDescription,
+          searchBySportId: stateSearchBySportId,
+        },
+      })
+      setPlaces(response)
+    } catch (err) {
+      setError((err as Error).message || 'Failed to fetch places.')
+    } finally {
+      setLoading(false)
+    }
+  }
+  const fetchActivities = async () => {
+    try {
+      const response = await activityService.getActivities()
+      setActivities(
+        (response || []).map((option) => {
+          return { text: option.name, value: option.id }
+        }),
+      )
+    } catch (err) {
+      setError((err as Error).message || 'Failed to fetch activities.')
+    }
+  }
+
+  useEffect(() => {
     fetchPlaces()
+  }, [
+    stateOrder,
+    stateOrderBy,
+    stateSearchByCity,
+    stateSearchByNameDescription,
+    stateSearchBySportId,
+  ])
+
+  useEffect(() => {
+    fetchActivities()
   }, [])
 
   return (
@@ -70,9 +121,32 @@ export const Dashboard = () => {
             justifyContent="space-between"
             width="100%"
           >
-            <LocationSelect />
-            <SportSelect />
-            <SearchAndFilter onSearch={console.log} />
+            <LocationSelect
+              onChange={(e) => setStateSearchByCity(e.currentTarget.value)}
+            />
+
+            <SportSelect
+              onChange={(e) =>
+                setStateSearchBySportId(
+                  e.currentTarget.value
+                    ? parseInt(e.currentTarget.value)
+                    : undefined,
+                )
+              }
+              options={activities}
+            />
+            <SearchAndFilter
+              onSearch={handleSearch}
+              sortChange={(e) => {
+                if (e.currentTarget.value) {
+                  setStateOrder(e.currentTarget.value.split('/')[1])
+                  setStateOrderBy(e.currentTarget.value.split('/')[0])
+                } else {
+                  setStateOrder('')
+                  setStateOrderBy('')
+                }
+              }}
+            />
           </HStack>
         </Stack>
         <Stack padding={'3rem'}>
