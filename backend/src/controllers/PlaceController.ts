@@ -5,6 +5,8 @@ import { z } from "zod";
 import { ExtendedPlace } from "src/domains/Place";
 import { EventResponse } from "src/domains/Event";
 import { FeedbackResponse } from "src/domains/Feedback";
+import { BenefitsByPlaceIdResponse } from "src/domains/PlaceByActivity";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export interface PlaceSelectFilter {
   pg?: number;
@@ -160,6 +162,7 @@ export default class PlaceController {
         ) / data.feedback.length,
     });
   }
+  
 
   static async create(req: Request, res: Response) {
     const PlaceRef = supabase.from("place");
@@ -279,5 +282,58 @@ export default class PlaceController {
     res
       .status(201)
       .json({ code: 201, status: "OK", message: `Rows affected -> ${count}` });
+  }
+
+  
+  static async findBenefitsByPlaceId(req: Request, res: Response) {
+    const { id } = req.params;
+    
+     const { data: benefitsData, error } = await supabase
+     .from('place')
+     .select(`
+       id,
+       place_by_activity (
+         activity (
+           *,
+           activity_benefit (
+             benefit (*)
+           )
+         )
+       )
+     `)
+     .eq('id', id)
+     .limit(1)
+     .single() as {data:BenefitsByPlaceIdResponse, error: PostgrestError | null};
+
+    if(error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    if (!benefitsData) {
+      return res.status(204).json({
+        message: `No benefits found for the place id = ${id}`,
+      });
+    }
+
+    const activities = benefitsData.place_by_activity.map(
+      (item) => item.activity.name
+    );
+
+    const benefits = benefitsData.place_by_activity.flatMap(
+      (item) =>
+        item.activity.activity_benefit.map((b) => ({
+          id: b.benefit.id,
+          name: b.benefit.name,
+          description: b.benefit.description,
+          activity: item.activity.name,
+          icon: b.benefit.icon,
+        }))
+    );
+
+    res.status(201).json({
+      activities,
+      benefits
+    });
+
   }
 }

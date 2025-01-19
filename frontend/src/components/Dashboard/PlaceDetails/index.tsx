@@ -4,22 +4,23 @@ import { UnderlinedTitle } from '@/components/commons/UnderlinedTitle'
 import { Event } from '@/models/event'
 import { Place } from '@/models/place'
 import {
+  Badge,
   Flex,
+  HStack,
   List,
   ListItem,
   SimpleGrid,
   Stack,
   Text,
 } from '@chakra-ui/layout'
-import { border, Button, Image, Input } from '@chakra-ui/react'
-import { color } from 'framer-motion'
+import { Button, Image, Input, theme } from '@chakra-ui/react'
 import { t } from 'i18next'
 import EventCard from '../EventCard'
 import { TextButton } from '@/components/commons/TextButton'
 import { RiArrowRightLine } from 'react-icons/ri'
 import { FeedbackCard } from '../FeedbackCard'
 import { OrderSelect } from '../OrderSelect'
-
+import { useNavigate } from 'react-router-dom'
 const stackStyles = {
   width: {
     base: '100%',
@@ -91,6 +92,7 @@ const stackFeedbackList = {
 }
 
 export const PlaceDetails = ({ place }: { place: Place }) => {
+  const navigate = useNavigate()
   return (
     <Stack sx={stackStyles}>
       <SimpleGrid columns={{ base: 1, md: 1, lg: 2 }} spacing={12}>
@@ -100,11 +102,11 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
             <Text sx={titleTextStyle}>{place?.name}</Text>
             <FavoriteButton />
           </Flex>
-          <Text textStyle="h3" fontSize="1.2rem" fontWeight="bold">
-            {place?.place_by_activity
-              ?.map((place_by_activity) => place_by_activity.activity?.name)
-              .join(' - ')}
-          </Text>
+          <HStack wrap={'wrap'} spacing={2}>
+            {place.place_by_activity?.map((place_by_activity) => (
+              <Badge>{place_by_activity.activity?.name}</Badge>
+            ))}
+          </HStack>
           <Text color="#ababab">
             {place?.address?.streetname} - {place?.address?.neighborhood},{' '}
             {place?.address?.city} - {place?.address?.state},{' '}
@@ -118,7 +120,6 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
         </Stack>
       </SimpleGrid>
       <Stack sx={stackOtherInfosStyle}>
-        <UnderlinedTitle title={t('detailedLocationPage.description')} />
         <Text>{place?.description}</Text>
       </Stack>
       <Stack sx={stackOtherInfosStyle}>
@@ -130,7 +131,7 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
           />
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
-          {place?.events?.length > 0 ? (
+          {place?.events && place?.events?.length > 0 ? (
             place?.events?.map((event: Event) => <EventCard event={event} />)
           ) : (
             <Text>{t('detailedLocationPage.noEventsListed')}</Text>
@@ -140,19 +141,28 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
       <Stack sx={stackOtherInfosStyle}>
         <UnderlinedTitle title={t('detailedLocationPage.benefitsForHealth')} />
         <Stack>
-          {place?.place_by_activity?.map((place_by_activity) => (
+          {place?.place_by_activity && place.place_by_activity.length > 0 ? (
+            <>
             <Stack>
               <Text fontWeight="bold" marginTop=".5rem">
-                {place_by_activity.activity?.name}
+                {place.place_by_activity[0].activity?.name}
               </Text>
-              {place_by_activity.activity?.activity_benefit?.map(
+              {place.place_by_activity[0].activity?.activity_benefit?.map(
                 (activity_benefit) => (
-                  <Text>{activity_benefit.benefit?.description}</Text>
+                  <Text key={activity_benefit.benefit?.description}>
+                    {activity_benefit.benefit?.description}
+                  </Text>
                 ),
               )}
             </Stack>
-          ))}
-          <TextButton text={t('detailedLocationPage.seeMoreButton')} />
+            <TextButton
+              text={t('detailedLocationPage.seeMoreButton')}
+              onClick={() => navigate(`/places/${place.id}/benefits`)}
+            />
+            </>
+          ): (
+            <Text>{t('detailedLocationPage.noBenefitsListed')}</Text>
+          )}
         </Stack>
       </Stack>
       <Stack sx={{ ...stackOtherInfosStyle, ...stackFeedbackList }}>
