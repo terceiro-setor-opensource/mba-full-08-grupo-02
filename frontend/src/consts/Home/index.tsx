@@ -17,26 +17,32 @@ const chooseActivity = [
   {
     activity: 'Futebol',
     icon: FaFutbol,
+    id: 6,
   },
   {
     activity: 'Vôlei',
     icon: FaVolleyballBall,
+    id: 7,
   },
   {
     activity: 'Basquete',
     icon: FaBasketballBall,
+    id: 8,
   },
   {
     activity: 'Corrida',
     icon: FaRunning,
+    id: 1,
   },
   {
     activity: 'Caminhada',
     icon: FaWalking,
+    id: 2,
   },
   {
     activity: 'Academia',
     icon: CgGym,
+    id: 9,
   },
 ]
 

@@ -4,8 +4,16 @@ import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
 import { ExtendedPlace } from "src/domains/Place";
 import { EventResponse } from "src/domains/Event";
+import { FeedbackResponse } from "src/domains/Feedback";
 
-const PlaceRef = supabase.from("place");
+export interface PlaceSelectFilter {
+  pg?: number;
+  order_by?: string;
+  order?: string;
+  searchByNameDescription?: string;
+  searchBySportId?: number;
+  searchByCity?: string;
+}
 
 const placeSchema = {
   name: z.string().min(1),
@@ -23,12 +31,64 @@ const placeSchema = {
 
 export default class PlaceController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await PlaceRef.select(`
-      *,
-      address(*),
-      place_image(imageid),
-      feedback(rating),
-      event(*)`);
+    const PlaceRef = supabase.from("place");
+
+    const {
+      order,
+      order_by,
+      pg,
+      searchByCity,
+      searchByNameDescription,
+      searchBySportId,
+    } = (req.query as unknown as PlaceSelectFilter) || {};
+
+    const isForeignOrder = {
+      feedback_rating: "feedback(rating)",
+      distance: "address(postalcode)",
+    };
+
+    const orderBy =
+      isForeignOrder[(order_by || "") as keyof typeof isForeignOrder] ||
+      order_by ||
+      "name";
+
+    let findAllPlaces = PlaceRef.select(
+      `
+        *,
+        address(*),
+        place_image(imageid),
+        feedback(rating),
+        event(*),
+        place_by_activity(activity(*))`
+    ).order(orderBy, {
+      ascending: order && order === "DESC" ? false : true,
+    });
+
+    if (searchByNameDescription) {
+      findAllPlaces = findAllPlaces.or(
+        `name.ilike.%${searchByNameDescription}%,description.ilike.%${searchByNameDescription}%`
+      );
+    }
+
+    if (searchBySportId) {
+      findAllPlaces = findAllPlaces
+        .eq("place_by_activity.activity.id", searchBySportId)
+        .not("place_by_activity", "is", null)
+        .not("place_by_activity.activity", "is", null);
+    }
+
+    if (searchByCity) {
+      const brokenCityInfo = searchByCity.split("-");
+      brokenCityInfo.splice(-1);
+      const city = brokenCityInfo.join("-");
+      const state = searchByCity.split("-").at(-1);
+      findAllPlaces = findAllPlaces
+        .ilike("address.city", `%${city}%`)
+        .ilike("address.state", `%${state}%`)
+        .not("address", "is", null);
+    }
+
+    const { data, error } = await findAllPlaces;
 
     if (error) {
       return res.status(500).json({ error: error.message });
@@ -46,8 +106,10 @@ export default class PlaceController {
         image:
           "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
         rating_avg:
-          place.feedback.reduce((acc, curr) => acc + curr.rating, 0) /
-          place.feedback.length,
+          place.feedback.reduce(
+            (acc: number, curr: FeedbackResponse) => acc + curr.rating,
+            0
+          ) / place.feedback.length,
       };
     });
 
@@ -55,6 +117,7 @@ export default class PlaceController {
   }
 
   static async findById(req: Request, res: Response) {
+    const PlaceRef = supabase.from("place");
     const { id } = req.params;
     const { data, error } = await PlaceRef.select(
       `*,
@@ -91,12 +154,15 @@ export default class PlaceController {
       image:
         "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
       rating_avg:
-        data.feedback.reduce((acc, curr) => acc + curr.rating, 0) /
-        data.feedback.length,
+        data.feedback.reduce(
+          (acc: number, curr: FeedbackResponse) => acc + curr.rating,
+          0
+        ) / data.feedback.length,
     });
   }
 
   static async create(req: Request, res: Response) {
+    const PlaceRef = supabase.from("place");
     const { body } = req;
 
     const ZPlaceSchema = z.object(placeSchema);
@@ -129,6 +195,7 @@ export default class PlaceController {
   }
 
   static async update(req: Request, res: Response) {
+    const PlaceRef = supabase.from("place");
     const { id } = req.params;
     const { body } = req;
 
@@ -174,6 +241,7 @@ export default class PlaceController {
   }
 
   static async delete(req: Request, res: Response) {
+    const PlaceRef = supabase.from("place");
     const { body } = req;
 
     const DeleteSchema = z.object({

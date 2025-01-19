@@ -54,14 +54,17 @@
     "discoverBestExercises": "Descubra as melhores opções de exercícios físicos",
     "selectCity": "Selecione uma cidade",
     "selectSport": "Selecione um esporte",
+    "selectSort": "Ordenar",
     "searchPlace": "Pesquise um local",
     "lookingFor": "Estou procurando por...",
     "nearYou": "Perto de você",
     "saoPaulo": "São Paulo - SP",
+    "santoAndre": "Santo André - SP",
     "running": "Corrida"
   },
   "locationsPage": {
-    "searchResults": "Exibindo resultados para pesquisa:"
+    "searchResults": "Exibindo resultados para pesquisa",
+    "searchResultsFor": "em"
   },
   "detailedLocationPage": {
     "description": "Descrição",
