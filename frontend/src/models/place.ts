@@ -6,13 +6,13 @@ export interface Place {
   id: number
   name: string
   description: string
-  addressId: number
-  mapsLink: string
-  linkSocial: string
-  openingTime: string
-  closingTime: string
-  is24: boolean
-  daysOfWeek: string
+  address_id: number
+  maps_link: string
+  link_social: string
+  opening_time: string
+  closing_time: string
+  is_24: boolean
+  days_of_week: string
   restrictions: string | null
   observations: string | null
   created_at: string

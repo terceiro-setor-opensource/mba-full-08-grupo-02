@@ -327,48 +327,48 @@ export type Database = {
       }
       place: {
         Row: {
-          addressId: number
-          closingTime: string
+          address_id: number
+          closing_time: string
           created_at: string
-          daysOfWeek: string
+          days_of_week: string
           description: string
           id: number
-          is24: boolean | null
-          linkSocial: string | null
-          mapsLink: string | null
+          is_24: boolean | null
+          link_social: string | null
+          maps_link: string | null
           name: string
           observations: string | null
-          openingTime: string
+          opening_time: string
           restrictions: string | null
         }
         Insert: {
-          addressId: number
-          closingTime: string
+          address_id: number
+          closing_time: string
           created_at?: string
-          daysOfWeek: string
+          days_of_week: string
           description: string
           id?: number
-          is24?: boolean | null
-          linkSocial?: string | null
-          mapsLink?: string | null
+          is_24?: boolean | null
+          link_social?: string | null
+          maps_link?: string | null
           name: string
           observations?: string | null
-          openingTime: string
+          opening_time: string
           restrictions?: string | null
         }
         Update: {
-          addressId?: number
-          closingTime?: string
+          address_id?: number
+          closing_time?: string
           created_at?: string
-          daysOfWeek?: string
+          days_of_week?: string
           description?: string
           id?: number
-          is24?: boolean | null
-          linkSocial?: string | null
-          mapsLink?: string | null
+          is_24?: boolean | null
+          link_social?: string | null
+          maps_link?: string | null
           name?: string
           observations?: string | null
-          openingTime?: string
+          opening_time?: string
           restrictions?: string | null
         }
         Relationships: []
@@ -442,21 +442,21 @@ export type Database = {
       users: {
         Row: {
           accountid: number | null
-          addressid: number | null
+          address_id: number | null
           birthdate: string | null
           id: number
           name: string
         }
         Insert: {
           accountid?: number | null
-          addressid?: number | null
+          address_id?: number | null
           birthdate?: string | null
           id?: never
           name: string
         }
         Update: {
           accountid?: number | null
-          addressid?: number | null
+          address_id?: number | null
           birthdate?: string | null
           id?: never
           name?: string
@@ -470,8 +470,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "users_addressid_fkey"
-            columns: ["addressid"]
+            foreignKeyName: "users_address_id_fkey"
+            columns: ["address_id"]
             isOneToOne: false
             referencedRelation: "address"
             referencedColumns: ["id"]

@@ -35,7 +35,7 @@ create table image (
 
 create table users (
   id bigint generated always as identity primary key,
-  addressId bigint references address(id),
+  address_id bigint references address(id),
   accountId bigint references account(id),
   name text not null,
   birthdate date null
@@ -81,13 +81,13 @@ create table event (
 );
 
 ALTER TABLE place
-ALTER COLUMN "addressId" TYPE bigint USING "addressId"::bigint;
+ALTER COLUMN "address_id" TYPE bigint USING "address_id"::bigint;
 
 UPDATE place
-SET "addressId" = 1
-WHERE "addressId" NOT IN (SELECT id FROM address);
+SET "address_id" = 1
+WHERE "address_id" NOT IN (SELECT id FROM address);
 
 ALTER TABLE place
 ADD CONSTRAINT fk_place_address
-FOREIGN KEY ("addressId")
+FOREIGN KEY ("address_id")
 REFERENCES address(id);

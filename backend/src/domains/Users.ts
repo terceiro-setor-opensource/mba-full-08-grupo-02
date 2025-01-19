@@ -3,7 +3,7 @@ type UserResponse = {
   name: string;
   email: string;
   birthdate: string;
-  addressId: string;
+  address_id: string;
   accountId: string;
   datetime_creation: string;
 };

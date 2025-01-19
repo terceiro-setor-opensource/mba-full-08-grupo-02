@@ -1,4 +1,4 @@
-import { Box, HStack, Heading, Spacer } from '@chakra-ui/layout'
+import { Box, HStack, Spacer } from '@chakra-ui/layout'
 import { Logo } from '../Logo'
 import {
   ButtonGroup,
