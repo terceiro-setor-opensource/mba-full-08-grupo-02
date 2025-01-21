@@ -12,8 +12,9 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  VStack,
 } from '@chakra-ui/layout'
-import { Button, Image, Input, theme } from '@chakra-ui/react'
+import { Button, Image, Input, useDisclosure } from '@chakra-ui/react'
 import { t } from 'i18next'
 import EventCard from '../EventCard'
 import { TextButton } from '@/components/commons/TextButton'
@@ -21,6 +22,7 @@ import { RiArrowRightLine } from 'react-icons/ri'
 import { FeedbackCard } from '../FeedbackCard'
 import { OrderSelect } from '../OrderSelect'
 import { useNavigate } from 'react-router-dom'
+import { MapModal } from './MapModal'
 const stackStyles = {
   width: {
     base: '100%',
@@ -92,33 +94,44 @@ const stackFeedbackList = {
 }
 
 export const PlaceDetails = ({ place }: { place: Place }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const navigate = useNavigate()
   return (
     <Stack sx={stackStyles}>
       <SimpleGrid columns={{ base: 1, md: 1, lg: 2 }} spacing={12}>
         <Image src={place?.image} alt={place?.name} sx={placeImageStyles} />
-        <Stack sx={stackDetailsStyles}>
-          <Flex justifyContent="space-between">
+        <Stack sx={stackDetailsStyles} justifyContent={'space-between'} height={'100%'} >
+          <VStack justifyContent={'flex-start'} alignItems={'flex-start'}>
+            <Flex justifyContent="space-between" width={'100%'}>
             <Text sx={titleTextStyle}>{place?.name}</Text>
-            <FavoriteButton />
-          </Flex>
-          <HStack wrap={'wrap'} spacing={2}>
-            {place.place_by_activity?.map((place_by_activity) => (
-              <Badge>{place_by_activity.activity?.name}</Badge>
-            ))}
-          </HStack>
-          <Text color="#ababab">
-            {place?.address?.streetname} - {place?.address?.neighborhood},{' '}
-            {place?.address?.city} - {place?.address?.state},{' '}
-            {place?.address?.postalcode}
-          </Text>
-          <StarRating
-            rating={place?.rating_avg || 0}
-            reviewCount={place?.feedback?.length}
-          />
-          <TextButton text={t('detailedLocationPage.seeMapButton')} />
+              <FavoriteButton />
+            </Flex>
+            <HStack wrap={'wrap'} spacing={2}>
+              {place.place_by_activity?.map((place_by_activity) => (
+                <Badge>{place_by_activity.activity?.name}</Badge>
+              ))}
+            </HStack>
+            <Text color="#ababab">
+              {place?.address?.streetname} - {place?.address?.neighborhood},{' '}
+              {place?.address?.city} - {place?.address?.state},{' '}
+              {place?.address?.postalcode}
+            </Text>
+            <StarRating
+              rating={place?.rating_avg || 0}
+              reviewCount={place?.feedback?.length}
+            />
+          </VStack>
+          <TextButton text={t('detailedLocationPage.seeMapButton')} onClick={onOpen}/>
         </Stack>
       </SimpleGrid>
+
+      <MapModal
+        isOpen={isOpen}
+        onClose={onClose}
+        latitude={place?.address?.latitude}
+        longitude={place?.address?.longitude}
+        placeName={place?.name}
+      />
       <Stack sx={stackOtherInfosStyle}>
         <Text>{place?.description}</Text>
       </Stack>
