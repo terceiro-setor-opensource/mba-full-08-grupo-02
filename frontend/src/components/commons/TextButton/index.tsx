@@ -1,26 +1,32 @@
-import { Button } from '@chakra-ui/react'
-import { t } from 'i18next'
+import { Button, ButtonProps as ChakraButtonProps, useToken } from '@chakra-ui/react'
+import { useMemo } from 'react'
 
-interface ButtonProps {
+interface ButtonProps extends ChakraButtonProps {
   text: string
   backgroundColor?: string
 }
 
-const buttonStyle = {
-  bg: 'green.500',
-  borderColor: 'green.200',
-  borderRadius: '20px',
-  color: 'neutral.100',
-  cursor: 'pointer',
-  paddingX: '3rem',
-}
+export const TextButton = ({ text, backgroundColor, sx, ...props }: ButtonProps) => {
+  const defaultBg = useToken('colors', 'green.500')
+  const borderColor = useToken('colors', 'green.200')
+  const defaultColor = useToken('colors', 'neutral.100')
 
-export const TextButton = ({ text, backgroundColor }: ButtonProps) => (
-  <Button
-    sx={{ ...buttonStyle, bg: backgroundColor || buttonStyle.bg }}
-    backgroundColor={backgroundColor}
-    width="fit-content"
-  >
-    {text}
-  </Button>
-)
+  const buttonStyle = useMemo(
+    () => ({
+      bg: backgroundColor || defaultBg,
+      borderColor,
+      borderRadius: '20px',
+      color: defaultColor,
+      cursor: 'pointer',
+      px: '3rem',
+      width: 'fit-content',
+    }),
+    [backgroundColor, defaultBg, borderColor, defaultColor]
+  )
+
+  return (
+    <Button sx={{ ...buttonStyle, ...sx }} {...props}>
+      {text}
+    </Button>
+  )
+}
