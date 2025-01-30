@@ -23,6 +23,9 @@ import { FeedbackCard } from '../FeedbackCard'
 import { OrderSelect } from '../OrderSelect'
 import { useNavigate } from 'react-router-dom'
 import { MapModal } from './MapModal'
+import ShareFeedback from '../ShareFeedback'
+import { useAuth } from '@/hooks/useAuth'
+import { useCallback } from 'react'
 const stackStyles = {
   width: {
     base: '100%',
@@ -58,27 +61,6 @@ const stackOtherInfosStyle = {
   marginTop: '2rem',
 }
 
-const stackShareFeedbackStyle = {
-  border: '1px solid #dcdcdc',
-  borderRadius: '1rem',
-  display: 'flex',
-  flexDirection: 'row',
-  padding: '1rem',
-  width: '100%',
-}
-
-const sendButtonStyle = {
-  bg: 'green.500',
-  borderColor: 'green.200',
-  borderRadius: '20px',
-  color: 'neutral.100',
-  cursor: 'pointer',
-  display: 'flex',
-  justifyContent: 'space-between',
-  paddingX: '2rem',
-  width: '20%',
-}
-
 const titleTextStyle = {
   textStyle: 'h2',
   fontSize: '1.7rem',
@@ -93,17 +75,33 @@ const stackFeedbackList = {
   },
 }
 
+const loginRedirectButtonStyle = {
+  bg: 'green.500',
+  borderColor: 'green.200',
+  borderRadius: '20px',
+  color: 'neutral.100',
+  cursor: 'pointer',
+  display: 'flex',
+  justifyContent: 'space-between',
+  paddingX: '2rem',
+}
+
 export const PlaceDetails = ({ place }: { place: Place }) => {
+  const { user } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const navigate = useNavigate()
   return (
     <Stack sx={stackStyles}>
       <SimpleGrid columns={{ base: 1, md: 1, lg: 2 }} spacing={12}>
         <Image src={place?.image} alt={place?.name} sx={placeImageStyles} />
-        <Stack sx={stackDetailsStyles} justifyContent={'space-between'} height={'100%'} >
+        <Stack
+          sx={stackDetailsStyles}
+          justifyContent={'space-between'}
+          height={'100%'}
+        >
           <VStack justifyContent={'flex-start'} alignItems={'flex-start'}>
             <Flex justifyContent="space-between" width={'100%'}>
-            <Text sx={titleTextStyle}>{place?.name}</Text>
+              <Text sx={titleTextStyle}>{place?.name}</Text>
               <FavoriteButton />
             </Flex>
             <HStack wrap={'wrap'} spacing={2}>
@@ -121,7 +119,10 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
               reviewCount={place?.feedback?.length}
             />
           </VStack>
-          <TextButton text={t('detailedLocationPage.seeMapButton')} onClick={onOpen}/>
+          <TextButton
+            text={t('detailedLocationPage.seeMapButton')}
+            onClick={onOpen}
+          />
         </Stack>
       </SimpleGrid>
 
@@ -156,24 +157,24 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
         <Stack>
           {place?.place_by_activity && place.place_by_activity.length > 0 ? (
             <>
-            <Stack>
-              <Text fontWeight="bold" marginTop=".5rem">
-                {place.place_by_activity[0].activity?.name}
-              </Text>
-              {place.place_by_activity[0].activity?.activity_benefit?.map(
-                (activity_benefit) => (
-                  <Text key={activity_benefit.benefit?.description}>
-                    {activity_benefit.benefit?.description}
-                  </Text>
-                ),
-              )}
-            </Stack>
-            <TextButton
-              text={t('detailedLocationPage.seeMoreButton')}
-              onClick={() => navigate(`/places/${place.id}/benefits`)}
-            />
+              <Stack>
+                <Text fontWeight="bold" marginTop=".5rem">
+                  {place.place_by_activity[0].activity?.name}
+                </Text>
+                {place.place_by_activity[0].activity?.activity_benefit?.map(
+                  (activity_benefit) => (
+                    <Text key={activity_benefit.benefit?.description}>
+                      {activity_benefit.benefit?.description}
+                    </Text>
+                  ),
+                )}
+              </Stack>
+              <TextButton
+                text={t('detailedLocationPage.seeMoreButton')}
+                onClick={() => navigate(`/places/${place.id}/benefits`)}
+              />
             </>
-          ): (
+          ) : (
             <Text>{t('detailedLocationPage.noBenefitsListed')}</Text>
           )}
         </Stack>
@@ -182,28 +183,30 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
         <Text sx={titleTextStyle}>
           {t('detailedLocationPage.feedbacksStackTitle')}
         </Text>
-        <Stack sx={stackShareFeedbackStyle}>
-          <Input
-            border="none"
-            placeholder={t('detailedLocationPage.feedbackInputPlaceholder')}
-            width="80%"
-          />
-          <Button sx={sendButtonStyle}>
-            <Text>{t('send')}</Text>
-            <RiArrowRightLine />
+        {!user ? (
+          <Button
+            sx={loginRedirectButtonStyle}
+            onClick={() => navigate('/login')}
+          >
+            <Text>{t('detailedLocationPage.loginRedirect')}</Text>
           </Button>
-        </Stack>
+        ) : (
+          <ShareFeedback user={user} place={place} />
+        )}
+
         <Stack marginTop="1rem">
           <Stack display="flex" justifyContent="space-between" flexDir="row">
             <Text sx={titleTextStyle}>
-              {place?.feedback?.length || 0}{' '}
+              {place?.feedback?.length || ''}{' '}
               {t(
                 place?.feedback?.length > 1
                   ? 'detailedLocationPage.feedbackListTitleMultiple'
-                  : 'detailedLocationPage.feedbackListTitleSingle',
+                  : place?.feedback?.length === 1
+                  ? 'detailedLocationPage.feedbackListTitleSingle'
+                  : 'detailedLocationPage.noFeedbackListTitle',
               )}
             </Text>
-            <OrderSelect />
+            {place?.feedback?.length > 1 ? <OrderSelect /> : <></>}
           </Stack>
           <List>
             {place?.feedback?.map((feedback) => {
