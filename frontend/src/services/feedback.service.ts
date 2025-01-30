@@ -15,8 +15,8 @@ class FeedbackService {
 
   public async findFeebaacksByPlace(
     placeid: number,
-    orderBy?: string,
-    order?: string,
+    orderBy = 'id',
+    order = 'ASC',
   ) {
     try {
       const response = await api.get(

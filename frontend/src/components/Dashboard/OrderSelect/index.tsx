@@ -21,7 +21,7 @@ interface Props {
 export const OrderSelect = ({ place, setFeedbackList }: Props) => {
   async function fetchFeedbacksByOrder(e: ChangeEvent<HTMLSelectElement>) {
     const { value } = e.currentTarget
-    const [orderBy, order] = value.split('.')
+    const [orderBy, order] = (value || 'id.ASC').split('.')
 
     try {
       const response = await feedbackService.findFeebaacksByPlace(
