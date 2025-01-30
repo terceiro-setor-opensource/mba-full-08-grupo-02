@@ -2,13 +2,14 @@ import StarRatingSelection from '@/components/commons/StarRatingSelection'
 import { Stack, Text } from '@chakra-ui/layout'
 import { Button, Input, Textarea } from '@chakra-ui/react'
 import { t } from 'i18next'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { RiArrowRightLine } from 'react-icons/ri'
 import { FcOk } from 'react-icons/fc'
 import { Place } from '@/models/place'
 import { Account } from '@/models/account'
 import { toast } from 'react-toastify'
 import FeedbackService, { feedbackService } from '@/services/feedback.service'
+import { Feedback } from '@/models/feedback'
 
 const stackShareFeedbackStyle = {
   border: '1px solid #dcdcdc',
@@ -33,9 +34,10 @@ const sendButtonStyle = {
 interface Props {
   user: Account
   place: Place
+  setFeedbackList: Dispatch<SetStateAction<Feedback[]>>
 }
 
-export default function ShareFeedback({ user, place }: Props) {
+export default function ShareFeedback({ user, place, setFeedbackList }: Props) {
   const [feedbackSent, setFeedbackSent] = useState(false)
   const [rating, setRating] = useState(0)
   const [writtenFeedback, setWrittenFeedback] = useState('')
@@ -68,6 +70,12 @@ export default function ShareFeedback({ user, place }: Props) {
       toast.error((err as Error).message || 'Failed to fetch places.')
     } finally {
       // Carregar aqui novamente os feeedbacks
+      try {
+        const response = await feedbackService.findFeebaacksByPlace(place.id)
+        setFeedbackList(response)
+      } catch (err) {
+        toast.error((err as Error).message || 'Failed to fetch places.')
+      }
     }
   }
 

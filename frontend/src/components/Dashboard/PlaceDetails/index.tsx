@@ -25,7 +25,8 @@ import { useNavigate } from 'react-router-dom'
 import { MapModal } from './MapModal'
 import ShareFeedback from '../ShareFeedback'
 import { useAuth } from '@/hooks/useAuth'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { Feedback } from '@/models/feedback'
 const stackStyles = {
   width: {
     base: '100%',
@@ -90,6 +91,9 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
   const { user } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const navigate = useNavigate()
+  const [feedbackList, setFeedbackList] = useState<Feedback[]>(
+    place && place.feedback ? place.feedback : [],
+  )
   return (
     <Stack sx={stackStyles}>
       <SimpleGrid columns={{ base: 1, md: 1, lg: 2 }} spacing={12}>
@@ -191,25 +195,25 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
             <Text>{t('detailedLocationPage.loginRedirect')}</Text>
           </Button>
         ) : (
-          <ShareFeedback user={user} place={place} />
+          <ShareFeedback user={user} place={place} setFeedbackList={setFeedbackList}/>
         )}
 
         <Stack marginTop="1rem">
           <Stack display="flex" justifyContent="space-between" flexDir="row">
             <Text sx={titleTextStyle}>
-              {place?.feedback?.length || ''}{' '}
+              {feedbackList.length || ''}{' '}
               {t(
-                place?.feedback?.length > 1
+                feedbackList.length > 1
                   ? 'detailedLocationPage.feedbackListTitleMultiple'
-                  : place?.feedback?.length === 1
+                  : feedbackList.length === 1
                   ? 'detailedLocationPage.feedbackListTitleSingle'
                   : 'detailedLocationPage.noFeedbackListTitle',
               )}
             </Text>
-            {place?.feedback?.length > 1 ? <OrderSelect /> : <></>}
+            {feedbackList.length > 1 ? <OrderSelect /> : <></>}
           </Stack>
           <List>
-            {place?.feedback?.map((feedback) => {
+            {feedbackList.map((feedback) => {
               return (
                 <ListItem marginBottom="1rem">
                   <FeedbackCard feedback={feedback} />{' '}

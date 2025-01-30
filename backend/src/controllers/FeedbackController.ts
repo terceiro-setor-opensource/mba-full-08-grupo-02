@@ -53,6 +53,26 @@ export default class FeedbackController {
     res.status(201).json(data);
   }
 
+  static async findFeebaacksByPlace(req: Request, res: Response) {
+    const FeedbackRef = supabase.from("feedback");
+    const { id } = req.params;
+    const { data, error } = await FeedbackRef.select(
+      "id, description, rating, users(name), place(name)"
+    ).eq("placeid", id);
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    if (!data) {
+      return res.status(204).json({
+        message: `No feedback found for the id = ${id}`,
+      });
+    }
+
+    res.status(201).json(data);
+  }
+
   static async create(req: Request, res: Response) {
     const FeedbackRef = supabase.from("feedback");
     const { body } = req;
@@ -78,13 +98,14 @@ export default class FeedbackController {
       .from("users")
       .select("id, name")
       .eq("accountid", body.userid)
-      .limit(1);
+      .limit(1)
+      .single();
 
     if (resultUser.error) {
       return res.status(500).json({ error: resultUser.error.message });
     }
 
-    if (resultUser.data.length === 0) {
+    if (!resultUser.data) {
       return res.status(404).json({
         message: `No user found for the accountid = ${body.userid}`,
       });
@@ -109,7 +130,7 @@ export default class FeedbackController {
     // Everithing is ok, so insert
     const inserted = await FeedbackRef.insert({
       ...body,
-      userid: resultUser.data[0].id,
+      userid: resultUser.data.id,
     }).select("description, rating, users(name), place(name)");
 
     const { error } = inserted;

@@ -13,6 +13,15 @@ class FeedbackService {
     }
   }
 
+  public async findFeebaacksByPlace(placeid: number) {
+    try {
+      const response = await api.get(`${this.basePath}/place/${placeid}`)
+      return response.data
+    } catch (error: any) {
+      this.handleError(error)
+    }
+  }
+
   private handleError(error: any): never {
     if (error.response) {
       throw new Error(error.response.data?.message || error.response.statusText)
@@ -23,6 +32,5 @@ class FeedbackService {
     }
   }
 }
-
 
 export const feedbackService = new FeedbackService()
