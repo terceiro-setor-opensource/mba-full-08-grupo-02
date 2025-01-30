@@ -55,10 +55,12 @@ export default class FeedbackController {
 
   static async findFeebaacksByPlace(req: Request, res: Response) {
     const FeedbackRef = supabase.from("feedback");
-    const { id } = req.params;
+    const { id, order_by = "id", order = "ASC" } = req.params;
     const { data, error } = await FeedbackRef.select(
       "id, description, rating, users(name), place(name)"
-    ).eq("placeid", id);
+    )
+      .eq("placeid", id)
+      .order(order_by, { ascending: order === "ASC" });
 
     if (error) {
       return res.status(500).json({ error: error.message });

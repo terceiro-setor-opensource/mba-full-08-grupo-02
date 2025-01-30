@@ -35,17 +35,17 @@ export const FeedbackCard = ({ feedback }: FeedbackCardProps) => {
               {feedback?.description}
             </Text>
             <Stack alignItems="center" display="flex" flexDir="row">
-              <Text color="gray.500" textStyle="sm" fontSize=".8rem">
+              {/* <Text color="gray.500" textStyle="sm" fontSize=".8rem">
                 we don't have this info yet
-              </Text>
-              <Button
+              </Text> */}
+              {/* <Button
                 variant="plain"
                 width="fit-content"
                 height="fit-content"
                 fontSize=".8rem"
               >
                 {t('like')}
-              </Button>
+              </Button> */}
             </Stack>
           </Stack>
         </HStack>

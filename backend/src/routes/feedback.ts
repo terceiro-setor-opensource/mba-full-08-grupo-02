@@ -5,7 +5,10 @@ const router = Router();
 
 router.get("/", FeedbackController.findAll);
 router.get("/:id", FeedbackController.findById);
-router.get("/place/:id", FeedbackController.findFeebaacksByPlace);
+router.get(
+  "/place/:id/:order_by/:order",
+  FeedbackController.findFeebaacksByPlace
+);
 router.post("/", FeedbackController.create);
 router.put("/:id", FeedbackController.update);
 router.delete("/", FeedbackController.delete);

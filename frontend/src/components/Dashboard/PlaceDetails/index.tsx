@@ -210,7 +210,7 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
                   : 'detailedLocationPage.noFeedbackListTitle',
               )}
             </Text>
-            {feedbackList.length > 1 ? <OrderSelect /> : <></>}
+            {feedbackList.length > 1 ? <OrderSelect setFeedbackList={setFeedbackList} place={place} /> : <></>}
           </Stack>
           <List>
             {feedbackList.map((feedback) => {

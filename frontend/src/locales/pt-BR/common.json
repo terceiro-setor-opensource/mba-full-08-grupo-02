@@ -93,7 +93,9 @@
   "orderSelection": {
     "select": "Ordenar",
     "newer": "Mais recentes",
-    "older": "Mais antigos"
+    "older": "Mais antigos",
+    "higher": "Maiores notas",
+    "lower": "Menores notas"
   },
   "loading": "Carregando...",
   "backButton": "Voltar"

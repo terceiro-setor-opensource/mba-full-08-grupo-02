@@ -13,9 +13,15 @@ class FeedbackService {
     }
   }
 
-  public async findFeebaacksByPlace(placeid: number) {
+  public async findFeebaacksByPlace(
+    placeid: number,
+    orderBy?: string,
+    order?: string,
+  ) {
     try {
-      const response = await api.get(`${this.basePath}/place/${placeid}`)
+      const response = await api.get(
+        `${this.basePath}/place/${placeid}/${orderBy}/${order}`,
+      )
       return response.data
     } catch (error: any) {
       this.handleError(error)
