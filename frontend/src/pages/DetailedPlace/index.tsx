@@ -47,8 +47,6 @@ export const DetailedPlace = () => {
     if (id) fetchPlace()
   }, [])
 
-  console.log(place)
-
   return (
     <>
       <Box>
