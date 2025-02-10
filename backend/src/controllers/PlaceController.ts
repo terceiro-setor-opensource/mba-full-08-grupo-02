@@ -12,9 +12,9 @@ export interface PlaceSelectFilter {
   pg?: number;
   order_by?: string;
   order?: string;
-  searchByNameDescription?: string;
-  searchBySportId?: number;
-  searchByCity?: string;
+  name?: string;
+  sport?: number;
+  city?: string;
 }
 
 const placeSchema = {
@@ -39,9 +39,9 @@ export default class PlaceController {
       order,
       order_by,
       pg,
-      searchByCity,
-      searchByNameDescription,
-      searchBySportId,
+      city,
+      name,
+      sport,
     } = (req.query as unknown as PlaceSelectFilter) || {};
 
     const isForeignOrder = {
@@ -66,27 +66,22 @@ export default class PlaceController {
       ascending: order && order === "DESC" ? false : true,
     });
 
-    if (searchByNameDescription) {
+    if (name) {
       findAllPlaces = findAllPlaces.or(
-        `name.ilike.%${searchByNameDescription}%,description.ilike.%${searchByNameDescription}%`
+        `name.ilike.%${name}%,description.ilike.%${name}%`
       );
     }
 
-    if (searchBySportId) {
+    if (sport) {
       findAllPlaces = findAllPlaces
-        .eq("place_by_activity.activity.id", searchBySportId)
+        .eq("place_by_activity.activity.id", sport)
         .not("place_by_activity", "is", null)
         .not("place_by_activity.activity", "is", null);
     }
 
-    if (searchByCity) {
-      const brokenCityInfo = searchByCity.split("-");
-      brokenCityInfo.splice(-1);
-      const city = brokenCityInfo.join("-");
-      const state = searchByCity.split("-").at(-1);
+    if (city) {
       findAllPlaces = findAllPlaces
         .ilike("address.city", `%${city}%`)
-        .ilike("address.state", `%${state}%`)
         .not("address", "is", null);
     }
 

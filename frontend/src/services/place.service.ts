@@ -8,10 +8,13 @@ export interface SelectFilter {
   searchByNameDescription?: string
   searchBySportId?: number
   searchByCity?: string
+  city?: string
+  name?: string
+  sport?: number
 }
 
 class PlaceService {
-  private basePath = '/places' // Base path for places
+  private basePath = '/places'
 
   public async getPlaces({
     filter = {},

@@ -64,7 +64,8 @@
   },
   "locationsPage": {
     "searchResults": "Exibindo resultados para pesquisa",
-    "searchResultsFor": "em"
+    "searchResultsFor": "em",
+    "noResults": "Nenhum resultado encontrado"
   },
   "detailedLocationPage": {
     "description": "Descrição",
