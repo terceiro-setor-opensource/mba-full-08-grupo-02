@@ -20,13 +20,13 @@ export interface PlaceSelectFilter {
 const placeSchema = {
   name: z.string().min(1),
   description: z.string().min(1),
-  address_id: z.number().int().positive(),
+  address_id: z.number().int().positive().optional(),
   maps_link: z.string().optional(),
   link_social: z.string().optional(),
-  opening_time: z.string().min(5).max(5),
-  closing_time: z.string().min(5).max(5),
+  opening_time: z.string().min(5).max(5).default("08:00"),
+  closing_time: z.string().min(5).max(5).default("18:00"),
   is_24: z.boolean().optional(),
-  days_of_week: z.string().min(1),
+  days_of_week: z.string().min(1).default("0123456"),
   restrictions: z.string().optional(),
   observations: z.string().optional(),
 };
@@ -143,7 +143,14 @@ export default class PlaceController {
       });
     }
 
-    res.status(201).json({
+    const firstImageUrl = data.place_image[0]?.imageid;
+
+    const {data: imgData, error: imageError } = await supabase.from("image").select("*").eq("id", firstImageUrl).single();
+
+    if (imageError) {
+      return res.status(500).json({ error: imageError.message });
+    }
+   return res.status(201).json({
       ...data,
       address: data.address,
       events: (data.event || []).map((event: EventResponse) => {
@@ -153,8 +160,7 @@ export default class PlaceController {
             "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
         };
       }),
-      image:
-        "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      image: imgData?.url || 'https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       rating_avg:
         data.feedback.reduce(
           (acc: number, curr: FeedbackResponse) => acc + curr.rating,
@@ -166,35 +172,144 @@ export default class PlaceController {
 
   static async create(req: Request, res: Response) {
     const PlaceRef = supabase.from("place");
+
     const { body } = req;
 
     const ZPlaceSchema = z.object(placeSchema);
     const validation = ZPlaceSchema.safeParse(body);
     if (validation.error) {
-      return res.status(404).json({
-        status: 404,
-        message: `Validation error`,
+      return res.status(400).json({
+        status: 400,
+        message: "Validation error",
         errors: validation.error.errors,
       });
     }
 
-    const placeInserted = await PlaceRef.insert(body).select();
+    try {
+      const { address, images, activities, ...placeData } = body;
 
-    const { error } = placeInserted;
-    if (error)
-      return res
-        .status(404)
-        .json(
-          new ErrorHandling(
-            error.code,
-            error.message,
-            "inserting a new Place"
-          ).returnObjectRequestError()
-        );
+      const { data: addressData, error: addressError } = await supabase
+        .from("address")
+        .insert([address])
+        .select("id")
+        .single();
 
-    const { data } = placeInserted;
+      if (addressError) throw addressError;
+      const address_id = addressData.id;
 
-    res.status(201).json(data);
+      const placeDataToInsert = {
+        ...placeData,
+        address_id,
+        opening_time: placeData.opening_time || "08:00",
+        closing_time: placeData.closing_time || "18:00",
+        days_of_week: placeData.days_of_week || "0123456",
+      };
+
+      const { data: placeDataInserted, error: placeError } = await supabase
+        .from("place")
+        .insert([placeDataToInsert])
+        .select("id")
+        .single();
+
+      if (placeError) throw placeError;
+      const place_id = placeDataInserted.id;
+
+      if (images && images.length > 0) {
+        const payloadToInsertImages = images.map((image) => ({
+          url: image,
+          alt: 'Imagem de: ' + placeData.name,
+        }));
+
+        const { data: imageInsertData, error: imageError } = await supabase
+          .from("image")
+          .insert(payloadToInsertImages)
+          .select("id");
+
+        if (imageError) throw imageError;
+
+        const placeImageInsertData = imageInsertData?.map((image) => ({
+          placeid: place_id, 
+          imageid: image.id,
+        })) || [];
+
+        const { error: placeImageError } = await supabase
+          .from("place_image")
+          .insert(placeImageInsertData);
+
+        if (placeImageError) throw placeImageError;
+      }
+
+
+      for (const activity of activities) {
+        // Insert activity if not exists
+        const { data: newActivity, error: activityError } = await supabase
+          .from("activity")
+          .insert([{ name: activity.name }])
+          .select("id")
+          .single(); // We expect a single result for the activity insert
+
+        if (activityError) throw activityError;
+        let activity_id = newActivity.id;
+        
+        if(!activity_id && !place_id){
+          throw new Error('Activity or Place ID not found');
+        }
+
+        // Link Activity to Place
+        const { error: placeActivityError } = await supabase
+          .from("place_by_activity")
+          .insert([{ placeid: place_id, activityid: activity_id }]);
+
+        if (placeActivityError) throw placeActivityError;
+
+        // Insert Benefits
+        for (const benefit of activity.benefits) {
+          let benefit_id = benefit.id;
+
+          // Check if the benefit already exists
+          const { data: existingBenefit, error: benefitExistError } = await supabase
+            .from("benefit")
+            .select("id")
+            .eq("name", benefit.name)
+            .limit(1);  // Limiting to 1 result in case of multiple entries
+
+          if (benefitExistError) throw benefitExistError;
+
+          if (existingBenefit && existingBenefit.length > 0) {
+            // If the benefit already exists, use the existing benefit ID
+            benefit_id = existingBenefit[0].id;
+          } else {
+            // If the benefit does not exist, insert it and get the new benefit ID
+            const { data: newBenefit, error: benefitError } = await supabase
+              .from("benefit")
+              .insert([{ name: benefit.name, description: benefit.description  ?? '' }])
+              .select("id")
+              .single();  // Now it will insert and return a single row
+        
+            if (benefitError) throw benefitError;
+            benefit_id = newBenefit.id;
+          }
+
+
+          // Link Benefit to Activity
+          const { error: activityBenefitError } = await supabase
+            .from("activity_benefit")
+            .insert([{ activity_id, benefit_id }]);
+
+          if (activityBenefitError) throw activityBenefitError;
+        }
+      }
+
+      // ✅ Return Created Place
+      res.status(201).json({ id: place_id, message: "Place created successfully" });
+    } catch (error) {
+      console.error("Error creating place:", error);
+      return res.status(500).json({
+        status: 500,
+        message: "Internal Server Error",
+        error: error.message || error,
+      });
+    }
   }
 
   static async update(req: Request, res: Response) {
@@ -336,4 +451,61 @@ export default class PlaceController {
     });
 
   }
+
+  static async findPlaceDetails(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const { data, error } = await supabase
+      .from("place")
+      .select(`
+        *,
+        address(*),
+        place_image(imageid),
+        event(*),
+        feedback(*, users(name)),
+        place_by_activity(activity(*, activity_benefit(benefit(*))))
+      `)
+      .eq("id", id)
+      .limit(1)
+      .single();
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    if (!data) {
+      return res.status(204).json({
+        message: `No place found for the id = ${id}`,
+      });
+    }
+
+    // Process the response
+    res.status(200).json({
+      ...data,
+      address: data.address,
+      events: (data.event || []).map((event: EventResponse) => ({
+        ...event,
+        banner:
+          "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      })),
+      images: data.place_image,
+      rating_avg:
+        data.feedback.reduce(
+          (acc: number, curr: FeedbackResponse) => acc + curr.rating,
+          0
+        ) / (data.feedback.length || 1),
+      activities: data.place_by_activity.map((item: any) => ({
+        id: item.activity.id,
+        name: item.activity.name,
+        description: item.activity.description,
+        benefits: item.activity.activity_benefit.map((b: any) => ({
+          id: b.benefit.id,
+          name: b.benefit.name,
+          description: b.benefit.description,
+          icon: b.benefit.icon,
+        })),
+      })),
+    });
+}
+
 }
