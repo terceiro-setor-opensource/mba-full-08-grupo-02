@@ -10,6 +10,7 @@ import { Place } from '@/models/place'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { debounce } from 'lodash' 
 import { activityService } from '@/services/activity.service'
+import LoadingPlaceSkeleton from '@/components/Dashboard/LoadingPlaceSkeleton'
 
 const stackStyles = {
   width: {
@@ -156,7 +157,7 @@ export const Places = () => {
           </Text>
 
           {loading ? (
-            <Text>{t('loading')}</Text>
+            <LoadingPlaceSkeleton />
           ) : error ? (
             <Text color="red.500">{error}</Text>
           ) : (
