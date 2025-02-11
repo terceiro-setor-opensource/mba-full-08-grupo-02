@@ -8,8 +8,9 @@ import PlaceCard from '@/components/Dashboard/PlaceCard'
 import { placeService } from '@/services/place.service'
 import { Place } from '@/models/place'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { debounce } from 'lodash' // Optional, for debouncing
+import { debounce } from 'lodash' 
 import { activityService } from '@/services/activity.service'
+import LoadingPlaceSkeleton from '@/components/Dashboard/LoadingPlaceSkeleton'
 
 const stackStyles = {
   width: {
@@ -30,15 +31,22 @@ export const Places = () => {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
 
+
+  const initialValues = new URLSearchParams(useSearchParams().toString())
+  const initialCity = initialValues.get('city') || ''
+  const initialSport = initialValues.get('sport') || ''
+  const initialSearch = initialValues.get('name') || ''
+
+
   const [stateOrder, setStateOrder] = useState('')
   const [stateOrderBy, setStateOrderBy] = useState('')
-  const [stateSearchByCity, setStateSearchByCity] = useState('')
+  const [stateSearchByCity, setStateSearchByCity] = useState(initialCity)
   const [stateSelectedActivityName, setStateSelectedActivityName] = useState('')
   const [stateSearchByNameDescription, setSearchStateByNameDescription] =
-    useState('')
+    useState(initialSearch)
   const [stateSearchBySportId, setStateSearchBySportId] = useState<
     number | undefined
-  >(undefined)
+  >(initialSport ? parseInt(initialSport) : undefined)
 
   const handleSearch = useCallback(
     debounce((search: string) => {
@@ -54,9 +62,9 @@ export const Places = () => {
         filter: {
           order: stateOrder,
           order_by: stateOrderBy,
-          searchByCity: stateSearchByCity,
-          searchByNameDescription: stateSearchByNameDescription,
-          searchBySportId: stateSearchBySportId,
+          city: stateSearchByCity,
+          name: stateSearchByNameDescription,
+          sport: stateSearchBySportId,
         },
       })
       setPlaces(response)
@@ -104,10 +112,12 @@ export const Places = () => {
             width="100%"
           >
             <LocationSelect
+              defaultValue={stateSearchByCity}
               onChange={(e) => setStateSearchByCity(e.currentTarget.value)}
             />
 
             <SportSelect
+              value={stateSearchBySportId}
               onChange={(e) => {
                 setStateSearchBySportId(
                   e.currentTarget.value
@@ -122,6 +132,7 @@ export const Places = () => {
               options={activities}
             />
             <SearchAndFilter
+              defaultValue={stateSearchByNameDescription}
               onSearch={handleSearch}
               sortChange={(e) => {
                 if (e.currentTarget.value) {
@@ -146,12 +157,15 @@ export const Places = () => {
           </Text>
 
           {loading ? (
-            <Text>{t('loading')}</Text>
+            <LoadingPlaceSkeleton />
           ) : error ? (
             <Text color="red.500">{error}</Text>
           ) : (
             <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
-              {(places || []).map((place) => (
+              {places.length === 0 && (
+                <Text>{t('locationsPage.noResults')}</Text>
+              )}  
+              {places.length > 0 && places.map((place) => (
                 <PlaceCard
                   key={place.id}
                   place={place}
