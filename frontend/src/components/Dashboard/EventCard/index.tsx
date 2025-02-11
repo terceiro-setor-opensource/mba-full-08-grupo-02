@@ -1,7 +1,5 @@
 import { Image, Text } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
-import StarRating from '@/components/commons/StarRating'
-import { Place } from '@/models/place'
 import { Event } from '@/models/event'
 
 type EventCardProps = {
@@ -22,10 +20,15 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
           borderTopStartRadius={4}
         />
       </CardHeader>
-      <CardBody textAlign={'start'} paddingBottom={0} height="100px">
-        <Text fontWeight="bold" fontSize="lg">
-          {event.name}
-        </Text>
+      <CardBody textAlign={'start'} paddingBottom={0} minHeight="100px" >
+          <Text
+            lineHeight="short"
+            color="black"
+            maxWidth="100%"
+            fontSize={'small'}
+          >
+            {event.name}
+          </Text>
       </CardBody>
     </Card>
   )

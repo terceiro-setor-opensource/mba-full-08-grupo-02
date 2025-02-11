@@ -1,3 +1,4 @@
+import { NewPlace } from "@/components/Admin/CreatePlace";
 import { Place } from "@/models/place";
 import { placeService } from "@/services/place.service";
 import { useDisclosure } from "@chakra-ui/react";
@@ -45,7 +46,7 @@ export function useAdminPlacesManager() {
     onOpen();
   };
 
-  const handleCreatePlace = async (newPlace: Place) => {
+  const handleCreatePlace = async (newPlace: NewPlace) => {
     try {
       const createdPlace = await placeService.createPlace(newPlace);
       console.log("New place created:", createdPlace);

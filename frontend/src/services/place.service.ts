@@ -1,5 +1,6 @@
 import { Place } from '@/models/place'
 import api from './api'
+import { NewPlace } from '@/components/Admin/CreatePlace'
 
 export interface SelectFilter {
   pg?: number
@@ -71,7 +72,7 @@ class PlaceService {
     }
   }
 
-  public async createPlace(newPlace: Place): Promise<Place> {
+  public async createPlace(newPlace: NewPlace): Promise<Place> {
     try {
       const response = await api.post(this.basePath, newPlace);
       return response.data;

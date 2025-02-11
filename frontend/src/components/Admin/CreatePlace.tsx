@@ -5,7 +5,7 @@ import { useState } from "react";
 import { BiPlus, BiTrash } from "react-icons/bi";
 import { t } from "i18next";
 
-type NewPlace = {
+export type NewPlace = {
   name: string;
   description: string;
   address: {
