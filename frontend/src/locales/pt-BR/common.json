@@ -98,5 +98,55 @@
     "lower": "Menores notas"
   },
   "loading": "Carregando...",
-  "backButton": "Voltar"
+  "backButton": "Voltar",
+  "managePlaces": {
+    "title": "Gerenciar Locais"
+  },
+  "buttons": {
+    "add_place": "Adicionar Local",
+    "save": "Salvar",
+    "close": "Fechar",
+    "add_image": "Adicionar Imagem",
+    "add_activity": "Adicionar Atividade",
+    "add_benefit": "Adicionar Benefício",
+    "remove": "Remover"
+  },
+  "table": {
+    "name": "Nome",
+    "description": "Descrição",
+    "city": "Cidade",
+    "actions": "Ações"
+  },
+  "drawer": {
+    "new_place": "Novo Local",
+    "edit": "Editar",
+    "address": "Endereço",
+    "events": "Eventos",
+    "feedback": "Feedback",
+    "activities": "Atividades",
+    "benefits": "Benefícios",
+    "no_details": "Nenhum detalhe disponível",
+    "images": "Imagens",
+    "no_images": "Nenhuma imagem disponível",
+    "activity": "Atividade esportiva"
+  },
+  
+  "form": {
+    "name": "Nome",
+    "description": "Descrição",
+    "city": "Cidade",
+    "address": "Endereço",
+    "number": "Número",
+    "complement": "Complemento",
+    "postal_code": "CEP",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "neighborhood": "Bairro",
+    "state": "Estado",
+    "add": "Adicionar",
+    "edit": "Editar",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "add_image": "Adicionar Imagem"
+  }
 }

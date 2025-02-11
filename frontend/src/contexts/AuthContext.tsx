@@ -1,7 +1,6 @@
 import React, { createContext, ReactNode, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useLocalStorage from '@/hooks/useLocalStorage'
-import axios from 'axios'
 import { Account } from '@/models/account'
 import api from '@/services/api'
 

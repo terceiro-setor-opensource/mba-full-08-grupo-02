@@ -36,6 +36,18 @@ class PlaceService {
       this.handleError(error)
     }
   }
+  public async getDetails(id: number): Promise<Place> {
+    if(!id) {
+      throw new Error('Id is required')
+    }
+    try {
+      const response = await api.get(`${this.basePath}/${id}/details`)
+      return response.data
+    } catch (error: any) {
+      this.handleError(error)
+    }
+  }
+
 
   public async getByUserLocation({
     latitude,
@@ -53,6 +65,33 @@ class PlaceService {
       return response.data
     } catch (error: any) {
       this.handleError(error)
+    }
+  }
+
+  public async createPlace(newPlace: Place): Promise<Place> {
+    try {
+      const response = await api.post(this.basePath, newPlace);
+      return response.data;
+    } catch (error: any) {
+      this.handleError(error);
+    }
+  }
+
+  public async updatePlace(place: Place): Promise<Place> {
+    try {
+      const response = await api.put(`${this.basePath}/${place.id}`, place);
+      return response.data;
+    } catch (error: any) {
+      this.handleError(error);
+    }
+  }
+
+  public async deletePlace(id: number): Promise<void> {
+    try {
+      await api.delete(`${this.basePath}/${id}`);
+    } catch (error: any) {
+      this.handleError(error
+      );
     }
   }
 
