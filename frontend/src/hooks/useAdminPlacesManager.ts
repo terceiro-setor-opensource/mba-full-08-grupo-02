@@ -62,7 +62,6 @@ export function useAdminPlacesManager() {
       await placeService.deletePlace(placeId);
       console.log("Place deleted:", placeId);
       
-      // Optionally refresh places list
       fetchPlaces();
     } catch (error) {
       console.error("Error deleting place:", error);

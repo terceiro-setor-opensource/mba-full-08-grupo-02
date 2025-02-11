@@ -31,6 +31,8 @@ const placeSchema = {
   observations: z.string().optional(),
 };
 
+const PLACEHOLDER_IMAGE = 'https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
+
 export default class PlaceController {
   static async findAll(req: Request, res: Response) {
     const PlaceRef = supabase.from("place");
@@ -100,8 +102,7 @@ export default class PlaceController {
       return {
         ...place,
         address: place.address,
-        image:
-          "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        image: PLACEHOLDER_IMAGE,
         rating_avg:
           place.feedback.reduce(
             (acc: number, curr: FeedbackResponse) => acc + curr.rating,
@@ -147,11 +148,10 @@ export default class PlaceController {
       events: (data.event || []).map((event: EventResponse) => {
         return {
           ...event,
-          banner:
-            "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+          banner: PLACEHOLDER_IMAGE,
         };
       }),
-      image: imgData?.url || 'https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      image: imgData?.url || PLACEHOLDER_IMAGE,
       rating_avg:
         data.feedback.reduce(
           (acc: number, curr: FeedbackResponse) => acc + curr.rating,
@@ -232,12 +232,11 @@ export default class PlaceController {
 
 
       for (const activity of activities) {
-        // Insert activity if not exists
         const { data: newActivity, error: activityError } = await supabase
           .from("activity")
           .insert([{ name: activity.name }])
           .select("id")
-          .single(); // We expect a single result for the activity insert
+          .single();
 
         if (activityError) throw activityError;
         let activity_id = newActivity.id;
@@ -253,36 +252,31 @@ export default class PlaceController {
 
         if (placeActivityError) throw placeActivityError;
 
-        // Insert Benefits
         for (const benefit of activity.benefits) {
           let benefit_id = benefit.id;
 
-          // Check if the benefit already exists
           const { data: existingBenefit, error: benefitExistError } = await supabase
             .from("benefit")
             .select("id")
             .eq("name", benefit.name)
-            .limit(1);  // Limiting to 1 result in case of multiple entries
+            .limit(1);
 
           if (benefitExistError) throw benefitExistError;
 
           if (existingBenefit && existingBenefit.length > 0) {
-            // If the benefit already exists, use the existing benefit ID
             benefit_id = existingBenefit[0].id;
           } else {
-            // If the benefit does not exist, insert it and get the new benefit ID
             const { data: newBenefit, error: benefitError } = await supabase
               .from("benefit")
               .insert([{ name: benefit.name, description: benefit.description  ?? '' }])
               .select("id")
-              .single();  // Now it will insert and return a single row
+              .single();
         
             if (benefitError) throw benefitError;
             benefit_id = newBenefit.id;
           }
 
 
-          // Link Benefit to Activity
           const { error: activityBenefitError } = await supabase
             .from("activity_benefit")
             .insert([{ activity_id, benefit_id }]);
@@ -291,14 +285,13 @@ export default class PlaceController {
         }
       }
 
-      // ✅ Return Created Place
       res.status(201).json({ id: place_id, message: "Place created successfully" });
     } catch (error) {
       console.error("Error creating place:", error);
       return res.status(500).json({
         status: 500,
         message: "Internal Server Error",
-        error: error.message || error,
+        error: error?.message || error,
       });
     }
   }
@@ -476,8 +469,7 @@ export default class PlaceController {
       address: data.address,
       events: (data.event || []).map((event: EventResponse) => ({
         ...event,
-        banner:
-          "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        banner: PLACEHOLDER_IMAGE,
       })),
       images: data.place_image,
       rating_avg:

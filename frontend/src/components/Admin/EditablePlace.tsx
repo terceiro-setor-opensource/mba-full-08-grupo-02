@@ -4,14 +4,12 @@ import {
 } from "@chakra-ui/react";
 import { t } from "i18next";
 
-// ✅ Define Props Correctly
 type PlaceDetailsProps = {
   selectedPlace: PlaceDetails | null;
   loading: boolean;
   onEdit: (updatedPlace: PlaceDetails) => void;
 };
 
-// ✅ Type for PlaceDetails
 type PlaceDetails = {
   name: string;
   description: string;
@@ -19,7 +17,7 @@ type PlaceDetails = {
     city: string;
     streetname: string;
   };
-  images: string[]; // Image URLs as text input
+  images: string[];
   events: {
     id: string;
     name: string;
@@ -41,7 +39,6 @@ type PlaceDetails = {
   }[];
 };
 
-// ✅ Skeleton Loader Component
 function LoadingSkeleton() {
   return (
     <>
@@ -52,19 +49,16 @@ function LoadingSkeleton() {
   );
 }
 
-// ✅ Fully Editable Component
 export default function EditablePlace({ selectedPlace, loading, onEdit }: PlaceDetailsProps) {
   if (loading) return <LoadingSkeleton />;
   if (!selectedPlace) return <Text>{t("drawer.no_details")}</Text>;
 
-  // ✅ Function to handle field changes
   const handleChange = (field: string, value: any) => {
     onEdit({ ...selectedPlace, [field]: value });
   };
 
   return (
     <Stack spacing={4}>
-      {/* 📌 Editable Name */}
       <FormLabel>{t("form.name")}</FormLabel>
       <Skeleton isLoaded={!loading}>
         <Editable defaultValue={selectedPlace.name} onChange={(val) => handleChange("name", val)} 
@@ -74,7 +68,6 @@ export default function EditablePlace({ selectedPlace, loading, onEdit }: PlaceD
         </Editable>
       </Skeleton>
 
-      {/* 📌 Editable Description */}
       <FormLabel>{t("form.description")}</FormLabel>
       <Skeleton isLoaded={!loading}>
         <Editable defaultValue={selectedPlace.description} onChange={(val) => handleChange("description", val)}>
@@ -83,7 +76,6 @@ export default function EditablePlace({ selectedPlace, loading, onEdit }: PlaceD
         </Editable>
       </Skeleton>
 
-      {/* 📌 Editable Address */}
       <FormLabel>{t("form.city")}</FormLabel>
       <Skeleton isLoaded={!loading}>
         <Editable defaultValue={selectedPlace.address.city} onChange={(val) => handleChange("address", { ...selectedPlace.address, city: val })}>
@@ -100,7 +92,6 @@ export default function EditablePlace({ selectedPlace, loading, onEdit }: PlaceD
         </Editable>
       </Skeleton>
 
-      {/* 📌 Editable Images as URL Text Inputs */}
       <Text fontWeight="bold" mt={4}>{t("drawer.images")}</Text>
       {selectedPlace.images.map((img, index) => (
         <Skeleton key={index} isLoaded={!loading}>
@@ -115,7 +106,6 @@ export default function EditablePlace({ selectedPlace, loading, onEdit }: PlaceD
         </Skeleton>
       ))}
 
-      {/* 📌 Editable Events */}
       <Text fontWeight="bold" mt={4}>{t("drawer.events")}</Text>
       {selectedPlace.events.map((event, index) => (
         <Skeleton key={event.id} isLoaded={!loading}>
@@ -130,7 +120,6 @@ export default function EditablePlace({ selectedPlace, loading, onEdit }: PlaceD
         </Skeleton>
       ))}
 
-      {/* 📌 Editable Feedback */}
       <Text fontWeight="bold" mt={4}>{t("drawer.feedback")}</Text>
       {selectedPlace.feedback.map((feedback, index) => (
         <Skeleton key={feedback.id} isLoaded={!loading}>
@@ -145,7 +134,6 @@ export default function EditablePlace({ selectedPlace, loading, onEdit }: PlaceD
         </Skeleton>
       ))}
 
-      {/* 📌 Editable Activities & Nested Benefits */}
       <Text fontWeight="bold" mt={4}>{t("drawer.activities")}</Text>
       {selectedPlace.activities.map((activity, activityIndex) => (
         <Box key={activity.id} borderWidth="1px" borderRadius="md" p={3}>
