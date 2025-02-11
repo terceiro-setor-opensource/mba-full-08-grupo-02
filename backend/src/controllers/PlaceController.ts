@@ -127,6 +127,7 @@ export default class PlaceController {
       .eq("id", id)
       .limit(1)
       .single();
+
     if (error) {
       return res.status(500).json({ error: error.message });
     }
@@ -138,12 +139,8 @@ export default class PlaceController {
     }
 
     const firstImageUrl = data.place_image[0]?.imageid ?? data.place_image[0]?.image?.id;
-
     const {data: imgData, error: imageError } = await supabase.from("image").select("*").eq("id", firstImageUrl).single();
-
-    if (imageError) {
-      return res.status(500).json({ error: imageError.message});
-    }
+   
    return res.status(201).json({
       ...data,
       address: data.address,
