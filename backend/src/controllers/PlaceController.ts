@@ -58,7 +58,7 @@ export default class PlaceController {
       `
         *,
         address(*),
-        place_image(imageid),
+        place_image(image(*)),
         feedback(rating),
         event(*),
         place_by_activity(activity(*))`
@@ -124,7 +124,7 @@ export default class PlaceController {
     const { data, error } = await PlaceRef.select(
       `*,
       address(*),
-      place_image(imageid),
+      place_image(image(*)),
       feedback(*,users(name)),
       event(*),
       place_by_activity(activity(*, activity_benefit(benefit(*))))`

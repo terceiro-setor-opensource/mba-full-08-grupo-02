@@ -27,6 +27,7 @@ import ShareFeedback from '../ShareFeedback'
 import { useAuth } from '@/hooks/useAuth'
 import { useCallback, useState } from 'react'
 import { Feedback } from '@/models/feedback'
+import { ImageGallery } from '../ImageGallery'
 const stackStyles = {
   width: {
     base: '100%',
@@ -46,15 +47,6 @@ const stackDetailsStyles = {
     md: '100%',
   },
   textAlign: 'left',
-  margin: 'auto',
-}
-
-const placeImageStyles = {
-  rounded: 'md',
-  width: {
-    base: '80%',
-    md: '100%',
-  },
   margin: 'auto',
 }
 
@@ -97,7 +89,7 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
   return (
     <Stack sx={stackStyles}>
       <SimpleGrid columns={{ base: 1, md: 1, lg: 2 }} spacing={12}>
-        <Image src={place?.image} alt={place?.name} sx={placeImageStyles} />
+        <ImageGallery imageList={place.place_image || []} showTotal />
         <Stack
           sx={stackDetailsStyles}
           justifyContent={'space-between'}
@@ -195,7 +187,11 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
             <Text>{t('detailedLocationPage.loginRedirect')}</Text>
           </Button>
         ) : (
-          <ShareFeedback user={user} place={place} setFeedbackList={setFeedbackList}/>
+          <ShareFeedback
+            user={user}
+            place={place}
+            setFeedbackList={setFeedbackList}
+          />
         )}
 
         <Stack marginTop="1rem">
@@ -210,7 +206,11 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
                   : 'detailedLocationPage.noFeedbackListTitle',
               )}
             </Text>
-            {feedbackList.length > 1 ? <OrderSelect setFeedbackList={setFeedbackList} place={place} /> : <></>}
+            {feedbackList.length > 1 ? (
+              <OrderSelect setFeedbackList={setFeedbackList} place={place} />
+            ) : (
+              <></>
+            )}
           </Stack>
           <List>
             {feedbackList.map((feedback) => {

@@ -1,7 +1,8 @@
-import { Image, Text } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import StarRating from '@/components/commons/StarRating'
 import { Place } from '@/models/place'
+import { ImageGallery } from '../ImageGallery'
 
 type PlaceCardProps = {
   place: Place
@@ -9,19 +10,15 @@ type PlaceCardProps = {
 }
 const PlaceCard = ({ place, onClick }: PlaceCardProps) => {
   return (
-    <Card onClick={onClick}>
+    <Card>
       <CardHeader padding={0} borderTopEndRadius={4} borderTopStartRadius={4}>
-        <Image
-          src={place.image}
-          alt={place.name}
-          objectFit="cover"
-          width="100%"
-          height="200px"
-          borderTopEndRadius={4}
-          borderTopStartRadius={4}
+        <ImageGallery
+          imageList={place.place_image || []}
+          fixedImageHeight="150px"
+          imageClick={onClick}
         />
       </CardHeader>
-      <CardBody textAlign={'start'} paddingBottom={0}>
+      <CardBody textAlign={'start'} paddingBottom={0} onClick={onClick}>
         <Text fontWeight="bold" fontSize="lg">
           {place.name}
         </Text>
@@ -30,7 +27,7 @@ const PlaceCard = ({ place, onClick }: PlaceCardProps) => {
           {place.address.addressnumber}
         </Text>
       </CardBody>
-      <CardFooter>
+      <CardFooter onClick={onClick}>
         <StarRating
           rating={place.rating_avg || 0}
           reviewCount={place.feedback.length}
