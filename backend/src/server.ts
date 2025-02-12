@@ -11,6 +11,7 @@ import addressRoutes from "./routes/address";
 import feedbackRoutes from "./routes/feedback";
 import favoritePlaceRoutes from "./routes/favoritePlace";
 import authRoutes from "./routes/auth";
+import ProfileRoutes from "./routes/profile";
 
 const app = express();
 const port = 3000;
@@ -33,6 +34,7 @@ app.use("/accounts", accountRoutes);
 app.use("/address", addressRoutes);
 app.use("/feedbacks", feedbackRoutes);
 app.use("/favorite_places", favoritePlaceRoutes);
+app.use("/profile", ProfileRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
