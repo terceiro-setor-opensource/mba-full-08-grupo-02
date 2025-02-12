@@ -35,10 +35,21 @@ export async function login(req: Request, res: Response): Promise<Response> {
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
+  const { data: cadastro } = await supabase
+    .from("users")
+    .select("id")
+    .eq("accountid", account.id)
+    .single();
+
+    if (!cadastro) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
   const token = jwt.sign(
     {
       id: account.id,
       email: account.email,
+      userid: cadastro.id,
       account_type_id: account.account_type_id,
     },
     JWT_SECRET,

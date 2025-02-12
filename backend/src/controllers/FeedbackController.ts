@@ -43,7 +43,7 @@ export default class FeedbackController {
       return res.status(500).json({ error: error.message });
     }
 
-    if (data.length === 0) {
+    if (!data) {
       return res.status(204).json({
         message: `No feedback found for the id = ${id}`,
       });

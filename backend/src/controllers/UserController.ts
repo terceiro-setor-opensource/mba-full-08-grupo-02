@@ -21,17 +21,13 @@ export async function findById(req: Request, res: Response): Promise<Response> {
 
   const { data, error } = await supabase.from('users').select("id, name, birthdate").eq("id", id).limit(1).single();
   
-  if(error) {
-    return res.status(500).json({ error: error.message });
-  }
-
-  if(data.length === 0) {
+  if(data === null) {
     return res.status(404).json({
       message: "User not found"
     });
   }
 
-  return res.json(data[0]);
+  return res.json(data);
 }
 
 export async function create(req: Request, res: Response): Promise<Response> {
