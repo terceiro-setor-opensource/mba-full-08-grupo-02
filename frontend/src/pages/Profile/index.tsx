@@ -41,7 +41,6 @@ type ProfileFormData = z.infer<typeof profileSchema>;
 
 const ProfileForm = () => {
   const { user } = useAuth();
-  console.log('user', user)
   const [profileImage, setProfileImage] = useState<string | null>(user?.profile_image || null);
 
   const {
@@ -92,6 +91,7 @@ const ProfileForm = () => {
           postalcode: user.address?.postalcode || '',
         },
       });
+      setProfileImage(user.profile_image || null);
     }
   }, [user, reset]);
 
