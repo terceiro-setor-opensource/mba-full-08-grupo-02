@@ -14,6 +14,7 @@ import { ToastContainer } from 'react-toastify'
 import About from './pages/About'
 import { ProtectedAdminRoute } from './components/commons/ProtectedAdminRoute'
 import { ManagePlaces } from './pages/Admin/Places'
+import ProfileForm from './pages/Profile'
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'profile',
+        element: (
+          <ProtectedRoute>
+            <ProfileForm />
           </ProtectedRoute>
         ),
       },

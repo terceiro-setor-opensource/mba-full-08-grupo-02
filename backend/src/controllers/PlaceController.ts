@@ -206,7 +206,7 @@ export default class PlaceController {
       const place_id = placeDataInserted.id;
 
       if (images && images.length > 0) {
-        const payloadToInsertImages = images.map((image) => ({
+        const payloadToInsertImages = images.map((image: string) => ({
           url: image,
           alt: 'Imagem de: ' + placeData.name,
         }));
@@ -291,7 +291,7 @@ export default class PlaceController {
       return res.status(500).json({
         status: 500,
         message: "Internal Server Error",
-        error: error?.message || error,
+        error: 'Houve um erro ao criar o local'
       });
     }
   }

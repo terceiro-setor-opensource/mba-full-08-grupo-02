@@ -43,7 +43,7 @@ const AuthMenuItems: React.FC<AuthMenuItemsProps> = ({
 }) => {
   return (
     <>
-      <MenuItem>{user.name}</MenuItem>
+      <MenuItem onClick={() => navigate('/profile')}>{user.name}</MenuItem>
       <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
       <MenuItem onClick={() => navigate('/admin/places')}>Gerenciar locais</MenuItem>
       <MenuItem>{t('requestCatalog')}</MenuItem>
