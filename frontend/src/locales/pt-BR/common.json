@@ -64,7 +64,8 @@
   },
   "locationsPage": {
     "searchResults": "Exibindo resultados para pesquisa",
-    "searchResultsFor": "em"
+    "searchResultsFor": "em",
+    "noResults": "Nenhum resultado encontrado"
   },
   "detailedLocationPage": {
     "description": "Descrição",
@@ -77,14 +78,25 @@
     "addEvent": "Adicionar evento",
     "noEventsListed": "Sem eventos listados nesse local",
     "feedbacksStackTitle": "Avaliações do local",
-    "feedbackInputPlaceholder": "Compartilhe sua experiência",
+    "loginRedirect": "Realize o login para deixar uma avaliação",
     "feedbackListTitleMultiple": "Avaliações",
-    "feedbackListTitleSingle": "Avaliação"
+    "feedbackListTitleSingle": "Avaliação",
+    "noFeedbackListTitle": "Este local ainda não recebeu avaliações!"
+  },
+  "shareFeedback": {
+    "howManyStars": "Quantas estrelas este local merece?",
+    "feedbackInputPlaceholder": "Compartilhe sua experiência",
+    "noUserOrPlaceSelected": "Nenhum usuário ou local foram selecionados",
+    "pleaseSelectStars": "Por favor selecione de 1 a 5 estrelas",
+    "pleaseFillWrittenFeedback": "Digite ao menos 10 caracteres na sua avaliação",
+    "thanksForSharing": "Obrigado por compartilhar sua experiência e contribuir com a plataforma!"
   },
   "orderSelection": {
     "select": "Ordenar",
     "newer": "Mais recentes",
-    "older": "Mais antigos"
+    "older": "Mais antigos",
+    "higher": "Maiores notas",
+    "lower": "Menores notas"
   },
   "loading": "Carregando...",
   "backButton": "Voltar"

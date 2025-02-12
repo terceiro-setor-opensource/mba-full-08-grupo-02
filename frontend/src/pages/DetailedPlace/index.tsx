@@ -2,10 +2,10 @@ import { BackButton } from '@/components/commons/BackButton'
 import { Place } from '@/models/place'
 import { placeService } from '@/services/place.service'
 import { Box, Stack, Text } from '@chakra-ui/layout'
-import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { PlaceDetails } from '@/components/Dashboard/PlaceDetails'
+import { PlaceDetailsSkeleton } from '@/components/Dashboard/LoadingPlaceSkeleton/details'
 
 const stackStyles = {
   width: {
@@ -40,6 +40,7 @@ export const DetailedPlace = () => {
       }
             setLoading(true)
       try {
+        if(!id) return
         const response = await placeService.getById(parseInt(id))
         localStorage.setItem("placeid", String(response.id))
         setPlace(response)
@@ -53,8 +54,6 @@ export const DetailedPlace = () => {
     if (id) fetchPlace()
   }, [])
 
-  console.log(place)
-
   return (
     <>
       <Box>
@@ -62,12 +61,12 @@ export const DetailedPlace = () => {
           <Stack spacing={8} paddingTop={12} alignItems={'start'}>
             <BackButton />
             {loading ? (
-              <Text>{t('loading')}</Text>
+              <PlaceDetailsSkeleton />
             ) : error ? (
               <Text color="red.500">{error}</Text>
             ) : (
               <Stack sx={stackContentStyles}>
-                <PlaceDetails place={place} />
+                <PlaceDetails place={place as Place} />
               </Stack>
             )}
           </Stack>

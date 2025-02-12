@@ -8,6 +8,9 @@ export interface SelectFilter {
   searchByNameDescription?: string
   searchBySportId?: number
   searchByCity?: string
+  city?: string
+  name?: string
+  sport?: number
 }
 
 class PlaceService {

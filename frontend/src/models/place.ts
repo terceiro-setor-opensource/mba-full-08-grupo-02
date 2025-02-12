@@ -1,6 +1,7 @@
 import { Event } from './event'
 import { Feedback } from './feedback'
 import { PlaceByActivity } from './place_by_activity'
+import { PlaceImage } from './place_image'
 
 export interface Place {
   id: number
@@ -22,6 +23,7 @@ export interface Place {
   address: Address
   events?: Event[]
   place_by_activity?: PlaceByActivity[]
+  place_image?: PlaceImage[]
 }
 
 type Address = {

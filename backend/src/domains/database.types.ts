@@ -306,22 +306,19 @@ export type Database = {
       }
       image: {
         Row: {
-          description: string | null
+          alt: string | null
           id: number
-          name: string
-          recommendations: string | null
+          url: string
         }
         Insert: {
-          description?: string | null
-          id?: never
-          name: string
-          recommendations?: string | null
+          alt: string | null
+          id: number
+          url: string
         }
         Update: {
-          description?: string | null
-          id?: never
-          name?: string
-          recommendations?: string | null
+          alt: string | null
+          id: number
+          url: string
         }
         Relationships: []
       }
