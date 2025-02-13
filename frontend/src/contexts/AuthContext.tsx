@@ -86,7 +86,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       })
       navigate('/login')
     } catch (error) {
-      console.error('Registration error:', error)
+      if(error.response?.data?.message){
+        throw new Error(error.response.data.message)
+      }
       throw new Error('Registration failed')
     }
   }

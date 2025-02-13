@@ -48,7 +48,12 @@ export const SignUp = () => {
       })
       toast.success(t('formSignUp.success'))
     } catch (error) {
-      toast.error(t('formSignUp.error'))
+      if(error instanceof Error){
+        toast.error(error.message);
+        return;
+      }
+
+      toast.error(t('formSignUp.error'));
     }
   }
 
