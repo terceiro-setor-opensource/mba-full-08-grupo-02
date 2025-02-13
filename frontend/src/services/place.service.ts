@@ -16,6 +16,7 @@ export interface SelectFilter {
 
 class PlaceService {
   private basePath = '/places'
+  private baseFavoritePlacePath = '/favorite_places'
 
   public async getPlaces({
     filter = {},
@@ -66,6 +67,15 @@ class PlaceService {
       this.handleError(error)
     }
   }
+  
+  public async getByPlaceIdAndUserId(userid: number, placeid: number): Promise<Place> {
+    try {
+      const response = await api.get(`${this.basePath}/${userid}/${placeid}`)
+      return response.data
+    } catch (error: any) {
+      this.handleError(error)
+    }
+  }
 
   public async createPlace(newPlace: NewPlace): Promise<Place> {
     try {
@@ -89,8 +99,67 @@ class PlaceService {
     try {
       await api.delete(`${this.basePath}/${id}`);
     } catch (error: any) {
-      this.handleError(error
-      );
+      this.handleError(error);
+    }
+  }
+  
+  public async postFavoritePlace({
+    placeid,
+    userid,
+  }: {
+    placeid: string
+    userid: string
+  }): Promise<Place[]> {
+    try {
+      let response
+      response = await api.post(this.baseFavoritePlacePath, {
+        placeid: parseInt(placeid,10), 
+        userid: parseInt(userid,10), 
+      })
+
+      localStorage.setItem("favoriteid", response.data.data[0].id)
+
+      return response.data
+    } catch (error: any) {
+      localStorage.setItem("ERRO", error)
+      this.handleError(error)
+    }
+  }
+
+  public async removeFavoritePlace({
+    favoriteId,
+  }: {
+    favoriteId: string
+  }): Promise<Place[]> {
+    try {
+      const response = await api.delete(this.baseFavoritePlacePath, {
+        data: { favoriteId: parseInt(favoriteId, 10) }
+      })
+      return response.data
+    } catch (error: any) {
+      this.handleError(error)
+    }
+  }
+
+  public async isFavoritePlace({
+    placeid,
+    userid,
+  }: {
+    placeid: string;
+    userid: string;
+  }): Promise<boolean> {
+    try {
+      const response = await api.get(this.baseFavoritePlacePath + "/isFavorite/" + placeid + "/",  {
+        params: { userid },
+      });
+      if(!response.data){
+        console.error('Retorno da API inválido')
+      }
+      // Retorna diretamente o valor de "isFavorite" (isFavorite)
+      localStorage.setItem("favoriteid", response.data.id)
+      return response.data.isFavorite
+    } catch (error: any) {
+      this.handleError(error);
     }
   }
 
