@@ -41,15 +41,6 @@ class PlaceService {
     }
   }
 
-  public async getByPlaceIdAndUserId(userid: number, placeid: number): Promise<Place> {
-    try {
-      const response = await api.get(`${this.basePath}/${userid}/${placeid}`)
-      return response.data
-    } catch (error: any) {
-      this.handleError(error)
-    }
-  }
-
   public async getByUserLocation({
     latitude,
     longitude,

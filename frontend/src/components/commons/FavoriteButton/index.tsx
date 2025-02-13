@@ -4,6 +4,7 @@ import { TiHeartOutline } from 'react-icons/ti'
 import { placeService } from '@/services/place.service'
 import { jwtDecode, JwtPayload  } from "jwt-decode";
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface UserToken extends JwtPayload {
   id: string;
@@ -26,7 +27,7 @@ export const FavoriteButton = () => {
         }
 
         if (!token) {
-          console.error('Usuário não autenticado')
+          toast.error('Usuário não autenticado')
           return;
         }
 
@@ -52,7 +53,7 @@ export const FavoriteButton = () => {
     try {
       
       const token = localStorage.getItem('@cidade-ativa:auth_token') // Pegando o userId dentro da função para evitar erro ao renderizar
-      const placeid = localStorage.getItem('placeid') // Pegando o placeId dentro da função para evitar erro ao renderizar
+      const placeid = id; 
       const favoriteId = localStorage.getItem('favoriteid') // Pegando o placeId dentro da função para evitar erro ao renderizar
 
 
