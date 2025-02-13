@@ -1,5 +1,6 @@
 import { Place } from '@/models/place'
-import api from './api'
+import api, { getToken } from './api'
+import { NewPlace } from '@/components/Admin/CreatePlace'
 
 export interface SelectFilter {
   pg?: number
@@ -40,27 +41,68 @@ class PlaceService {
       this.handleError(error)
     }
   }
-
-  public async getByUserLocation({
-    latitude,
-    longitude,
-    radius,
-  }: {
-    latitude: number
-    longitude: number
-    radius: number
-  }): Promise<Place[]> {
+  public async getDetails(id: number): Promise<Place> {
+    if(!id) {
+      throw new Error('Id is required')
+    }
     try {
-
-      const response = await api.get(this.basePath, {
-        params: { latitude, longitude, radius },
-      })
+      const response = await api.get(`${this.basePath}/${id}/details`)
       return response.data
     } catch (error: any) {
       this.handleError(error)
     }
   }
 
+
+  public async getByUserLocation(): Promise<Place[]> {
+    try {
+      const response = await api.get(`/places/user-location/places`, {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${getToken()}`,
+        }
+      })
+      return response.data
+    } catch (error: any) {
+      this.handleError(error)
+    }
+  }
+  
+  public async getByPlaceIdAndUserId(userid: number, placeid: number): Promise<Place> {
+    try {
+      const response = await api.get(`${this.basePath}/${userid}/${placeid}`)
+      return response.data
+    } catch (error: any) {
+      this.handleError(error)
+    }
+  }
+
+  public async createPlace(newPlace: NewPlace): Promise<Place> {
+    try {
+      const response = await api.post(this.basePath, newPlace);
+      return response.data;
+    } catch (error: any) {
+      this.handleError(error);
+    }
+  }
+
+  public async updatePlace(place: Place): Promise<Place> {
+    try {
+      const response = await api.put(`${this.basePath}/${place.id}`, place);
+      return response.data;
+    } catch (error: any) {
+      this.handleError(error);
+    }
+  }
+
+  public async deletePlace(id: number): Promise<void> {
+    try {
+      await api.delete(`${this.basePath}/${id}`);
+    } catch (error: any) {
+      this.handleError(error);
+    }
+  }
+  
   public async postFavoritePlace({
     placeid,
     userid,

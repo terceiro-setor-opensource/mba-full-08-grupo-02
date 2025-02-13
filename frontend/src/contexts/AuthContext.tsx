@@ -1,12 +1,11 @@
 import React, { createContext, ReactNode, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useLocalStorage from '@/hooks/useLocalStorage'
-import axios from 'axios'
-import { Account } from '@/models/account'
+import { Account, Profile } from '@/models/account'
 import api from '@/services/api'
 
 export interface AuthContextType {
-  user: Account | null
+  user: Profile | null
   login: (data: { email: string; password: string }) => Promise<void>
   register: (data: {
     name: string

@@ -12,6 +12,9 @@ import { Benefits } from './pages/Benefits'
 import { DetailedPlace } from './pages/DetailedPlace'
 import { ToastContainer } from 'react-toastify'
 import About from './pages/About'
+import { ProtectedAdminRoute } from './components/commons/ProtectedAdminRoute'
+import { ManagePlaces } from './pages/Admin/Places'
+import ProfileForm from './pages/Profile'
 
 const router = createBrowserRouter([
   {
@@ -52,6 +55,22 @@ const router = createBrowserRouter([
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'profile',
+        element: (
+          <ProtectedRoute>
+            <ProfileForm />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'admin/places',
+        element: (
+          <ProtectedAdminRoute>
+            <ManagePlaces />
+          </ProtectedAdminRoute>
         ),
       },
       {
