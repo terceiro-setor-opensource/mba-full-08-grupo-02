@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { supabase } from "../services/supabase";
+import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 const JWT_EXPIRATION = process.env.JWT_EXPIRATION || "1h";
 
-// Define Profile Update Schema
 const profileSchema = z.object({
   profileimage: z.string().optional(),
   name: z.string().min(2, "Nome é obrigatório"),
@@ -103,6 +102,7 @@ export default class ProfileController {
 
       // Update address details in "address" table
       if (addressId === null) {
+
         const { data: newAddress, error: newAddressError } = await supabase
           .from("address")
           .insert({
@@ -138,6 +138,7 @@ export default class ProfileController {
 
         if (addressUpdateError) throw addressUpdateError;
 
+
         return res.status(200).json({
           status: 200,
           message: "Profile updated successfully",
@@ -166,10 +167,11 @@ export default class ProfileController {
         });
       }
     } catch (error) {
+      console.log(error);
       return res.status(500).json({
         status: 500,
         message: "Internal Server Error",
-        error: error.message || "An unexpected error occurred",
+        error: "An unexpected error occurred",
       });
     }
   }
