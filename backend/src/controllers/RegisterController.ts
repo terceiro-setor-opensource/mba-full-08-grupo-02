@@ -44,5 +44,15 @@ export async function register(req: Request, res: Response): Promise<Response> {
     return res.status(500).json({ error: error.message });
   }
 
-  return res.status(201).json({ message: "Account registered successfully", data });
+  //Insert in the users table
+  const {data:user, error:userError} = await supabase
+  .from("users")
+  .insert(
+    [{ accountid: data[0].id, name }]
+  );
+
+  if(userError){
+    return res.status(500).json({ error: userError.message });
+  }
+  return res.status(201).json({ message: "Account and user registered successfully", data });
 }
