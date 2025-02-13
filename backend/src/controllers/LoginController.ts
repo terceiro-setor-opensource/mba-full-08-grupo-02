@@ -123,12 +123,21 @@ export async function profile(req: Request, res: Response): Promise<Response> {
       return res.status(401).json({ message: "Invalid token" });
     }
 
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("name, birthdate, profile_image, address(*), accountid")
+      .eq("accountid", decoded.id)
+      .single();
+    
     return res.status(200).json({
       id: account.id,
       name: account.name,
       email: account.email,
       phone_number: account.phone_number,
       account_type_id: account.account_type_id,
+      birthdate: user?.birthdate,
+      profile_image: user?.profile_image,
+      address: user?.address,
     });
   } catch (err) {
     return res.status(403).json({ message: "Invalid token" });
