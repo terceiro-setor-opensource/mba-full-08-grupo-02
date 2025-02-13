@@ -58,6 +58,7 @@
     "searchPlace": "Pesquise um local",
     "lookingFor": "Estou procurando por...",
     "nearYou": "Perto de você",
+    "favoritePlaces": "Seus favoritos",
     "saoPaulo": "São Paulo - SP",
     "santoAndre": "Santo André - SP",
     "running": "Corrida"
@@ -131,7 +132,7 @@
     "no_images": "Nenhuma imagem disponível",
     "activity": "Atividade esportiva"
   },
-  
+
   "form": {
     "name": "Nome",
     "description": "Descrição",

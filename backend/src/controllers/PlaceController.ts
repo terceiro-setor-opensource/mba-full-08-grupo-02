@@ -34,20 +34,15 @@ const placeSchema = {
   observations: z.string().optional(),
 };
 
-const PLACEHOLDER_IMAGE = 'https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
+const PLACEHOLDER_IMAGE =
+  "https://images.pexels.com/photos/325521/pexels-photo-325521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
 export default class PlaceController {
   static async findAll(req: Request, res: Response) {
     const PlaceRef = supabase.from("place");
 
-    const {
-      order,
-      order_by,
-      pg,
-      city,
-      name,
-      sport,
-    } = (req.query as unknown as PlaceSelectFilter) || {};
+    const { order, order_by, pg, city, name, sport } =
+      (req.query as unknown as PlaceSelectFilter) || {};
 
     const isForeignOrder = {
       feedback_rating: "feedback(rating)",
@@ -142,10 +137,15 @@ export default class PlaceController {
       });
     }
 
-    const firstImageUrl = data.place_image[0]?.imageid ?? data.place_image[0]?.image?.id;
-    const {data: imgData, error: imageError } = await supabase.from("image").select("*").eq("id", firstImageUrl).single();
-   
-   return res.status(201).json({
+    const firstImageUrl =
+      data.place_image[0]?.imageid ?? data.place_image[0]?.image?.id;
+    const { data: imgData, error: imageError } = await supabase
+      .from("image")
+      .select("*")
+      .eq("id", firstImageUrl)
+      .single();
+
+    return res.status(201).json({
       ...data,
       address: data.address,
       events: (data.event || []).map((event: EventResponse) => {
@@ -162,7 +162,6 @@ export default class PlaceController {
         ) / data.feedback.length,
     });
   }
-  
 
   static async create(req: Request, res: Response) {
     const PlaceRef = supabase.from("place");
@@ -211,7 +210,7 @@ export default class PlaceController {
       if (images && images.length > 0) {
         const payloadToInsertImages = images.map((image: string) => ({
           url: image,
-          alt: 'Imagem de: ' + placeData.name,
+          alt: "Imagem de: " + placeData.name,
         }));
 
         const { data: imageInsertData, error: imageError } = await supabase
@@ -221,10 +220,11 @@ export default class PlaceController {
 
         if (imageError) throw imageError;
 
-        const placeImageInsertData = imageInsertData?.map((image) => ({
-          placeid: place_id, 
-          imageid: image.id,
-        })) || [];
+        const placeImageInsertData =
+          imageInsertData?.map((image) => ({
+            placeid: place_id,
+            imageid: image.id,
+          })) || [];
 
         const { error: placeImageError } = await supabase
           .from("place_image")
@@ -232,7 +232,6 @@ export default class PlaceController {
 
         if (placeImageError) throw placeImageError;
       }
-
 
       for (const activity of activities) {
         const { data: newActivity, error: activityError } = await supabase
@@ -243,9 +242,9 @@ export default class PlaceController {
 
         if (activityError) throw activityError;
         let activity_id = newActivity.id;
-        
-        if(!activity_id && !place_id){
-          throw new Error('Activity or Place ID not found');
+
+        if (!activity_id && !place_id) {
+          throw new Error("Activity or Place ID not found");
         }
 
         // Link Activity to Place
@@ -258,11 +257,12 @@ export default class PlaceController {
         for (const benefit of activity.benefits) {
           let benefit_id = benefit.id;
 
-          const { data: existingBenefit, error: benefitExistError } = await supabase
-            .from("benefit")
-            .select("id")
-            .eq("name", benefit.name)
-            .limit(1);
+          const { data: existingBenefit, error: benefitExistError } =
+            await supabase
+              .from("benefit")
+              .select("id")
+              .eq("name", benefit.name)
+              .limit(1);
 
           if (benefitExistError) throw benefitExistError;
 
@@ -271,14 +271,15 @@ export default class PlaceController {
           } else {
             const { data: newBenefit, error: benefitError } = await supabase
               .from("benefit")
-              .insert([{ name: benefit.name, description: benefit.description  ?? '' }])
+              .insert([
+                { name: benefit.name, description: benefit.description ?? "" },
+              ])
               .select("id")
               .single();
-        
+
             if (benefitError) throw benefitError;
             benefit_id = newBenefit.id;
           }
-
 
           const { error: activityBenefitError } = await supabase
             .from("activity_benefit")
@@ -288,13 +289,15 @@ export default class PlaceController {
         }
       }
 
-      res.status(201).json({ id: place_id, message: "Place created successfully" });
+      res
+        .status(201)
+        .json({ id: place_id, message: "Place created successfully" });
     } catch (error) {
       console.error("Error creating place:", error);
       return res.status(500).json({
         status: 500,
         message: "Internal Server Error",
-        error: 'Houve um erro ao criar o local'
+        error: "Houve um erro ao criar o local",
       });
     }
   }
@@ -386,13 +389,13 @@ export default class PlaceController {
       .json({ code: 201, status: "OK", message: `Rows affected -> ${count}` });
   }
 
-  
   static async findBenefitsByPlaceId(req: Request, res: Response) {
     const { id } = req.params;
-    
-     const { data: benefitsData, error } = await supabase
-     .from('place')
-     .select(`
+
+    const { data: benefitsData, error } = (await supabase
+      .from("place")
+      .select(
+        `
        id,
        place_by_activity (
          activity (
@@ -402,12 +405,16 @@ export default class PlaceController {
            )
          )
        )
-     `)
-     .eq('id', id)
-     .limit(1)
-     .single() as {data:BenefitsByPlaceIdResponse, error: PostgrestError | null};
+     `
+      )
+      .eq("id", id)
+      .limit(1)
+      .single()) as {
+      data: BenefitsByPlaceIdResponse;
+      error: PostgrestError | null;
+    };
 
-    if(error) {
+    if (error) {
       return res.status(500).json({ error: error.message });
     }
 
@@ -421,22 +428,20 @@ export default class PlaceController {
       (item) => item.activity.name
     );
 
-    const benefits = benefitsData.place_by_activity.flatMap(
-      (item) =>
-        item.activity.activity_benefit.map((b) => ({
-          id: b.benefit.id,
-          name: b.benefit.name,
-          description: b.benefit.description,
-          activity: item.activity.name,
-          icon: b.benefit.icon,
-        }))
+    const benefits = benefitsData.place_by_activity.flatMap((item) =>
+      item.activity.activity_benefit.map((b) => ({
+        id: b.benefit.id,
+        name: b.benefit.name,
+        description: b.benefit.description,
+        activity: item.activity.name,
+        icon: b.benefit.icon,
+      }))
     );
 
     res.status(201).json({
       activities,
-      benefits
+      benefits,
     });
-
   }
 
   static async findPlaceDetails(req: Request, res: Response) {
@@ -444,14 +449,16 @@ export default class PlaceController {
 
     const { data, error } = await supabase
       .from("place")
-      .select(`
+      .select(
+        `
         *,
         address(*),
         place_image(imageid),
         event(*),
         feedback(*, users(name)),
         place_by_activity(activity(*, activity_benefit(benefit(*))))
-      `)
+      `
+      )
       .eq("id", id)
       .limit(1)
       .single();
@@ -499,7 +506,9 @@ export default class PlaceController {
       // Get token from request headers
       const token = req.headers.authorization?.split(" ")[1];
       if (!token) {
-        return res.status(401).json({ message: "No token provided", error_code: 401 });
+        return res
+          .status(401)
+          .json({ message: "No token provided", error_code: 401 });
       }
 
       // Decode JWT token
@@ -523,13 +532,15 @@ export default class PlaceController {
 
       const { data: places, error: placesError } = await supabase
         .from("place")
-        .select(`
+        .select(
+          `
         *,
         address(*),
         place_image(image(*)),
         feedback(rating),
         event(*),
-        place_by_activity(activity(*))`)
+        place_by_activity(activity(*))`
+        )
         .not("address.latitude", "is", "null")
         .not("address.longitude", "is", "null")
         .limit(10);
@@ -544,7 +555,12 @@ export default class PlaceController {
 
       const sortedPlaces = places
         .map((place) => {
-          const distance = PlaceController.getDistance(userLat, userLong, place.address?.latitude, place.address?.longitude);
+          const distance = PlaceController.getDistance(
+            userLat,
+            userLong,
+            place.address?.latitude,
+            place.address?.longitude
+          );
           return { ...place, distance };
         })
         .sort((a, b) => a.distance - b.distance)
@@ -554,7 +570,7 @@ export default class PlaceController {
         return {
           ...place,
           address: place.address,
-          distance: 'Aproximadamente ' + place.distance.toFixed(2) + ' km',
+          distance: "Aproximadamente " + place.distance.toFixed(2) + " km",
           image: PLACEHOLDER_IMAGE,
           rating_avg:
             place.feedback.reduce(
@@ -570,20 +586,77 @@ export default class PlaceController {
     }
   }
 
+  static async getByUserFavorite(req: Request, res: Response) {
+    try {
+      // Get token from request headers
+      const token = req.headers.authorization?.split(" ")[1];
+      if (!token) {
+        return res
+          .status(401)
+          .json({ message: "No token provided", error_code: 401 });
+      }
+
+      // Decode JWT token
+      const decoded = jwt.verify(token, JWT_SECRET) as {
+        id: string;
+        email: string;
+        account_type_id: number;
+      };
+
+      const { data: user, error: userError } = await supabase
+        .from("users")
+        .select("id, accountid, addressid, address(*)")
+        .eq("accountid", decoded.id.toString())
+        .single();
+
+      if (userError || !user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const { data: favorite_places, error: placesError } = await supabase
+        .from("favorite_place")
+        .select(
+          `place(
+            *,
+            address(*),
+            place_image(image(*)),
+            feedback(rating),
+            event(*),
+            place_by_activity(activity(*))
+          )`
+        )
+        .eq("userid", user.id);
+
+      if (placesError) {
+        return res.status(500).json({ error: placesError.message });
+      }
+
+      if (!favorite_places || favorite_places.length === 0) {
+        return res.status(404).json({ message: "No places found" });
+      }
+
+      const places = favorite_places.map((favorite) => favorite.place);
+      return res.status(200).json(places);
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
   // Function to calculate geographical distance using Haversine formula
   static getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
     const toRad = (value: number) => (value * Math.PI) / 180;
-    const R = 6371; 
+    const R = 6371;
 
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos(toRad(lat1)) *
+        Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return R * c; // Distance in km
   }
-
 }
