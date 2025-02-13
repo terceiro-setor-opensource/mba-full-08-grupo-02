@@ -60,15 +60,12 @@ const LargeScreenMenu: React.FC<LargeScreenMenuProps> = ({
   logout,
 }) => (
   <ButtonGroup gap={12}>
-    <Button cursor="pointer" fontSize={'button'} variant="link">
-      {t('maps')}
-    </Button>
     <Button
       cursor="pointer"
       fontSize={'button'}
       variant="link"
       color="neutral.400"
-      onClick={() => navigate('/dashboard')}
+      onClick={() => navigate('/places')}
     >
       {t('search')}
     </Button>
@@ -162,7 +159,6 @@ export const Header: React.FC = () => {
             variant="outline"
           />
           <MenuList>
-            <MenuItem onClick={handleNavigate('/maps')}>{t('maps')}</MenuItem>
             <MenuItem onClick={handleNavigate('/search')}>
               {t('search')}
             </MenuItem>
