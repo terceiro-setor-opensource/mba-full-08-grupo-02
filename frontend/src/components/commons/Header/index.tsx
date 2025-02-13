@@ -17,20 +17,17 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/hooks/useAuth'
 import { useCallback } from 'react'
 import { t } from 'i18next'
+import { Profile } from '@/models/account'
 
-interface User {
-  name: string
-  [key: string]: any
-}
 
 interface AuthMenuItemsProps {
-  user: User
+  user: Profile | null
   logout: () => void
   navigate: (path: string) => void
 }
 
 interface LargeScreenMenuProps {
-  user: User | null
+  user: Profile | null
   t: (key: string) => string
   navigate: (path: string) => void
   logout: () => void
@@ -43,7 +40,7 @@ const AuthMenuItems: React.FC<AuthMenuItemsProps> = ({
 }) => {
   return (
     <>
-      <MenuItem onClick={() => navigate('/profile')}>{user.name}</MenuItem>
+      <MenuItem onClick={() => navigate('/profile')}>{user?.name}</MenuItem>
       <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
       <MenuItem onClick={() => navigate('/admin/places')}>Gerenciar locais</MenuItem>
       <MenuItem>{t('requestCatalog')}</MenuItem>
@@ -100,7 +97,7 @@ const LargeScreenMenu: React.FC<LargeScreenMenuProps> = ({
           <Box style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Img
               borderRadius="50%"
-              src={'https://eu.ui-avatars.com/api/?name=U+Fe&size=250'}
+              src={`${user?.profile_image || "https://eu.ui-avatars.com/api/?name=${user?.name}e&size=250"}`}
               alt={user.name}
               boxSize="30px"
             />

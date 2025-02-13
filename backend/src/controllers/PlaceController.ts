@@ -124,7 +124,7 @@ export default class PlaceController {
       `*,
       address(*),
       place_image(image(*)),
-      feedback(*,users(name)),
+      feedback(*,users(name,profile_image)),
       event(*),
       place_by_activity(activity(*, activity_benefit(benefit(*))))`
     )

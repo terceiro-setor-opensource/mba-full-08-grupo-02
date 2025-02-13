@@ -2,14 +2,12 @@ import StarRating from '@/components/commons/StarRating'
 import { Feedback } from '@/models/feedback'
 import {
   Avatar,
-  Button,
   Card,
   CardBody,
   HStack,
   Stack,
   Text,
 } from '@chakra-ui/react'
-import { t } from 'i18next'
 
 interface FeedbackCardProps {
   feedback: Feedback
@@ -21,8 +19,8 @@ export const FeedbackCard = ({ feedback }: FeedbackCardProps) => {
       <CardBody>
         <HStack gap="3">
           <Avatar
-            src="https://images.unsplash.com/photo-1511806754518-53bada35f930"
-            name="Nate Foss"
+            src={`${feedback.users?.profile_image  || "https://images.unsplash.com/photo-1511806754518-53bada35f930"}`}
+            name={`${feedback?.users?.name}`}
           />
           <Stack gap="0">
             <HStack gap="3">
