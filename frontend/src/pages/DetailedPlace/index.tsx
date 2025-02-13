@@ -33,10 +33,16 @@ export const DetailedPlace = () => {
 
   useEffect(() => {
     const fetchPlace = async () => {
-      setLoading(true)
+      
+      if (!id) {
+        setError("ID não definido");
+        return;
+      }
+            setLoading(true)
       try {
         if(!id) return
         const response = await placeService.getById(parseInt(id))
+        localStorage.setItem("placeid", String(response.id))
         setPlace(response)
       } catch (err) {
         setError((err as Error).message || 'Failed to fetch places.')

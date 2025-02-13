@@ -3,10 +3,6 @@ import { supabase } from "../services/supabase";
 import ErrorHandling from "../util/ErrorHandling";
 import { z } from "zod";
 
-const UserRef = supabase.from("users");
-const PlaceRef = supabase.from("place");
-const FavoritePlaceRef = supabase.from("favorite_place");
-
 const favoritePlaceSchema = z.object({
   placeid: z.number().int().positive(),
   userid: z.number().int().positive(),
@@ -14,12 +10,12 @@ const favoritePlaceSchema = z.object({
 
 export default class FavoritePlaceController {
   static async findAll(req: Request, res: Response) {
-    const { data, error } = await FavoritePlaceRef.select(
-      "users(id, name), place(*)"
-    );
+
+    const { data, error } = await supabase.from('favorite_place')
+    .select("users(id, name), place(*)");
 
     if (error) {
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({ error: error.message, favorite: data });
     }
 
     if (data.length === 0) {
@@ -28,26 +24,53 @@ export default class FavoritePlaceController {
       });
     }
 
-    res.status(201).json(data);
+    return res.status(201).json(data);
   }
 
   static async findById(req: Request, res: Response) {
     const { userid } = req.params;
-    const { data, error } = await FavoritePlaceRef.select(
+    const { data, error } = await supabase.from('favorite_place').select(
       "users(id, name), place(*)"
     ).eq("userid", userid).limit(1).single();
 
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
+    // if (error) {
+    //   return res.status(500).json({ error: error.message, byId: data });
+    // }
 
-    if (data.length === 0) {
+    if (data === null) {
       return res.status(204).json({
         message: `No favorite place found for the id = ${userid}`,
       });
     }
 
     res.status(201).json(data);
+  }
+
+  static async verifyIsFavorite(req: Request, res: Response) {
+
+    const { placeid } = req.params;
+    const { userid } = req.query;
+
+    if (!userid || !placeid) {
+      return res.status(400).json({ error: "Parametros obrigatórios não informados" });
+    }
+
+    const { data, error } = await supabase
+    .from('favorite_place')
+    .select("id, users(id, name), place(*)")
+    .eq("userid", userid)
+    .eq("placeid", placeid)
+    .limit(1)
+    .single();
+
+    if (!data) {
+      return res.status(200).json({ isFavorite: false  });
+   } 
+
+    return res.status(200).json({ 
+      isFavorite: true,
+      id: data.id,  
+    });
   }
 
   static async create(req: Request, res: Response) {
@@ -63,7 +86,7 @@ export default class FavoritePlaceController {
     }
 
     // checking if the user exists
-    const resultUser = await UserRef.select("name").eq("id", body.userid);
+    const resultUser = await supabase.from("users").select("name").eq("id", body.userid);
 
     if (resultUser.error) {
       return res.status(500).json({ error: resultUser.error.message });
@@ -76,7 +99,7 @@ export default class FavoritePlaceController {
     }
 
     // checking if the place exists
-    const resultPlace = await PlaceRef.select("name").eq(
+    const resultPlace = await supabase.from("place").select("name").eq(
       "id",
       String(body.placeid)
     );
@@ -92,7 +115,7 @@ export default class FavoritePlaceController {
     }
 
     // checking if the place has already been set as favorite by the user
-    const resultFavorite = await FavoritePlaceRef.select("id")
+    const resultFavorite = await supabase.from('favorite_place').select("id")
       .eq("placeid", body.placeid)
       .eq("userid", body.userid);
 
@@ -107,8 +130,8 @@ export default class FavoritePlaceController {
     }
 
     // Everithing is ok, so insert
-    const inserted = await FavoritePlaceRef.insert(body).select(
-      "users(id, name), place(*)"
+    const inserted = await supabase.from('favorite_place').insert(body).select(
+      "users(id, name), place(*), id"
     );
 
     const { error } = inserted;
@@ -123,7 +146,7 @@ export default class FavoritePlaceController {
           ).returnObjectRequestError()
         );
 
-    res.status(201).json(inserted.data);
+    res.status(201).json(inserted);
   }
 
   static async update(req: Request, res: Response) {
@@ -146,7 +169,7 @@ export default class FavoritePlaceController {
       });
     }
 
-    const updated = await FavoritePlaceRef.update(body, { count: "exact" }).eq(
+    const updated = await supabase.from('favorite_place').update(body, { count: "exact" }).eq(
       "id",
       id // Não sei pq, mas só funcionou quando dei parse pra string
     );
@@ -174,7 +197,7 @@ export default class FavoritePlaceController {
     const { body } = req;
 
     const DeleteSchema = z.object({
-      id: z.number().int(),
+      favoriteId: z.number().int(),
     });
     const validation = DeleteSchema.safeParse(body);
     if (validation.error) {
@@ -187,9 +210,9 @@ export default class FavoritePlaceController {
 
     // In the future there will be here a validation to see if the user with the userId has the permission to delete a place from the database
 
-    const deleted = await FavoritePlaceRef.delete({ count: "exact" }).eq(
+    const deleted = await supabase.from('favorite_place').delete({ count: "exact" }).eq(
       "id",
-      body.id
+      body.favoriteId
     );
 
     const { error, count } = deleted;
