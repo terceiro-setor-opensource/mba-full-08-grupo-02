@@ -1,6 +1,10 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
+export const getToken = () => {
+  return localStorage.getItem("@cidade-ativa:auth_token")?.replace(/"/g, "");
+}
+
 const api = axios.create({
   baseURL: "http://localhost:3000",
 });

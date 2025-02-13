@@ -1,5 +1,5 @@
 import { Place } from '@/models/place'
-import api from './api'
+import api, { getToken } from './api'
 import { NewPlace } from '@/components/Admin/CreatePlace'
 
 export interface SelectFilter {
@@ -53,18 +53,13 @@ class PlaceService {
   }
 
 
-  public async getByUserLocation({
-    latitude,
-    longitude,
-    radius,
-  }: {
-    latitude: number
-    longitude: number
-    radius: number
-  }): Promise<Place[]> {
+  public async getByUserLocation(): Promise<Place[]> {
     try {
-      const response = await api.get(this.basePath, {
-        params: { latitude, longitude, radius },
+      const response = await api.get(`/places/user-location/places`, {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${getToken()}`,
+        }
       })
       return response.data
     } catch (error: any) {

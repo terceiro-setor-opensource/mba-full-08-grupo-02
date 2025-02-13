@@ -7,6 +7,9 @@ import { EventResponse } from "src/domains/Event";
 import { FeedbackResponse } from "src/domains/Feedback";
 import { BenefitsByPlaceIdResponse } from "src/domains/PlaceByActivity";
 import { PostgrestError } from "@supabase/supabase-js";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 export interface PlaceSelectFilter {
   pg?: number;
@@ -489,6 +492,98 @@ export default class PlaceController {
         })),
       })),
     });
-}
+  }
+
+  static async getByUserLocation(req: Request, res: Response) {
+    try {
+      // Get token from request headers
+      const token = req.headers.authorization?.split(" ")[1];
+      if (!token) {
+        return res.status(401).json({ message: "No token provided", error_code: 401 });
+      }
+
+      // Decode JWT token
+      const decoded = jwt.verify(token, JWT_SECRET) as {
+        id: string;
+        email: string;
+        account_type_id: number;
+      };
+
+      const { data: user, error: userError } = await supabase
+        .from("users")
+        .select("accountid, addressid, address(*)")
+        .eq("accountid", decoded.id.toString())
+        .single();
+
+      if (userError || !user || !user.address) {
+        return res.status(404).json({ message: "User or address not found" });
+      }
+
+      const { latitude: userLat, longitude: userLong } = user.address as any;
+
+      const { data: places, error: placesError } = await supabase
+        .from("place")
+        .select(`
+        *,
+        address(*),
+        place_image(image(*)),
+        feedback(rating),
+        event(*),
+        place_by_activity(activity(*))`)
+        .not("address.latitude", "is", "null")
+        .not("address.longitude", "is", "null")
+        .limit(10);
+
+      if (placesError) {
+        return res.status(500).json({ error: placesError.message });
+      }
+
+      if (!places || places.length === 0) {
+        return res.status(404).json({ message: "No places found" });
+      }
+
+      const sortedPlaces = places
+        .map((place) => {
+          const distance = PlaceController.getDistance(userLat, userLong, place.address?.latitude, place.address?.longitude);
+          return { ...place, distance };
+        })
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, 5);
+
+      const formatPlaces: ExtendedPlace[] = sortedPlaces?.map((place) => {
+        return {
+          ...place,
+          address: place.address,
+          distance: 'Aproximadamente ' + place.distance.toFixed(2) + ' km',
+          image: PLACEHOLDER_IMAGE,
+          rating_avg:
+            place.feedback.reduce(
+              (acc: number, curr: FeedbackResponse) => acc + curr.rating,
+              0
+            ) / place.feedback.length,
+        };
+      });
+
+      return res.status(200).json(formatPlaces);
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  // Function to calculate geographical distance using Haversine formula
+  static getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+    const toRad = (value: number) => (value * Math.PI) / 180;
+    const R = 6371; 
+
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // Distance in km
+  }
 
 }

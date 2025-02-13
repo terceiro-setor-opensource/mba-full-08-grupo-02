@@ -16,5 +16,6 @@ router.post("/", PlaceController.create);
 router.put("/:id", PlaceController.update);
 router.delete("/", PlaceController.delete);
 router.get("/:id/benefits", PlaceController.findBenefitsByPlaceId);
+router.get("/user-location/places", PlaceController.getByUserLocation);
 
 export default router;

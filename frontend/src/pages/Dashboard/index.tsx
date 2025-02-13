@@ -16,7 +16,9 @@ import { BiSearch } from 'react-icons/bi'
 export const Dashboard = () => {
   const navigate = useNavigate()
 
-  const [activities, setActivities] = useState<{ text: string; value: number }[]>([])
+  const [activities, setActivities] = useState<
+    { text: string; value: number }[]
+  >([])
   const [stateSearchByCity, setStateSearchByCity] = useState('')
   const [stateSearchBySportId, setStateSearchBySportId] = useState<number>()
   const [stateSearchQuery, setStateSearchQuery] = useState('')
@@ -30,7 +32,7 @@ export const Dashboard = () => {
         (response || []).map((option) => ({
           text: option.name,
           value: option.id,
-        }))
+        })),
       )
     } catch (err) {
       setError((err as Error).message || 'Failed to fetch activities.')
@@ -39,19 +41,16 @@ export const Dashboard = () => {
 
   useEffect(() => {
     fetchActivities()
-    const response = placeService.getByUserLocation({
-      latitude: 0,
-      longitude: 0,
-      radius: 100,
-    })
+    const response = placeService.getByUserLocation()
     response.then((places) => {
       setPlaces(places)
     })
-
   }, [])
 
   function handleSearch() {
-    navigate(`/places?name=${stateSearchQuery}&city=${stateSearchByCity}&sport=${stateSearchBySportId}`)
+    navigate(
+      `/places?name=${stateSearchQuery}&city=${stateSearchByCity}&sport=${stateSearchBySportId}`,
+    )
   }
 
   return (
@@ -67,12 +66,16 @@ export const Dashboard = () => {
             justifyContent="space-between"
             width="100%"
           >
-            <LocationSelect onChange={(e) => setStateSearchByCity(e.currentTarget.value)} />
+            <LocationSelect
+              onChange={(e) => setStateSearchByCity(e.currentTarget.value)}
+            />
 
-            <SportSelect 
-              onChange={(e) => setStateSearchBySportId(parseInt(e.currentTarget.value))} 
+            <SportSelect
+              onChange={(e) =>
+                setStateSearchBySportId(parseInt(e.currentTarget.value))
+              }
               options={activities}
-              />
+            />
 
             <HStack width="100%">
               <SearchBar
@@ -83,12 +86,15 @@ export const Dashboard = () => {
             </HStack>
 
             <Button onClick={handleSearch} colorScheme="purple">
-                <BiSearch />
-              </Button>
+              <BiSearch />
+            </Button>
           </HStack>
         </Stack>
         <Stack padding={'3rem'}>
-          <ChooseActivity title={t('dashboard.lookingFor')} color="neutral.500" />
+          <ChooseActivity
+            title={t('dashboard.lookingFor')}
+            color="neutral.500"
+          />
         </Stack>
         <Stack>
           <Text textStyle="h2" fontSize="2rem" alignSelf="start">
@@ -99,9 +105,13 @@ export const Dashboard = () => {
             <Text color="red.500">{error}</Text>
           ) : (
             <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
-              {places.map((place) => (
-                <PlaceCard key={place.id} place={place} onClick={() => navigate(`/places/${place.id}`)} />
-              ))}
+              {places && places.map((place) => ( 
+                <PlaceCard 
+                key={place.id} 
+                 place={place} 
+                   onClick={() => navigate(`/places/${place.id}`)} 
+                 /> 
+               ))}
             </SimpleGrid>
           )}
         </Stack>

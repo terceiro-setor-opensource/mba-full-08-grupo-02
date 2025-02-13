@@ -1,4 +1,4 @@
-import { Text } from '@chakra-ui/react'
+import { Text, VStack } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import StarRating from '@/components/commons/StarRating'
 import { Place } from '@/models/place'
@@ -28,10 +28,17 @@ const PlaceCard = ({ place, onClick }: PlaceCardProps) => {
         </Text>
       </CardBody>
       <CardFooter onClick={onClick}>
+        <VStack>
+        {place.distance && (
+          <Text color="gray.600" fontSize="sm">
+              {place.distance} 
+            </Text>
+          )}
         <StarRating
           rating={place.rating_avg || 0}
           reviewCount={place.feedback.length}
-        />
+          />
+          </VStack>
       </CardFooter>
     </Card>
   )
