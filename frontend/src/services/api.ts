@@ -13,6 +13,10 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401 || error.response.status === 403) {
+      if(error.response.data.message.includes('Invalid email or password') || error.response.data.message.includes('User not found')) {
+        return;
+      }
+
       toast.error("Parece que sua sessão expirou. Faça login novamente.");
 
       localStorage.removeItem("@cidade-ativa:auth_token");
