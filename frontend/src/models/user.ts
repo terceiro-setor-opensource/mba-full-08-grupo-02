@@ -6,4 +6,5 @@ export interface User {
   address_id: string
   accountId: string
   datetime_creation: string
+  profile_image?: string
 }

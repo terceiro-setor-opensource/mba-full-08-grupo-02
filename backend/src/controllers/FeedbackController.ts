@@ -14,7 +14,7 @@ export default class FeedbackController {
   static async findAll(req: Request, res: Response) {
     const FeedbackRef = supabase.from("feedback");
     const { data, error } = await FeedbackRef.select(
-      "id, description, rating, users(name), place(name)"
+      "id, description, rating, users(name,profile_image), place(name)"
     );
 
     if (error) {
@@ -34,7 +34,7 @@ export default class FeedbackController {
     const FeedbackRef = supabase.from("feedback");
     const { id } = req.params;
     const { data, error } = await FeedbackRef.select(
-      "id, description, rating, users(name), place(name)"
+      "id, description, rating, users(name,profile_image), place(name)"
     )
       .eq("id", id)
       .limit(1)
@@ -57,7 +57,7 @@ export default class FeedbackController {
     const FeedbackRef = supabase.from("feedback");
     const { id, order_by = "id", order = "ASC" } = req.params;
     const { data, error } = await FeedbackRef.select(
-      "id, description, rating, users(name), place(name)"
+      "id, description, rating, users(name,profile_image), place(name)"
     )
       .eq("placeid", id)
       .order(order_by, { ascending: order === "ASC" });
