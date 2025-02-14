@@ -42,7 +42,7 @@ class PlaceService {
     }
   }
   public async getDetails(id: number): Promise<Place> {
-    if(!id) {
+    if (!id) {
       throw new Error('Id is required')
     }
     try {
@@ -53,22 +53,38 @@ class PlaceService {
     }
   }
 
-
   public async getByUserLocation(): Promise<Place[]> {
     try {
       const response = await api.get(`/places/user-location/places`, {
         headers: {
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${getToken()}`,
-        }
+          Accept: 'application/json',
+          Authorization: `Bearer ${getToken()}`,
+        },
       })
       return response.data
     } catch (error: any) {
       this.handleError(error)
     }
   }
-  
-  public async getByPlaceIdAndUserId(userid: number, placeid: number): Promise<Place> {
+
+  public async getByUserFavorite(): Promise<Place[]> {
+    try {
+      const response = await api.get(`/places/user-favorite/places`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${getToken()}`,
+        },
+      })
+      return response.data
+    } catch (error: any) {
+      this.handleError(error)
+    }
+  }
+
+  public async getByPlaceIdAndUserId(
+    userid: number,
+    placeid: number,
+  ): Promise<Place> {
     try {
       const response = await api.get(`${this.basePath}/${userid}/${placeid}`)
       return response.data
@@ -79,30 +95,30 @@ class PlaceService {
 
   public async createPlace(newPlace: NewPlace): Promise<Place> {
     try {
-      const response = await api.post(this.basePath, newPlace);
-      return response.data;
+      const response = await api.post(this.basePath, newPlace)
+      return response.data
     } catch (error: any) {
-      this.handleError(error);
+      this.handleError(error)
     }
   }
 
   public async updatePlace(place: Place): Promise<Place> {
     try {
-      const response = await api.put(`${this.basePath}/${place.id}`, place);
-      return response.data;
+      const response = await api.put(`${this.basePath}/${place.id}`, place)
+      return response.data
     } catch (error: any) {
-      this.handleError(error);
+      this.handleError(error)
     }
   }
 
   public async deletePlace(id: number): Promise<void> {
     try {
-      await api.delete(`${this.basePath}/${id}`);
+      await api.delete(`${this.basePath}/${id}`)
     } catch (error: any) {
-      this.handleError(error);
+      this.handleError(error)
     }
   }
-  
+
   public async postFavoritePlace({
     placeid,
     userid,
@@ -113,15 +129,15 @@ class PlaceService {
     try {
       let response
       response = await api.post(this.baseFavoritePlacePath, {
-        placeid: parseInt(placeid,10), 
-        userid: parseInt(userid,10), 
+        placeid: parseInt(placeid, 10),
+        userid: parseInt(userid, 10),
       })
 
-      localStorage.setItem("favoriteid", response.data.data[0].id)
+      localStorage.setItem('favoriteid', response.data.data[0].id)
 
       return response.data
     } catch (error: any) {
-      localStorage.setItem("ERRO", error)
+      localStorage.setItem('ERRO', error)
       this.handleError(error)
     }
   }
@@ -133,7 +149,7 @@ class PlaceService {
   }): Promise<Place[]> {
     try {
       const response = await api.delete(this.baseFavoritePlacePath, {
-        data: { favoriteId: parseInt(favoriteId, 10) }
+        data: { favoriteId: parseInt(favoriteId, 10) },
       })
       return response.data
     } catch (error: any) {
@@ -145,21 +161,24 @@ class PlaceService {
     placeid,
     userid,
   }: {
-    placeid: string;
-    userid: string;
+    placeid: string
+    userid: string
   }): Promise<boolean> {
     try {
-      const response = await api.get(this.baseFavoritePlacePath + "/isFavorite/" + placeid + "/",  {
-        params: { userid },
-      });
-      if(!response.data){
+      const response = await api.get(
+        this.baseFavoritePlacePath + '/isFavorite/' + placeid + '/',
+        {
+          params: { userid },
+        },
+      )
+      if (!response.data) {
         console.error('Retorno da API inválido')
       }
       // Retorna diretamente o valor de "isFavorite" (isFavorite)
-      localStorage.setItem("favoriteid", response.data.id)
+      localStorage.setItem('favoriteid', response.data.id)
       return response.data.isFavorite
     } catch (error: any) {
-      this.handleError(error);
+      this.handleError(error)
     }
   }
 

@@ -98,7 +98,7 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
           <VStack justifyContent={'flex-start'} alignItems={'flex-start'}>
             <Flex justifyContent="space-between" width={'100%'}>
               <Text sx={titleTextStyle}>{place?.name}</Text>
-              <FavoriteButton />
+              {user ? <FavoriteButton /> : <></>}
             </Flex>
             <HStack wrap={'wrap'} spacing={2}>
               {place.place_by_activity?.map((place_by_activity) => (

@@ -24,6 +24,7 @@ export const Dashboard = () => {
   const [stateSearchQuery, setStateSearchQuery] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [places, setPlaces] = useState<Place[]>([])
+  const [favoritePlaces, setFavoritePlaces] = useState<Place[]>([])
 
   const fetchActivities = async () => {
     try {
@@ -44,6 +45,10 @@ export const Dashboard = () => {
     const response = placeService.getByUserLocation()
     response.then((places) => {
       setPlaces(places)
+    })
+    const responseFavorites = placeService.getByUserFavorite()
+    responseFavorites.then((favoritePlaces) => {
+      setFavoritePlaces(favoritePlaces)
     })
   }, [])
 
@@ -105,16 +110,41 @@ export const Dashboard = () => {
             <Text color="red.500">{error}</Text>
           ) : (
             <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
-              {places && places.map((place) => ( 
-                <PlaceCard 
-                key={place.id} 
-                 place={place} 
-                   onClick={() => navigate(`/places/${place.id}`)} 
-                 /> 
-               ))}
+              {places &&
+                places.map((place) => (
+                  <PlaceCard
+                    key={place.id}
+                    place={place}
+                    onClick={() => navigate(`/places/${place.id}`)}
+                  />
+                ))}
             </SimpleGrid>
           )}
         </Stack>
+        {favoritePlaces.length > 0 ? (
+          <Stack marginTop="2rem">
+            <Text textStyle="h2" fontSize="2rem" alignSelf="start">
+              {t('dashboard.favoritePlaces')}
+            </Text>
+
+            {error ? (
+              <Text color="red.500">{error}</Text>
+            ) : (
+              <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
+                {favoritePlaces &&
+                  favoritePlaces.map((place) => (
+                    <PlaceCard
+                      key={place.id}
+                      place={place}
+                      onClick={() => navigate(`/places/${place.id}`)}
+                    />
+                  ))}
+              </SimpleGrid>
+            )}
+          </Stack>
+        ) : (
+          <></>
+        )}
       </Stack>
     </Box>
   )
