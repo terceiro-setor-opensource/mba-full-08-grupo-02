@@ -94,7 +94,7 @@ const LargeScreenMenu: React.FC<LargeScreenMenuProps> = ({
           <Box style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Img
               borderRadius="50%"
-              src={`${user?.profile_image || "https://eu.ui-avatars.com/api/?name=${user?.name}e&size=250"}`}
+              src={`${user?.profile_image || `https://eu.ui-avatars.com/api/?name=${user?.name}e&size=250`}`}
               alt={user.name}
               boxSize="30px"
             />
