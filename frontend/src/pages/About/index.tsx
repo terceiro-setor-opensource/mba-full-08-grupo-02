@@ -166,7 +166,7 @@ export default function About() {
           </Text>
           <Button
             as="a"
-            href="https://github.com/impacta-full-08/cidade-ativa"
+            href="https://github.com/terceiro-setor-opensource/mba-full-08-grupo-02"
             colorScheme="teal"
             size="lg"
             target="_blank"
