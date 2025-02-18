@@ -79,6 +79,14 @@ const loginRedirectButtonStyle = {
   paddingX: '2rem',
 }
 
+export function SoonBadge() {
+  return (
+    <Badge borderRadius="full" px="2" py="1" fontSize="0.8rem">
+      {t('soonBadge')}
+    </Badge>
+  )
+}
+
 export const PlaceDetails = ({ place }: { place: Place }) => {
   const { user } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -135,10 +143,14 @@ export const PlaceDetails = ({ place }: { place: Place }) => {
       <Stack sx={stackOtherInfosStyle}>
         <Flex justifyContent="space-between">
           <UnderlinedTitle title={t('detailedLocationPage.locationEvents')} />
-          <TextButton
-            text={t('detailedLocationPage.addEvent')}
-            backgroundColor="#AC46F0"
-          />
+          <HStack>
+            <TextButton
+              text={t('detailedLocationPage.addEvent')}
+              backgroundColor="#AC46F0"
+              isDisabled
+            />
+            <SoonBadge />
+          </HStack>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
           {place?.events && place?.events?.length > 0 ? (

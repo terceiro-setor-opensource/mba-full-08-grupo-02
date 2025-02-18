@@ -4,7 +4,6 @@ import { supabase } from "../services/supabase";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
-const JWT_EXPIRATION = process.env.JWT_EXPIRATION || "1h";
 
 const profileSchema = z.object({
   profileimage: z.string().optional(),
@@ -83,7 +82,7 @@ export default class ProfileController {
         .update({
           profile_image: userData.profileImage ?? null,
           name: userData.name,
-          birthdate: userData.birthdate
+          birthdate: userData.birthdate ?? null,
         })
         .eq("id", user.id);
 
