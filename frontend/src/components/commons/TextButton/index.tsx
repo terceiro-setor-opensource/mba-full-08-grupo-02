@@ -25,7 +25,7 @@ export const TextButton = ({ text, backgroundColor, sx, ...props }: ButtonProps)
   )
 
   return (
-    <Button sx={{ ...buttonStyle, ...sx }} {...props}>
+    <Button sx={{ ...buttonStyle, ...sx }} {...props} >
       {text}
     </Button>
   )

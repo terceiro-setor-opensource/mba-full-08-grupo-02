@@ -1,4 +1,4 @@
-import { Box, HStack, Spacer } from '@chakra-ui/layout'
+import { Badge, Box, HStack, Spacer } from '@chakra-ui/layout'
 import { Logo } from '../Logo'
 import {
   ButtonGroup,
@@ -18,7 +18,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { useCallback } from 'react'
 import { t } from 'i18next'
 import { Profile } from '@/models/account'
-
 
 interface AuthMenuItemsProps {
   user: Profile | null
@@ -43,9 +42,16 @@ const AuthMenuItems: React.FC<AuthMenuItemsProps> = ({
       <MenuItem onClick={() => navigate('/profile')}>{user?.name}</MenuItem>
       <MenuItem onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
       {user?.account_type_id === 1 && (
-        <MenuItem onClick={() => navigate('/admin/places')}>Gerenciar locais</MenuItem>
+        <MenuItem onClick={() => navigate('/admin/places')}>
+          Gerenciar locais
+        </MenuItem>
       )}
-      <MenuItem>{t('requestCatalog')}</MenuItem>
+      <MenuItem isDisabled>
+        {t('requestCatalog')}{' '}
+        <Badge borderRadius="full" px="2" py="1" fontSize="0.8rem">
+          {t('soonBadge')}
+        </Badge>
+      </MenuItem>
       <MenuItem onClick={logout} cursor="pointer">
         {t('logout')}
       </MenuItem>
@@ -96,7 +102,10 @@ const LargeScreenMenu: React.FC<LargeScreenMenuProps> = ({
           <Box style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Img
               borderRadius="50%"
-              src={`${user?.profile_image || `https://eu.ui-avatars.com/api/?name=${user?.name}e&size=250`}`}
+              src={`${
+                user?.profile_image ||
+                `https://eu.ui-avatars.com/api/?name=${user?.name}e&size=250`
+              }`}
               alt={user.name}
               boxSize="30px"
             />
