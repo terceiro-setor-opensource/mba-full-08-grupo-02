@@ -59,7 +59,7 @@ const LargeScreenMenu: React.FC<LargeScreenMenuProps> = ({
   navigate,
   logout,
 }) => (
-  <ButtonGroup gap={12}>
+  <ButtonGroup gap={12} zIndex={20}>
     <Button
       cursor="pointer"
       fontSize={'button'}

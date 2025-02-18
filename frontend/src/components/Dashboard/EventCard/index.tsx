@@ -1,5 +1,5 @@
 import { Image, Text } from '@chakra-ui/react'
-import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody } from '@chakra-ui/react'
 import { Event } from '@/models/event'
 
 type EventCardProps = {
@@ -20,12 +20,13 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
           borderTopStartRadius={4}
         />
       </CardHeader>
-      <CardBody textAlign={'start'} paddingBottom={0} minHeight="100px" >
+      <CardBody textAlign={'start'}  minHeight="100px" >
           <Text
             lineHeight="short"
             color="black"
             maxWidth="100%"
             fontSize={'small'}
+            isTruncated
           >
             {event.name}
           </Text>

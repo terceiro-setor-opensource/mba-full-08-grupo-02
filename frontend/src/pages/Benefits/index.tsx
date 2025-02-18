@@ -49,13 +49,15 @@ export const Benefits = () => {
           bgPosition="center"
         >
           {benefitsData?.benefits.map((benefit, index) => (
-            <BenefitCard
+            benefit.name && (
+              <BenefitCard
               key={index}
               icon={benefit.icon}
               title={benefit.name}
               description={benefit.description}
               iconColor={benefit.icon}
-            />
+              />
+            )
           ))}
         </Grid>
       </Stack>

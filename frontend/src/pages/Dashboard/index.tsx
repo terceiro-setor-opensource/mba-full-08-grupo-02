@@ -24,6 +24,7 @@ export const Dashboard = () => {
   const [stateSearchQuery, setStateSearchQuery] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [places, setPlaces] = useState<Place[]>([])
+  const [placesError, setPlacesError] = useState<string | null>(null)
   const [favoritePlaces, setFavoritePlaces] = useState<Place[]>([])
 
   const fetchActivities = async () => {
@@ -45,6 +46,8 @@ export const Dashboard = () => {
     const response = placeService.getByUserLocation()
     response.then((places) => {
       setPlaces(places)
+    }).catch((err) => {
+      setPlacesError((err as Error).message || 'Failed to fetch places.')
     })
     const responseFavorites = placeService.getByUserFavorite()
     responseFavorites.then((favoritePlaces) => {
@@ -108,7 +111,14 @@ export const Dashboard = () => {
 
           {error ? (
             <Text color="red.500">{error}</Text>
-          ) : (
+          ) : placesError ? (
+            <Text>
+              Não foi possível carregar os lugares próximos. {' '}
+              <a href="/profile" style={{ textDecoration: 'underline' }}>
+                Verifique suas informações de endereço.
+              </a>
+            </Text>
+          ): (
             <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={12}>
               {places &&
                 places.map((place) => (
